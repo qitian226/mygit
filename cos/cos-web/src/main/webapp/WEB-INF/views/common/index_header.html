@@ -1,0 +1,24 @@
+<div id="header" class="u_head">
+<ul style="float:left;">
+  <li class="li_logo">
+  <a class="logo" href="${sitePath}index.html"></a>
+  </li>
+  <li style="margin-left:60px"></li>
+  <% for(var i=0;i<topictypes.~size;i++)  { 
+    if(i<10){ 
+  var item=topictypes[i];%>
+ <li class="li_nav"><a href="${sitePath}topic/${item.dictitemName}/index.html" target="_blank">${item.dictitemValue}</a>
+ </li>
+ <% }} %>
+ <li style="width: 120px">
+ <a id="more_nav" class="more">发现更多</a>
+ <div id="more_nav_panel" class="more_panel" style="display: none;" >
+ <% for(var item in topictypes)  { %>
+ <a href="${sitePath}topic/${item.dictitemName}/index.html" target="_blank">${item.dictitemValue}</a>
+ <% } %>
+ </div>
+ </li>
+ </ul>
+ <ul id="llogin" style="float:right;margin-right:10px;">
+</ul>
+</div>

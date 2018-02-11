@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="${sitePath}styles/main.css" rel="stylesheet" type="text/css">
+<link href="${sitePath}styles/index.css" rel="stylesheet" type="text/css">
+<link href="${sitePath}styles/topic.css" rel="stylesheet" type="text/css">
+<% include("/common/include.html"){} %>
+<script  type="text/javascript" charset="utf-8"  src="${sitePath}js/pogo-slider/js/jquery.pogo-slider.min.js"></script>
+<link href="${sitePath}js/pogo-slider/css/pogo-slider.min.css" rel="stylesheet" rel="stylesheet" type="text/css">
+<title>谁是最美的人-${siteDesc}</title>
+ </head>
+<body>
+<%
+include("/common/index_header.html"){}
+%>
+<div id="content">
+<div class="pogoSlider clearfix" id="js-main-slider">
+       <% if(isNotEmpty(images)){
+       for(img in images) {
+         if(imgLP.first){ %>
+         <div class="pogoSlider-slide" data-transition="slideOverLeft" data-duration="1000"  style="background-image:url(${imgUrl}${img.url}?t=${img.currVersion});"></div>
+        <% }
+        else if(imgLP.last){%>
+         <div class="pogoSlider-slide " data-transition="shrinkReveal" data-duration="1000"  style="background-image:url(${imgUrl}${img.url}?t=${img.currVersion});"></div> 
+        <% }
+        else{
+        %>
+          <div class="pogoSlider-slide " data-transition="fade" data-duration="1000"  style="background-image:url(${imgUrl}${img.url}?t=${img.currVersion});"></div>
+		<% } %>
+       <% }
+       } %>
+ </div>
+ <div id="search_panel">
+    <form action="${sitePath}beauty" method="get" target="_blank">
+     <input type="text" name="word" class="s_input" placeholder="找你所爱...">
+     <input type="submit" id="s_btn" class="index_s_btn" value="寻找">     
+     </input>
+     </form>
+  </div>
+</div>
+<div id="main" class="screen">
+
+<% if(isNotEmpty(topicmaps)) { 
+ for(topics in topicmaps) { %>
+  <div class="top_t">
+      <% if(topics.value.~size>0){%>
+	  <div class="topic_panel">
+	    <a  class="title">每日 <h1>${topics.key}</h1> 原创、彩集 top 30 主题</a>
+	    <a class="more" href="${sitePath}topic/${topics.value[0].type}/index.html" target="_blank">更多</a>
+	  </div>
+	  <ul  class="new_t">
+	  <% for(item in topics.value) { %>
+	     <li>
+	      <div class="p_img">
+		    <a class="ts" style="background-image: url(${imgUrl}${item.zoominUrl}?t=${item.currVersion})"; href="${sitePath}topic/${item.classify}/${item.id}.html" target="_blank">
+		      <span class="topnum">${itemLP.index}</span>
+			    <a class="entry_num" style="opacity: 0;">${item.entryNum} 页</a>
+		    </a>
+		    <a class="title" href="${sitePath}topic/${item.classify}/${item.id}.html" target="_blank">${strutil.length(item.title)>4?strutil.subStringTo(item.title,0,4):item.title}</a>
+    <div class="tag">
+	    <div class="c_nav">
+		    <a href="${sitePath}u/${item.accountName}" target="_blank">
+		    <img src="${imgUrl}${item.author.imgPath}?t=${item.currVersion}}">
+		    </a>
+	    </div>
+	    <div class="content">
+		    <div class="tags">
+		    <span class="star" title="评分">${item.gradeString}</span> 
+			 <span class="transpond" title="分享">${item.shareString}</span> 
+			 <span class="collect" title="收藏">${item.collectString}</span>
+		    </div>
+		    <div class="tdesc">
+		    	<a href="${sitePath}u/${item.accountName}" target="_blank">${item.author.nickname}</a> 彩集于 ${item.createTimeString}
+		        <a class="type"  target="_blank" href="${sitePath}topic/${item.type}/index.html">${item.typeName!""}</a>
+		    </div>
+	    </div>
+    </div>
+		   </div>
+	    </li>
+	  <% } %>
+	  </ul>
+	   <% } %>
+  </div>
+<% } } %>
+</div>
+ <%
+include("/common/footer.html"){}
+%>
+</body>
+ <script type="text/javascript">  
+ $().ready(function(){
+		 if(window.screen.width<1500){
+			 $("#main").css("width","1250px");
+		 }
+		 if(window.screen.width>1500){
+			 $("#main").css("width","1500px");
+		 } 
+	 <% if(isNotEmpty(images)){ %>
+	   //轮播广告
+	  	$('#js-main-slider').pogoSlider({
+			autoplay: true,
+			autoplayTimeout: 5000,
+			displayProgess: false,
+			preserveTargetSize: true,
+			responsive: true
+		}).data('plugin_pogoSlider');
+	   <% } %>
+	   $(window).on("scroll",function(){
+			  if($(window).scrollTop()>300){
+				  $("#header").removeClass("u_head");
+				  $("#header").addClass("head");
+				   
+		     }
+			  if($(window).scrollTop()<300){
+				  $("#header").removeClass("head");
+				  $("#header").addClass("u_head");
+		     }
+		  });
+ });
+ </script>
+
+</html>
