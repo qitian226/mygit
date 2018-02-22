@@ -1,0 +1,50 @@
+<% for (email in emails) {
+if (email.fromAccount==parseLong(toUserId)){
+%>
+<li style="display: none">
+<div class="right">
+	   <div class="item">
+	   <div class="pager">
+	      <div class="content">
+	      <span class="email">${email.createTimeString}</span>
+	      <span>${email.toAccountModel.nickname}</span>
+	      </div>
+	      <p>
+	      ${email.message}
+	      </p>
+	   </div>
+	   </div>
+	    <a class="rightuser"><img src="${imgUrl}${email.toAccountModel.imgPath}?t=${email.toAccountModel.currVersion}"></a>
+</div>
+</li>
+<% } %>
+<% if (email.fromAccount==parseLong(fromUserId)){ %>
+<li style="display: none">
+<div class="left">
+   <a class="leftuser"><img src="${imgUrl}${email.fromAccountModel.imgPath}?t=${email.fromAccountModel.currVersion}"></a>
+	   <div class="item">
+		   <div class="pager">
+		    <div class="content">
+	      <span class="email">${email.createTimeString}</span>
+	      <span>${email.fromAccountModel.nickname}</span>
+	      </div>
+	      <p>
+	      ${email.message}
+	      </p>
+	   </div>
+</div>
+</li>
+<% } 
+}
+
+if (isend==false) { %>
+<li style="text-align: center;">
+ <a id="page_btn" onclick="histoyEmail(${page})" class="nextpage">... 查看更多 ...</a>
+</li>
+<% } %>
+
+<% if(!isNotEmpty(emails) && emails.~size==0) { %>
+<li style="text-align: center;">
+ <a id="page_btn"   class="nextpage">... 还没有来信 ...</a>
+</li>
+<% } %>

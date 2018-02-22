@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>后台管理</title>
+  <% include("/common/include.html"){} %>
+  <style type="text/css">
+  
+  .red{
+  color: #FF0000;
+  }
+  </style>
+  </head>
+  <body>
+  	 <div style="padding:50px 30px">
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">字典CODE<span class="red">*</span></label>
+	    <div class="layui-input-block">
+	      <input id="code" type="text" style="background-color: #eee" disabled="disabled"  maxlength="10"   lay-verify="required" placeholder="请输入code" autocomplete="off" class="layui-input"  value="${item.dictCode}">
+	    </div>
+	  </div>
+     <div class="layui-form-item">
+	    <label class="layui-form-label">字典项名称<span class="red">*</span></label>
+	    <div class="layui-input-block">
+	      <input id="name" type="text" style="background-color: #eee" maxlength="20" disabled="disabled" lay-verify="required" placeholder="请输入name" autocomplete="off" class="layui-input"  value="${item.dictitemName}">
+	    </div>
+	  </div>
+	   <div class="layui-form-item">
+	    <label class="layui-form-label">字典项值</label>
+	    <div class="layui-input-block">
+	      <input id="value" type="text" maxlength="20"  lay-verify="required" placeholder="请输入value" autocomplete="off" class="layui-input"  value="${item.dictitemValue}">
+	    </div>
+	  </div>
+	   <div class="layui-form-item">
+	    <label class="layui-form-label">字典项描述</label>
+	    <div class="layui-input-block">
+	      <input id="desc" type="text" maxlength="20"  lay-verify="required" placeholder="请输入desc" autocomplete="off" class="layui-input"  value="${item.dictitemDesc}">
+	    </div>
+	  </div>
+	  </div>
+	  <div style="padding: 5px 30px;float: right">
+	  <button class="layui-btn layui-btn-normal" onclick="saveDic()">保存</button>
+	  <button class="layui-btn" onclick="closewin()">关闭</button>
+	  </div>
+  </body>
+  <script type="text/javascript">
+  var saveDic=function(){
+	  var code_=$("#code").val();
+	  var name_=$("#name").val();
+	  var value_=$("#value").val();
+	  if(code_.length==0){
+		  layer.msg("请输入CODE!");
+		  return false;
+	  }
+	  if(name_.length==0){
+		  layer.msg("请输入字典项名称!");
+		  return false;
+	  }
+	  if(isLetter(name_)==false){
+		  layer.msg("字典项名称只能是英文!");
+		  return false;
+	  }
+	  if(value_.length==0){
+		  layer.msg("请输入字典项值!");
+		  return false;
+	  }
+	  $.ajax({
+		     url : localhostPath+"sys/updatedicitem",
+		     dataType :"json",
+		     async:true,
+		     data:{id:'${item.id}',code:code_,name:name_,value:value_,desc:$("#desc").val()},
+		     method : "post",
+		     beforeSend:function(XMLHttpRequest){
+	        },
+		     success : function(json) {
+		    	    if(json.isPass=="ok"){
+		    	    	parent.reloadItemTable();
+		    	    	closewin();
+		    	    }
+		    	    else{
+		    	    	layer.msg(json.warn);
+		    	    }
+		    		
+		     },error:function(XMLHttpRequest, textStatus, errorThrown){
+	 	    	 if(XMLHttpRequest.status==500){
+	 	    		 layer.msg(XMLHttpRequest.responseText);
+	 	    	 }
+	 	     }
+	  });
+  }
+  
+  </script>
+  </html>

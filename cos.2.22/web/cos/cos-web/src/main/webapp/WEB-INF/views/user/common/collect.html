@@ -1,0 +1,22 @@
+   <% if(isEmpty(topics) || topics.~size==0){ %>
+   <span class="collect_null">还没有新的收藏哦</span>
+  <% } else { %>
+  <div class="box">
+ <div class="collect_btn">${type}</div>
+  <ul class="pic">
+<% for(var topic in topics){%>
+   <li class="p_li">
+     <div class="p_img">
+      <a class="jqthumb" href="${sitePath}topic/${topic.classify}/${topic.id}.html" target="_blank" style="background-image: url(${imgUrl}${topic.zoominUrl}?t=${topic.currVersion})" >
+       </a>
+       <a onclick="cancelCollectTopic(this)" data-id="${topic.id}" class="collect">取消收藏</a>
+       <div class="desc">
+	       <div class="title">【主题】${strutil.length(topic.title)>11?strutil.subStringTo(topic.title,0,11):topic.title}</div> 
+	       <div class="title"><span class="author">${topic.accountNickName}</span> <span class="time">彩于 ${topic.createTime,"yy年MM月dd日"}</span></div>
+       </div>
+       </div>
+     </li>
+  <% } %>
+  </ul>
+  </div>
+    <% } %>

@@ -1,0 +1,35 @@
+<% if(isFrom==true){ %>
+<li style="display: none">
+	<div class="left">
+	   <a class="leftuser"><img src="${imgUrl}${email.fromAccountModel.imgPath}?t=${email.fromAccountModel.currVersion}"></a>
+	   <div class="item">
+	   <div class="pager">
+	      <div class="content">
+	      <span class="email">${email.createTimeString}</span>
+	      <span>${email.fromAccountName}</span>
+	      </div>
+	      <p>
+	      ${email.message}
+	      </p>
+	   </div>
+	   </div>
+   </div>
+</li>
+<% }else{ %>
+<li style="display: none">
+<div class="right">
+	   <div class="item">
+	   <div class="pager">
+	    <div class="content">
+	      <span class="email">${email.createTimeString}</span>
+	      <span>${email.fromAccountName}</span>
+	      </div>
+	      <p>
+	      ${email.message}
+	      </p>
+	   </div>
+	   </div>
+	    <a class="rightuser"><img src="${imgUrl}${email.fromAccountModel.imgPath}?t=${email.fromAccountModel.currVersion}"></a>
+</div>
+</li>
+<% } %>

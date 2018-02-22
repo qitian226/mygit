@@ -1,0 +1,4077 @@
+/*
+Navicat MySQL Data Transfer
+
+Source Server         : my
+Source Server Version : 50721
+Source Host           : localhost:3306
+Source Database       : cosdb
+
+Target Server Type    : MYSQL
+Target Server Version : 50721
+File Encoding         : 65001
+
+Date: 2018-02-22 22:47:42
+*/
+
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for `attention_account`
+-- ----------------------------
+DROP TABLE IF EXISTS `attention_account`;
+CREATE TABLE `attention_account` (
+  `id_` bigint(20) NOT NULL,
+  `attention_account_` bigint(20) NOT NULL COMMENT '被关注用户',
+  `account_` bigint(20) NOT NULL COMMENT '用户',
+  `create_time_` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='关注用户表-同一用户只能被关注一次 废弃表';
+
+-- ----------------------------
+-- Records of attention_account
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `base_dictionary`
+-- ----------------------------
+DROP TABLE IF EXISTS `base_dictionary`;
+CREATE TABLE `base_dictionary` (
+  `id_` bigint(24) NOT NULL,
+  `dict_code_` varchar(20) NOT NULL,
+  `dict_name_` varchar(50) NOT NULL,
+  `dict_desc_` varchar(500) NOT NULL,
+  `created_by_` bigint(24) DEFAULT NULL,
+  `created_time_` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `last_updated_by_` bigint(24) DEFAULT NULL,
+  `last_updated_time_` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `status_` smallint(1) DEFAULT '1',
+  `curr_version_` smallint(6) DEFAULT '1' COMMENT '并发锁',
+  `lmt_utc_` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='数据字典表';
+
+-- ----------------------------
+-- Records of base_dictionary
+-- ----------------------------
+INSERT INTO `base_dictionary` VALUES ('2', 'topic_type', '主题分类', '主题分类', null, null, null, null, '1', '1', '2017-09-28 11:02:30');
+
+-- ----------------------------
+-- Table structure for `base_dictionaryitem`
+-- ----------------------------
+DROP TABLE IF EXISTS `base_dictionaryitem`;
+CREATE TABLE `base_dictionaryitem` (
+  `id_` bigint(24) NOT NULL,
+  `dict_code_` varchar(50) NOT NULL,
+  `dictitem_name_` varchar(50) NOT NULL,
+  `dictitem_value_` varchar(50) NOT NULL,
+  `dictitem_desc_` varchar(250) NOT NULL,
+  `sort_id_` int(11) NOT NULL,
+  `created_by_` bigint(10) NOT NULL,
+  `created_time_` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `status_` smallint(1) NOT NULL,
+  `curr_version_` smallint(6) DEFAULT '1' COMMENT '并发锁',
+  PRIMARY KEY (`id_`),
+  KEY `FK_DICCODE` (`dict_code_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='数据字段项表';
+
+-- ----------------------------
+-- Records of base_dictionaryitem
+-- ----------------------------
+INSERT INTO `base_dictionaryitem` VALUES ('1', 'erciyuan', 'siwa', '电脑', '丝袜', '1', '1', '2016-10-29 12:31:12', '0', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('2', 'erciyuan', 'changtui', '手机', '长腿', '2', '1', '2016-08-21 22:56:34', '0', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('3', 'erciyuan', 'juru', '汽车', '巨乳', '3', '1', '2016-08-21 23:03:07', '0', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('4', 'erciyuan', 'nenmo', '轮船', '嫩模', '4', '1', '2016-08-22 14:36:46', '0', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('5', 'topic_type', 'erciyuan', '美腿', '', '1', '1151385996686901', '2017-04-12 18:56:54', '0', '3');
+INSERT INTO `base_dictionaryitem` VALUES ('6', 'topic_type', 'changtui', '街拍', '', '1', '1151385996686901', '2017-04-12 18:56:54', '0', '4');
+INSERT INTO `base_dictionaryitem` VALUES ('7', 'topic_type', 'heisi', '校花', '', '1', '1151385996686901', '2017-04-12 18:56:54', '0', '3');
+INSERT INTO `base_dictionaryitem` VALUES ('8', 'topic_type', 'nenmo', '嫩模', '', '1', '1151385996686901', '2017-04-12 18:56:54', '0', '4');
+INSERT INTO `base_dictionaryitem` VALUES ('9', 'topic_type', 'wawa', '我行我秀', '', '1', '1151385996686901', '2017-04-12 18:56:54', '0', '2');
+INSERT INTO `base_dictionaryitem` VALUES ('1675904192501', 'topic_type', 'suyan', '素颜', '', '0', '1151385996686901', '2018-02-08 17:57:31', '1', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('1675904192502', 'topic_type', 'meitun', '美臀', '', '0', '1151385996686901', '2018-02-08 17:58:42', '1', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('1675904192503', 'topic_type', 'ol', '职业OL', '', '0', '1151385996686901', '2018-02-08 18:04:21', '1', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('1675904192504', 'topic_type', 'cosplay', '动漫COSPLAY', '', '0', '1151385996686901', '2018-02-08 18:05:03', '1', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('1675904192505', 'topic_type', 'jianshen', '健身美女', '', '0', '1151385996686901', '2018-02-08 18:07:58', '1', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('1675904192506', 'topic_type', 'mingxing', '明星', '', '0', '1151385996686901', '2018-02-08 18:08:22', '1', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('1675904192507', 'topic_type', 'yongzhuang', '泳装', '', '0', '1151385996686901', '2018-02-08 18:10:01', '1', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('1675904192508', 'topic_type', 'renti', '人体', '', '0', '1151385996686901', '2018-02-08 18:10:20', '1', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('1675904192509', 'topic_type', 'shunv', '熟女', '', '0', '1151385996686901', '2018-02-08 18:11:53', '1', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('1675904192510', 'topic_type', 'siwa', '丝袜', '', '0', '1151385996686901', '2018-02-08 18:12:34', '1', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('1675904192511', 'topic_type', 'nvshen', '女神', '', '0', '1151385996686901', '2018-02-08 18:13:05', '1', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('1675904192516', 'topic_type', 'wanghong', '网红', '', '0', '1151385996686901', '2018-02-08 18:22:46', '1', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('1675904192517', 'topic_type', 'zhubo', '主播', '', '0', '1151385996686901', '2018-02-08 18:23:10', '1', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('1675904192518', 'topic_type', 'mote', '模特', '', '0', '1151385996686901', '2018-02-08 18:25:32', '1', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('1675904192520', 'topic_type', 'xiongmeng', '胸猛', '', '0', '1151385996686901', '2018-02-08 18:28:13', '1', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('1675904192521', 'topic_type', 'qingseyingpian', '情色影片赏析', '', '0', '1151385996686901', '2018-02-08 18:30:21', '1', '1');
+INSERT INTO `base_dictionaryitem` VALUES ('1675904192522', 'topic_type', 'qingsemingxing', '情色明星', '', '0', '1151385996686901', '2018-02-08 18:30:58', '1', '1');
+
+-- ----------------------------
+-- Table structure for `city_code`
+-- ----------------------------
+DROP TABLE IF EXISTS `city_code`;
+CREATE TABLE `city_code` (
+  `id_` int(11) NOT NULL AUTO_INCREMENT,
+  `area_code_` int(11) DEFAULT NULL COMMENT '行政代号',
+  `p_area_code_` int(11) DEFAULT NULL COMMENT '父行政代号',
+  `area_name_` varchar(255) DEFAULT NULL COMMENT '区划名称',
+  `province_code_` varchar(255) DEFAULT NULL COMMENT '所属省',
+  `city_code_` varchar(255) DEFAULT NULL COMMENT '所属城市',
+  `zip_code_` varchar(20) DEFAULT NULL COMMENT '区号',
+  `devision_level_` int(8) DEFAULT NULL COMMENT '区划等级',
+  PRIMARY KEY (`id_`)
+) ENGINE=InnoDB AUTO_INCREMENT=3344 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of city_code
+-- ----------------------------
+INSERT INTO `city_code` VALUES ('1', '110000', '110000', '北京', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('2', '110000', '110000', '北京市', '北京', '', '010', '1');
+INSERT INTO `city_code` VALUES ('3', '110101', '110000', '东城区', '北京', '北京市', '010', '2');
+INSERT INTO `city_code` VALUES ('4', '110102', '110000', '西城区', '北京', '北京市', '010', '2');
+INSERT INTO `city_code` VALUES ('5', '110105', '110000', '朝阳区', '北京', '北京市', '010', '2');
+INSERT INTO `city_code` VALUES ('6', '110106', '110000', '丰台区', '北京', '北京市', '010', '2');
+INSERT INTO `city_code` VALUES ('7', '110107', '110000', '石景山区', '北京', '北京市', '010', '2');
+INSERT INTO `city_code` VALUES ('8', '110108', '110000', '海淀区', '北京', '北京市', '010', '2');
+INSERT INTO `city_code` VALUES ('9', '110109', '110000', '门头沟区', '北京', '北京市', '010', '2');
+INSERT INTO `city_code` VALUES ('10', '110111', '110000', '房山区', '北京', '北京市', '010', '2');
+INSERT INTO `city_code` VALUES ('11', '110112', '110000', '通州区', '北京', '北京市', '010', '2');
+INSERT INTO `city_code` VALUES ('12', '110113', '110000', '顺义区', '北京', '北京市', '010', '2');
+INSERT INTO `city_code` VALUES ('13', '110114', '110000', '昌平区', '北京', '北京市', '010', '2');
+INSERT INTO `city_code` VALUES ('14', '110115', '110000', '大兴区', '北京', '北京市', '010', '2');
+INSERT INTO `city_code` VALUES ('15', '110116', '110000', '怀柔区', '北京', '北京市', '010', '2');
+INSERT INTO `city_code` VALUES ('16', '110117', '110000', '平谷区', '北京', '北京市', '010', '2');
+INSERT INTO `city_code` VALUES ('17', '110228', '110000', '密云县', '北京', '北京市', '010', '2');
+INSERT INTO `city_code` VALUES ('18', '110229', '110000', '延庆县', '北京', '北京市', '010', '2');
+INSERT INTO `city_code` VALUES ('19', '120000', '120000', '天津', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('20', '120000', '120000', '天津市', '天津', '', '022', '1');
+INSERT INTO `city_code` VALUES ('21', '120101', '120000', '和平区', '天津', '天津市', '022', '2');
+INSERT INTO `city_code` VALUES ('22', '120102', '120000', '河东区', '天津', '天津市', '022', '2');
+INSERT INTO `city_code` VALUES ('23', '120103', '120000', '河西区', '天津', '天津市', '022', '2');
+INSERT INTO `city_code` VALUES ('24', '120104', '120000', '南开区', '天津', '天津市', '022', '2');
+INSERT INTO `city_code` VALUES ('25', '120105', '120000', '河北区', '天津', '天津市', '022', '2');
+INSERT INTO `city_code` VALUES ('26', '120106', '120000', '红桥区', '天津', '天津市', '022', '2');
+INSERT INTO `city_code` VALUES ('27', '120110', '120000', '东丽区', '天津', '天津市', '022', '2');
+INSERT INTO `city_code` VALUES ('28', '120111', '120000', '西青区', '天津', '天津市', '022', '2');
+INSERT INTO `city_code` VALUES ('29', '120112', '120000', '津南区', '天津', '天津市', '022', '2');
+INSERT INTO `city_code` VALUES ('30', '120113', '120000', '北辰区', '天津', '天津市', '022', '2');
+INSERT INTO `city_code` VALUES ('31', '120114', '120000', '武清区', '天津', '天津市', '022', '2');
+INSERT INTO `city_code` VALUES ('32', '120115', '120000', '宝坻区', '天津', '天津市', '022', '2');
+INSERT INTO `city_code` VALUES ('33', '120116', '120000', '滨海新区', '天津', '天津市', '022', '2');
+INSERT INTO `city_code` VALUES ('34', '120221', '120000', '宁河县', '天津', '天津市', '022', '2');
+INSERT INTO `city_code` VALUES ('35', '120223', '120000', '静海县', '天津', '天津市', '022', '2');
+INSERT INTO `city_code` VALUES ('36', '120225', '120000', '蓟县', '天津', '天津市', '022', '2');
+INSERT INTO `city_code` VALUES ('37', '130000', null, '河北省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('38', '130100', '130000', '石家庄市', '河北省', '河北省', '0311', '1');
+INSERT INTO `city_code` VALUES ('39', '130200', '130000', '唐山市', '河北省', '河北省', '0315', '1');
+INSERT INTO `city_code` VALUES ('40', '130300', '130000', '秦皇岛市', '河北省', '河北省', '0335', '1');
+INSERT INTO `city_code` VALUES ('41', '130400', '130000', '邯郸市', '河北省', '河北省', '0310', '1');
+INSERT INTO `city_code` VALUES ('42', '130500', '130000', '邢台市', '河北省', '河北省', '0319', '1');
+INSERT INTO `city_code` VALUES ('43', '130600', '130000', '保定市', '河北省', '河北省', '0312', '1');
+INSERT INTO `city_code` VALUES ('44', '130700', '130000', '张家口市', '河北省', '河北省', '0313', '1');
+INSERT INTO `city_code` VALUES ('45', '130800', '130000', '承德市', '河北省', '河北省', '0314', '1');
+INSERT INTO `city_code` VALUES ('46', '130900', '130000', '沧州市', '河北省', '河北省', '0317', '1');
+INSERT INTO `city_code` VALUES ('47', '131000', '130000', '廊坊市', '河北省', '河北省', '0316', '1');
+INSERT INTO `city_code` VALUES ('48', '131100', '130000', '衡水市', '河北省', '河北省', '0318', '1');
+INSERT INTO `city_code` VALUES ('49', '130102', '130100', '长安区', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('50', '130103', '130100', '桥东区', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('51', '130104', '130100', '桥西区', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('52', '130105', '130100', '新华区', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('53', '130107', '130100', '井陉矿区', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('54', '130108', '130100', '裕华区', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('55', '130121', '130100', '井陉县', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('56', '130123', '130100', '正定县', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('57', '130124', '130100', '栾城县', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('58', '130125', '130100', '行唐县', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('59', '130126', '130100', '灵寿县', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('60', '130127', '130100', '高邑县', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('61', '130128', '130100', '深泽县', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('62', '130129', '130100', '赞皇县', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('63', '130130', '130100', '无极县', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('64', '130131', '130100', '平山县', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('65', '130132', '130100', '元氏县', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('66', '130133', '130100', '赵县', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('67', '130181', '130100', '辛集市', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('68', '130182', '130100', '藁城市', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('69', '130183', '130100', '晋州市', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('70', '130184', '130100', '新乐市', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('71', '130185', '130100', '鹿泉市', '河北省', '石家庄市', '0311', '2');
+INSERT INTO `city_code` VALUES ('72', '130202', '130200', '路南区', '河北省', '唐山市', '0315', '2');
+INSERT INTO `city_code` VALUES ('73', '130203', '130200', '路北区', '河北省', '唐山市', '0315', '2');
+INSERT INTO `city_code` VALUES ('74', '130204', '130200', '古冶区', '河北省', '唐山市', '0315', '2');
+INSERT INTO `city_code` VALUES ('75', '130205', '130200', '开平区', '河北省', '唐山市', '0315', '2');
+INSERT INTO `city_code` VALUES ('76', '130207', '130200', '丰南区', '河北省', '唐山市', '0315', '2');
+INSERT INTO `city_code` VALUES ('77', '130208', '130200', '丰润区', '河北省', '唐山市', '0315', '2');
+INSERT INTO `city_code` VALUES ('78', '130230', '130200', '曹妃甸区', '河北省', '唐山市', '0315', '2');
+INSERT INTO `city_code` VALUES ('79', '130223', '130200', '滦县', '河北省', '唐山市', '0315', '2');
+INSERT INTO `city_code` VALUES ('80', '130224', '130200', '滦南县', '河北省', '唐山市', '0315', '2');
+INSERT INTO `city_code` VALUES ('81', '130225', '130200', '乐亭县', '河北省', '唐山市', '0315', '2');
+INSERT INTO `city_code` VALUES ('82', '130227', '130200', '迁西县', '河北省', '唐山市', '0315', '2');
+INSERT INTO `city_code` VALUES ('83', '130229', '130200', '玉田县', '河北省', '唐山市', '0315', '2');
+INSERT INTO `city_code` VALUES ('84', '130281', '130200', '遵化市', '河北省', '唐山市', '0315', '2');
+INSERT INTO `city_code` VALUES ('85', '130283', '130200', '迁安市', '河北省', '唐山市', '0315', '2');
+INSERT INTO `city_code` VALUES ('86', '130302', '130300', '海港区', '河北省', '秦皇岛市', '0335', '2');
+INSERT INTO `city_code` VALUES ('87', '130303', '130300', '山海关区', '河北省', '秦皇岛市', '0335', '2');
+INSERT INTO `city_code` VALUES ('88', '130304', '130300', '北戴河区', '河北省', '秦皇岛市', '0335', '2');
+INSERT INTO `city_code` VALUES ('89', '130321', '130300', '青龙满族自治县', '河北省', '秦皇岛市', '0335', '2');
+INSERT INTO `city_code` VALUES ('90', '130322', '130300', '昌黎县', '河北省', '秦皇岛市', '0335', '2');
+INSERT INTO `city_code` VALUES ('91', '130323', '130300', '抚宁县', '河北省', '秦皇岛市', '0335', '2');
+INSERT INTO `city_code` VALUES ('92', '130324', '130300', '卢龙县', '河北省', '秦皇岛市', '0335', '2');
+INSERT INTO `city_code` VALUES ('93', '130402', '130400', '邯山区', '河北省', '邯郸市', '0310', '2');
+INSERT INTO `city_code` VALUES ('94', '130403', '130400', '丛台区', '河北省', '邯郸市', '0310', '2');
+INSERT INTO `city_code` VALUES ('95', '130404', '130400', '复兴区', '河北省', '邯郸市', '0310', '2');
+INSERT INTO `city_code` VALUES ('96', '130406', '130400', '峰峰矿区', '河北省', '邯郸市', '0310', '2');
+INSERT INTO `city_code` VALUES ('97', '130421', '130400', '邯郸县', '河北省', '邯郸市', '0310', '2');
+INSERT INTO `city_code` VALUES ('98', '130423', '130400', '临漳县', '河北省', '邯郸市', '0310', '2');
+INSERT INTO `city_code` VALUES ('99', '130424', '130400', '成安县', '河北省', '邯郸市', '0310', '2');
+INSERT INTO `city_code` VALUES ('100', '130425', '130400', '大名县', '河北省', '邯郸市', '0310', '2');
+INSERT INTO `city_code` VALUES ('101', '130426', '130400', '涉县', '河北省', '邯郸市', '0310', '2');
+INSERT INTO `city_code` VALUES ('102', '130427', '130400', '磁县', '河北省', '邯郸市', '0310', '2');
+INSERT INTO `city_code` VALUES ('103', '130428', '130400', '肥乡县', '河北省', '邯郸市', '0310', '2');
+INSERT INTO `city_code` VALUES ('104', '130429', '130400', '永年县', '河北省', '邯郸市', '0310', '2');
+INSERT INTO `city_code` VALUES ('105', '130430', '130400', '邱县', '河北省', '邯郸市', '0310', '2');
+INSERT INTO `city_code` VALUES ('106', '130431', '130400', '鸡泽县', '河北省', '邯郸市', '0310', '2');
+INSERT INTO `city_code` VALUES ('107', '130432', '130400', '广平县', '河北省', '邯郸市', '0310', '2');
+INSERT INTO `city_code` VALUES ('108', '130433', '130400', '馆陶县', '河北省', '邯郸市', '0310', '2');
+INSERT INTO `city_code` VALUES ('109', '130434', '130400', '魏县', '河北省', '邯郸市', '0310', '2');
+INSERT INTO `city_code` VALUES ('110', '130435', '130400', '曲周县', '河北省', '邯郸市', '0310', '2');
+INSERT INTO `city_code` VALUES ('111', '130481', '130400', '武安市', '河北省', '邯郸市', '0310', '2');
+INSERT INTO `city_code` VALUES ('112', '130502', '130500', '桥东区', '河北省', '邢台市', '0319', '2');
+INSERT INTO `city_code` VALUES ('113', '130503', '130500', '桥西区', '河北省', '邢台市', '0319', '2');
+INSERT INTO `city_code` VALUES ('114', '130521', '130500', '邢台县', '河北省', '邢台市', '0319', '2');
+INSERT INTO `city_code` VALUES ('115', '130522', '130500', '临城县', '河北省', '邢台市', '0319', '2');
+INSERT INTO `city_code` VALUES ('116', '130523', '130500', '内丘县', '河北省', '邢台市', '0319', '2');
+INSERT INTO `city_code` VALUES ('117', '130524', '130500', '柏乡县', '河北省', '邢台市', '0319', '2');
+INSERT INTO `city_code` VALUES ('118', '130525', '130500', '隆尧县', '河北省', '邢台市', '0319', '2');
+INSERT INTO `city_code` VALUES ('119', '130526', '130500', '任县', '河北省', '邢台市', '0319', '2');
+INSERT INTO `city_code` VALUES ('120', '130527', '130500', '南和县', '河北省', '邢台市', '0319', '2');
+INSERT INTO `city_code` VALUES ('121', '130528', '130500', '宁晋县', '河北省', '邢台市', '0319', '2');
+INSERT INTO `city_code` VALUES ('122', '130529', '130500', '巨鹿县', '河北省', '邢台市', '0319', '2');
+INSERT INTO `city_code` VALUES ('123', '130530', '130500', '新河县', '河北省', '邢台市', '0319', '2');
+INSERT INTO `city_code` VALUES ('124', '130531', '130500', '广宗县', '河北省', '邢台市', '0319', '2');
+INSERT INTO `city_code` VALUES ('125', '130532', '130500', '平乡县', '河北省', '邢台市', '0319', '2');
+INSERT INTO `city_code` VALUES ('126', '130533', '130500', '威县', '河北省', '邢台市', '0319', '2');
+INSERT INTO `city_code` VALUES ('127', '130534', '130500', '清河县', '河北省', '邢台市', '0319', '2');
+INSERT INTO `city_code` VALUES ('128', '130535', '130500', '临西县', '河北省', '邢台市', '0319', '2');
+INSERT INTO `city_code` VALUES ('129', '130581', '130500', '南宫市', '河北省', '邢台市', '0319', '2');
+INSERT INTO `city_code` VALUES ('130', '130582', '130500', '沙河市', '河北省', '邢台市', '0319', '2');
+INSERT INTO `city_code` VALUES ('131', '130602', '130600', '新市区', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('132', '130603', '130600', '北市区', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('133', '130604', '130600', '南市区', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('134', '130621', '130600', '满城县', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('135', '130622', '130600', '清苑县', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('136', '130623', '130600', '涞水县', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('137', '130624', '130600', '阜平县', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('138', '130625', '130600', '徐水县', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('139', '130626', '130600', '定兴县', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('140', '130627', '130600', '唐县', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('141', '130628', '130600', '高阳县', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('142', '130629', '130600', '容城县', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('143', '130630', '130600', '涞源县', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('144', '130631', '130600', '望都县', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('145', '130632', '130600', '安新县', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('146', '130633', '130600', '易县', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('147', '130634', '130600', '曲阳县', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('148', '130635', '130600', '蠡县', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('149', '130636', '130600', '顺平县', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('150', '130637', '130600', '博野县', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('151', '130638', '130600', '雄县', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('152', '130681', '130600', '涿州市', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('153', '130682', '130600', '定州市', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('154', '130683', '130600', '安国市', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('155', '130684', '130600', '高碑店市', '河北省', '保定市', '0312', '2');
+INSERT INTO `city_code` VALUES ('156', '130702', '130700', '桥东区', '河北省', '张家口市', '0313', '2');
+INSERT INTO `city_code` VALUES ('157', '130703', '130700', '桥西区', '河北省', '张家口市', '0313', '2');
+INSERT INTO `city_code` VALUES ('158', '130705', '130700', '宣化区', '河北省', '张家口市', '0313', '2');
+INSERT INTO `city_code` VALUES ('159', '130706', '130700', '下花园区', '河北省', '张家口市', '0313', '2');
+INSERT INTO `city_code` VALUES ('160', '130721', '130700', '宣化县', '河北省', '张家口市', '0313', '2');
+INSERT INTO `city_code` VALUES ('161', '130722', '130700', '张北县', '河北省', '张家口市', '0313', '2');
+INSERT INTO `city_code` VALUES ('162', '130723', '130700', '康保县', '河北省', '张家口市', '0313', '2');
+INSERT INTO `city_code` VALUES ('163', '130724', '130700', '沽源县', '河北省', '张家口市', '0313', '2');
+INSERT INTO `city_code` VALUES ('164', '130725', '130700', '尚义县', '河北省', '张家口市', '0313', '2');
+INSERT INTO `city_code` VALUES ('165', '130726', '130700', '蔚县', '河北省', '张家口市', '0313', '2');
+INSERT INTO `city_code` VALUES ('166', '130727', '130700', '阳原县', '河北省', '张家口市', '0313', '2');
+INSERT INTO `city_code` VALUES ('167', '130728', '130700', '怀安县', '河北省', '张家口市', '0313', '2');
+INSERT INTO `city_code` VALUES ('168', '130729', '130700', '万全县', '河北省', '张家口市', '0313', '2');
+INSERT INTO `city_code` VALUES ('169', '130730', '130700', '怀来县', '河北省', '张家口市', '0313', '2');
+INSERT INTO `city_code` VALUES ('170', '130731', '130700', '涿鹿县', '河北省', '张家口市', '0313', '2');
+INSERT INTO `city_code` VALUES ('171', '130732', '130700', '赤城县', '河北省', '张家口市', '0313', '2');
+INSERT INTO `city_code` VALUES ('172', '130733', '130700', '崇礼县', '河北省', '张家口市', '0313', '2');
+INSERT INTO `city_code` VALUES ('173', '130802', '130800', '双桥区', '河北省', '承德市', '0314', '2');
+INSERT INTO `city_code` VALUES ('174', '130803', '130800', '双滦区', '河北省', '承德市', '0314', '2');
+INSERT INTO `city_code` VALUES ('175', '130804', '130800', '鹰手营子矿区', '河北省', '承德市', '0314', '2');
+INSERT INTO `city_code` VALUES ('176', '130821', '130800', '承德县', '河北省', '承德市', '0314', '2');
+INSERT INTO `city_code` VALUES ('177', '130822', '130800', '兴隆县', '河北省', '承德市', '0314', '2');
+INSERT INTO `city_code` VALUES ('178', '130823', '130800', '平泉县', '河北省', '承德市', '0314', '2');
+INSERT INTO `city_code` VALUES ('179', '130824', '130800', '滦平县', '河北省', '承德市', '0314', '2');
+INSERT INTO `city_code` VALUES ('180', '130825', '130800', '隆化县', '河北省', '承德市', '0314', '2');
+INSERT INTO `city_code` VALUES ('181', '130826', '130800', '丰宁满族自治县', '河北省', '承德市', '0314', '2');
+INSERT INTO `city_code` VALUES ('182', '130827', '130800', '宽城满族自治县', '河北省', '承德市', '0314', '2');
+INSERT INTO `city_code` VALUES ('183', '130828', '130800', '围场满族蒙古族自治县', '河北省', '承德市', '0314', '2');
+INSERT INTO `city_code` VALUES ('184', '130902', '130900', '新华区', '河北省', '沧州市', '0317', '2');
+INSERT INTO `city_code` VALUES ('185', '130903', '130900', '运河区', '河北省', '沧州市', '0317', '2');
+INSERT INTO `city_code` VALUES ('186', '130921', '130900', '沧县', '河北省', '沧州市', '0317', '2');
+INSERT INTO `city_code` VALUES ('187', '130922', '130900', '青县', '河北省', '沧州市', '0317', '2');
+INSERT INTO `city_code` VALUES ('188', '130923', '130900', '东光县', '河北省', '沧州市', '0317', '2');
+INSERT INTO `city_code` VALUES ('189', '130924', '130900', '海兴县', '河北省', '沧州市', '0317', '2');
+INSERT INTO `city_code` VALUES ('190', '130925', '130900', '盐山县', '河北省', '沧州市', '0317', '2');
+INSERT INTO `city_code` VALUES ('191', '130926', '130900', '肃宁县', '河北省', '沧州市', '0317', '2');
+INSERT INTO `city_code` VALUES ('192', '130927', '130900', '南皮县', '河北省', '沧州市', '0317', '2');
+INSERT INTO `city_code` VALUES ('193', '130928', '130900', '吴桥县', '河北省', '沧州市', '0317', '2');
+INSERT INTO `city_code` VALUES ('194', '130929', '130900', '献县', '河北省', '沧州市', '0317', '2');
+INSERT INTO `city_code` VALUES ('195', '130930', '130900', '孟村回族自治县', '河北省', '沧州市', '0317', '2');
+INSERT INTO `city_code` VALUES ('196', '130981', '130900', '泊头市', '河北省', '沧州市', '0317', '2');
+INSERT INTO `city_code` VALUES ('197', '130982', '130900', '任丘市', '河北省', '沧州市', '0317', '2');
+INSERT INTO `city_code` VALUES ('198', '130983', '130900', '黄骅市', '河北省', '沧州市', '0317', '2');
+INSERT INTO `city_code` VALUES ('199', '130984', '130900', '河间市', '河北省', '沧州市', '0317', '2');
+INSERT INTO `city_code` VALUES ('200', '131002', '131000', '安次区', '河北省', '廊坊市', '0316', '2');
+INSERT INTO `city_code` VALUES ('201', '131003', '131000', '广阳区', '河北省', '廊坊市', '0316', '2');
+INSERT INTO `city_code` VALUES ('202', '131022', '131000', '固安县', '河北省', '廊坊市', '0316', '2');
+INSERT INTO `city_code` VALUES ('203', '131023', '131000', '永清县', '河北省', '廊坊市', '0316', '2');
+INSERT INTO `city_code` VALUES ('204', '131024', '131000', '香河县', '河北省', '廊坊市', '0316', '2');
+INSERT INTO `city_code` VALUES ('205', '131025', '131000', '大城县', '河北省', '廊坊市', '0316', '2');
+INSERT INTO `city_code` VALUES ('206', '131026', '131000', '文安县', '河北省', '廊坊市', '0316', '2');
+INSERT INTO `city_code` VALUES ('207', '131028', '131000', '大厂回族自治县', '河北省', '廊坊市', '0316', '2');
+INSERT INTO `city_code` VALUES ('208', '131081', '131000', '霸州市', '河北省', '廊坊市', '0316', '2');
+INSERT INTO `city_code` VALUES ('209', '131082', '131000', '三河市', '河北省', '廊坊市', '0316', '2');
+INSERT INTO `city_code` VALUES ('210', '131102', '131100', '桃城区', '河北省', '衡水市', '0318', '2');
+INSERT INTO `city_code` VALUES ('211', '131121', '131100', '枣强县', '河北省', '衡水市', '0318', '2');
+INSERT INTO `city_code` VALUES ('212', '131122', '131100', '武邑县', '河北省', '衡水市', '0318', '2');
+INSERT INTO `city_code` VALUES ('213', '131123', '131100', '武强县', '河北省', '衡水市', '0318', '2');
+INSERT INTO `city_code` VALUES ('214', '131124', '131100', '饶阳县', '河北省', '衡水市', '0318', '2');
+INSERT INTO `city_code` VALUES ('215', '131125', '131100', '安平县', '河北省', '衡水市', '0318', '2');
+INSERT INTO `city_code` VALUES ('216', '131126', '131100', '故城县', '河北省', '衡水市', '0318', '2');
+INSERT INTO `city_code` VALUES ('217', '131127', '131100', '景县', '河北省', '衡水市', '0318', '2');
+INSERT INTO `city_code` VALUES ('218', '131128', '131100', '阜城县', '河北省', '衡水市', '0318', '2');
+INSERT INTO `city_code` VALUES ('219', '131181', '131100', '冀州市', '河北省', '衡水市', '0318', '2');
+INSERT INTO `city_code` VALUES ('220', '131182', '131100', '深州市', '河北省', '衡水市', '0318', '2');
+INSERT INTO `city_code` VALUES ('221', '140000', null, '山西省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('222', '140100', '140000', '太原市', '山西省', '', '0351', '1');
+INSERT INTO `city_code` VALUES ('223', '140200', '140000', '大同市', '山西省', '', '0352', '1');
+INSERT INTO `city_code` VALUES ('224', '140300', '140000', '阳泉市', '山西省', '', '0353', '1');
+INSERT INTO `city_code` VALUES ('225', '140400', '140000', '长治市', '山西省', '', '0355', '1');
+INSERT INTO `city_code` VALUES ('226', '140500', '140000', '晋城市', '山西省', '', '0356', '1');
+INSERT INTO `city_code` VALUES ('227', '140600', '140000', '朔州市', '山西省', '', '0349', '1');
+INSERT INTO `city_code` VALUES ('228', '140700', '140000', '晋中市', '山西省', '', '0354', '1');
+INSERT INTO `city_code` VALUES ('229', '140800', '140000', '运城市', '山西省', '', '0359', '1');
+INSERT INTO `city_code` VALUES ('230', '140900', '140000', '忻州市', '山西省', '', '0350', '1');
+INSERT INTO `city_code` VALUES ('231', '141000', '140000', '临汾市', '山西省', '', '0357', '1');
+INSERT INTO `city_code` VALUES ('232', '141100', '140000', '吕梁市', '山西省', '', '0358', '1');
+INSERT INTO `city_code` VALUES ('233', '140105', '140100', '小店区', '山西省', '太原市', '0351', '2');
+INSERT INTO `city_code` VALUES ('234', '140106', '140100', '迎泽区', '山西省', '太原市', '0351', '2');
+INSERT INTO `city_code` VALUES ('235', '140107', '140100', '杏花岭区', '山西省', '太原市', '0351', '2');
+INSERT INTO `city_code` VALUES ('236', '140108', '140100', '尖草坪区', '山西省', '太原市', '0351', '2');
+INSERT INTO `city_code` VALUES ('237', '140109', '140100', '万柏林区', '山西省', '太原市', '0351', '2');
+INSERT INTO `city_code` VALUES ('238', '140110', '140100', '晋源区', '山西省', '太原市', '0351', '2');
+INSERT INTO `city_code` VALUES ('239', '140121', '140100', '清徐县', '山西省', '太原市', '0351', '2');
+INSERT INTO `city_code` VALUES ('240', '140122', '140100', '阳曲县', '山西省', '太原市', '0351', '2');
+INSERT INTO `city_code` VALUES ('241', '140123', '140100', '娄烦县', '山西省', '太原市', '0351', '2');
+INSERT INTO `city_code` VALUES ('242', '140181', '140100', '古交市', '山西省', '太原市', '0351', '2');
+INSERT INTO `city_code` VALUES ('243', '140202', '140200', '城区', '山西省', '大同市', '0352', '2');
+INSERT INTO `city_code` VALUES ('244', '140203', '140200', '矿区', '山西省', '大同市', '0352', '2');
+INSERT INTO `city_code` VALUES ('245', '140211', '140200', '南郊区', '山西省', '大同市', '0352', '2');
+INSERT INTO `city_code` VALUES ('246', '140212', '140200', '新荣区', '山西省', '大同市', '0352', '2');
+INSERT INTO `city_code` VALUES ('247', '140221', '140200', '阳高县', '山西省', '大同市', '0352', '2');
+INSERT INTO `city_code` VALUES ('248', '140222', '140200', '天镇县', '山西省', '大同市', '0352', '2');
+INSERT INTO `city_code` VALUES ('249', '140223', '140200', '广灵县', '山西省', '大同市', '0352', '2');
+INSERT INTO `city_code` VALUES ('250', '140224', '140200', '灵丘县', '山西省', '大同市', '0352', '2');
+INSERT INTO `city_code` VALUES ('251', '140225', '140200', '浑源县', '山西省', '大同市', '0352', '2');
+INSERT INTO `city_code` VALUES ('252', '140226', '140200', '左云县', '山西省', '大同市', '0352', '2');
+INSERT INTO `city_code` VALUES ('253', '140227', '140200', '大同县', '山西省', '大同市', '0352', '2');
+INSERT INTO `city_code` VALUES ('254', '140302', '140300', '城区', '山西省', '阳泉市', '0353', '2');
+INSERT INTO `city_code` VALUES ('255', '140303', '140300', '矿区', '山西省', '阳泉市', '0353', '2');
+INSERT INTO `city_code` VALUES ('256', '140311', '140300', '郊区', '山西省', '阳泉市', '0353', '2');
+INSERT INTO `city_code` VALUES ('257', '140321', '140300', '平定县', '山西省', '阳泉市', '0353', '2');
+INSERT INTO `city_code` VALUES ('258', '140322', '140300', '盂县', '山西省', '阳泉市', '0353', '2');
+INSERT INTO `city_code` VALUES ('259', '140402', '140400', '城区', '山西省', '长治市', '0355', '2');
+INSERT INTO `city_code` VALUES ('260', '140411', '140400', '郊区', '山西省', '长治市', '0355', '2');
+INSERT INTO `city_code` VALUES ('261', '140421', '140400', '长治县', '山西省', '长治市', '0355', '2');
+INSERT INTO `city_code` VALUES ('262', '140423', '140400', '襄垣县', '山西省', '长治市', '0355', '2');
+INSERT INTO `city_code` VALUES ('263', '140424', '140400', '屯留县', '山西省', '长治市', '0355', '2');
+INSERT INTO `city_code` VALUES ('264', '140425', '140400', '平顺县', '山西省', '长治市', '0355', '2');
+INSERT INTO `city_code` VALUES ('265', '140426', '140400', '黎城县', '山西省', '长治市', '0355', '2');
+INSERT INTO `city_code` VALUES ('266', '140427', '140400', '壶关县', '山西省', '长治市', '0355', '2');
+INSERT INTO `city_code` VALUES ('267', '140428', '140400', '长子县', '山西省', '长治市', '0355', '2');
+INSERT INTO `city_code` VALUES ('268', '140429', '140400', '武乡县', '山西省', '长治市', '0355', '2');
+INSERT INTO `city_code` VALUES ('269', '140430', '140400', '沁县', '山西省', '长治市', '0355', '2');
+INSERT INTO `city_code` VALUES ('270', '140431', '140400', '沁源县', '山西省', '长治市', '0355', '2');
+INSERT INTO `city_code` VALUES ('271', '140481', '140400', '潞城市', '山西省', '长治市', '0355', '2');
+INSERT INTO `city_code` VALUES ('272', '140502', '140500', '城区', '山西省', '晋城市', '0356', '2');
+INSERT INTO `city_code` VALUES ('273', '140521', '140500', '沁水县', '山西省', '晋城市', '0356', '2');
+INSERT INTO `city_code` VALUES ('274', '140522', '140500', '阳城县', '山西省', '晋城市', '0356', '2');
+INSERT INTO `city_code` VALUES ('275', '140524', '140500', '陵川县', '山西省', '晋城市', '0356', '2');
+INSERT INTO `city_code` VALUES ('276', '140525', '140500', '泽州县', '山西省', '晋城市', '0356', '2');
+INSERT INTO `city_code` VALUES ('277', '140581', '140500', '高平市', '山西省', '晋城市', '0356', '2');
+INSERT INTO `city_code` VALUES ('278', '140602', '140600', '朔城区', '山西省', '朔州市', '0349', '2');
+INSERT INTO `city_code` VALUES ('279', '140603', '140600', '平鲁区', '山西省', '朔州市', '0349', '2');
+INSERT INTO `city_code` VALUES ('280', '140621', '140600', '山阴县', '山西省', '朔州市', '0349', '2');
+INSERT INTO `city_code` VALUES ('281', '140622', '140600', '应县', '山西省', '朔州市', '0349', '2');
+INSERT INTO `city_code` VALUES ('282', '140623', '140600', '右玉县', '山西省', '朔州市', '0349', '2');
+INSERT INTO `city_code` VALUES ('283', '140624', '140600', '怀仁县', '山西省', '朔州市', '0349', '2');
+INSERT INTO `city_code` VALUES ('284', '140702', '140700', '榆次区', '山西省', '晋中市', '0354', '2');
+INSERT INTO `city_code` VALUES ('285', '140721', '140700', '榆社县', '山西省', '晋中市', '0354', '2');
+INSERT INTO `city_code` VALUES ('286', '140722', '140700', '左权县', '山西省', '晋中市', '0354', '2');
+INSERT INTO `city_code` VALUES ('287', '140723', '140700', '和顺县', '山西省', '晋中市', '0354', '2');
+INSERT INTO `city_code` VALUES ('288', '140724', '140700', '昔阳县', '山西省', '晋中市', '0354', '2');
+INSERT INTO `city_code` VALUES ('289', '140725', '140700', '寿阳县', '山西省', '晋中市', '0354', '2');
+INSERT INTO `city_code` VALUES ('290', '140726', '140700', '太谷县', '山西省', '晋中市', '0354', '2');
+INSERT INTO `city_code` VALUES ('291', '140727', '140700', '祁县', '山西省', '晋中市', '0354', '2');
+INSERT INTO `city_code` VALUES ('292', '140728', '140700', '平遥县', '山西省', '晋中市', '0354', '2');
+INSERT INTO `city_code` VALUES ('293', '140729', '140700', '灵石县', '山西省', '晋中市', '0354', '2');
+INSERT INTO `city_code` VALUES ('294', '140781', '140700', '介休市', '山西省', '晋中市', '0354', '2');
+INSERT INTO `city_code` VALUES ('295', '140802', '140800', '盐湖区', '山西省', '运城市', '0359', '2');
+INSERT INTO `city_code` VALUES ('296', '140821', '140800', '临猗县', '山西省', '运城市', '0359', '2');
+INSERT INTO `city_code` VALUES ('297', '140822', '140800', '万荣县', '山西省', '运城市', '0359', '2');
+INSERT INTO `city_code` VALUES ('298', '140823', '140800', '闻喜县', '山西省', '运城市', '0359', '2');
+INSERT INTO `city_code` VALUES ('299', '140824', '140800', '稷山县', '山西省', '运城市', '0359', '2');
+INSERT INTO `city_code` VALUES ('300', '140825', '140800', '新绛县', '山西省', '运城市', '0359', '2');
+INSERT INTO `city_code` VALUES ('301', '140826', '140800', '绛县', '山西省', '运城市', '0359', '2');
+INSERT INTO `city_code` VALUES ('302', '140827', '140800', '垣曲县', '山西省', '运城市', '0359', '2');
+INSERT INTO `city_code` VALUES ('303', '140828', '140800', '夏县', '山西省', '运城市', '0359', '2');
+INSERT INTO `city_code` VALUES ('304', '140829', '140800', '平陆县', '山西省', '运城市', '0359', '2');
+INSERT INTO `city_code` VALUES ('305', '140830', '140800', '芮城县', '山西省', '运城市', '0359', '2');
+INSERT INTO `city_code` VALUES ('306', '140881', '140800', '永济市', '山西省', '运城市', '0359', '2');
+INSERT INTO `city_code` VALUES ('307', '140882', '140800', '河津市', '山西省', '运城市', '0359', '2');
+INSERT INTO `city_code` VALUES ('308', '140902', '140900', '忻府区', '山西省', '忻州市', '0350', '2');
+INSERT INTO `city_code` VALUES ('309', '140921', '140900', '定襄县', '山西省', '忻州市', '0350', '2');
+INSERT INTO `city_code` VALUES ('310', '140922', '140900', '五台县', '山西省', '忻州市', '0350', '2');
+INSERT INTO `city_code` VALUES ('311', '140923', '140900', '代县', '山西省', '忻州市', '0350', '2');
+INSERT INTO `city_code` VALUES ('312', '140924', '140900', '繁峙县', '山西省', '忻州市', '0350', '2');
+INSERT INTO `city_code` VALUES ('313', '140925', '140900', '宁武县', '山西省', '忻州市', '0350', '2');
+INSERT INTO `city_code` VALUES ('314', '140926', '140900', '静乐县', '山西省', '忻州市', '0350', '2');
+INSERT INTO `city_code` VALUES ('315', '140927', '140900', '神池县', '山西省', '忻州市', '0350', '2');
+INSERT INTO `city_code` VALUES ('316', '140928', '140900', '五寨县', '山西省', '忻州市', '0350', '2');
+INSERT INTO `city_code` VALUES ('317', '140929', '140900', '岢岚县', '山西省', '忻州市', '0350', '2');
+INSERT INTO `city_code` VALUES ('318', '140930', '140900', '河曲县', '山西省', '忻州市', '0350', '2');
+INSERT INTO `city_code` VALUES ('319', '140931', '140900', '保德县', '山西省', '忻州市', '0350', '2');
+INSERT INTO `city_code` VALUES ('320', '140932', '140900', '偏关县', '山西省', '忻州市', '0350', '2');
+INSERT INTO `city_code` VALUES ('321', '140981', '140900', '原平市', '山西省', '忻州市', '0350', '2');
+INSERT INTO `city_code` VALUES ('322', '141002', '141000', '尧都区', '山西省', '临汾市', '0357', '2');
+INSERT INTO `city_code` VALUES ('323', '141021', '141000', '曲沃县', '山西省', '临汾市', '0357', '2');
+INSERT INTO `city_code` VALUES ('324', '141022', '141000', '翼城县', '山西省', '临汾市', '0357', '2');
+INSERT INTO `city_code` VALUES ('325', '141023', '141000', '襄汾县', '山西省', '临汾市', '0357', '2');
+INSERT INTO `city_code` VALUES ('326', '141024', '141000', '洪洞县', '山西省', '临汾市', '0357', '2');
+INSERT INTO `city_code` VALUES ('327', '141025', '141000', '古县', '山西省', '临汾市', '0357', '2');
+INSERT INTO `city_code` VALUES ('328', '141026', '141000', '安泽县', '山西省', '临汾市', '0357', '2');
+INSERT INTO `city_code` VALUES ('329', '141027', '141000', '浮山县', '山西省', '临汾市', '0357', '2');
+INSERT INTO `city_code` VALUES ('330', '141028', '141000', '吉县', '山西省', '临汾市', '0357', '2');
+INSERT INTO `city_code` VALUES ('331', '141029', '141000', '乡宁县', '山西省', '临汾市', '0357', '2');
+INSERT INTO `city_code` VALUES ('332', '141030', '141000', '大宁县', '山西省', '临汾市', '0357', '2');
+INSERT INTO `city_code` VALUES ('333', '141031', '141000', '隰县', '山西省', '临汾市', '0357', '2');
+INSERT INTO `city_code` VALUES ('334', '141032', '141000', '永和县', '山西省', '临汾市', '0357', '2');
+INSERT INTO `city_code` VALUES ('335', '141033', '141000', '蒲县', '山西省', '临汾市', '0357', '2');
+INSERT INTO `city_code` VALUES ('336', '141034', '141000', '汾西县', '山西省', '临汾市', '0357', '2');
+INSERT INTO `city_code` VALUES ('337', '141081', '141000', '侯马市', '山西省', '临汾市', '0357', '2');
+INSERT INTO `city_code` VALUES ('338', '141082', '141000', '霍州市', '山西省', '临汾市', '0357', '2');
+INSERT INTO `city_code` VALUES ('339', '141102', '141100', '离石区', '山西省', '吕梁市', '0358', '2');
+INSERT INTO `city_code` VALUES ('340', '141121', '141100', '文水县', '山西省', '吕梁市', '0358', '2');
+INSERT INTO `city_code` VALUES ('341', '141122', '141100', '交城县', '山西省', '吕梁市', '0358', '2');
+INSERT INTO `city_code` VALUES ('342', '141123', '141100', '兴县', '山西省', '吕梁市', '0358', '2');
+INSERT INTO `city_code` VALUES ('343', '141124', '141100', '临县', '山西省', '吕梁市', '0358', '2');
+INSERT INTO `city_code` VALUES ('344', '141125', '141100', '柳林县', '山西省', '吕梁市', '0358', '2');
+INSERT INTO `city_code` VALUES ('345', '141126', '141100', '石楼县', '山西省', '吕梁市', '0358', '2');
+INSERT INTO `city_code` VALUES ('346', '141127', '141100', '岚县', '山西省', '吕梁市', '0358', '2');
+INSERT INTO `city_code` VALUES ('347', '141128', '141100', '方山县', '山西省', '吕梁市', '0358', '2');
+INSERT INTO `city_code` VALUES ('348', '141129', '141100', '中阳县', '山西省', '吕梁市', '0358', '2');
+INSERT INTO `city_code` VALUES ('349', '141130', '141100', '交口县', '山西省', '吕梁市', '0358', '2');
+INSERT INTO `city_code` VALUES ('350', '141181', '141100', '孝义市', '山西省', '吕梁市', '0358', '2');
+INSERT INTO `city_code` VALUES ('351', '141182', '141100', '汾阳市', '山西省', '吕梁市', '0358', '2');
+INSERT INTO `city_code` VALUES ('352', '150000', null, '内蒙古自治区', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('353', '150100', '150000', '呼和浩特市', '内蒙古自治区', '', '0471', '1');
+INSERT INTO `city_code` VALUES ('354', '150200', '150000', '包头市', '内蒙古自治区', '', '0472', '1');
+INSERT INTO `city_code` VALUES ('355', '150300', '150000', '乌海市', '内蒙古自治区', '', '0473', '1');
+INSERT INTO `city_code` VALUES ('356', '150400', '150000', '赤峰市', '内蒙古自治区', '', '0476', '1');
+INSERT INTO `city_code` VALUES ('357', '150500', '150000', '通辽市', '内蒙古自治区', '', '0475', '1');
+INSERT INTO `city_code` VALUES ('358', '150600', '150000', '鄂尔多斯市', '内蒙古自治区', '', '0477', '1');
+INSERT INTO `city_code` VALUES ('359', '150700', '150000', '呼伦贝尔市', '内蒙古自治区', '', '0470', '1');
+INSERT INTO `city_code` VALUES ('360', '150800', '150000', '巴彦淖尔市', '内蒙古自治区', '', '0478', '1');
+INSERT INTO `city_code` VALUES ('361', '150900', '150000', '乌兰察布市', '内蒙古自治区', '', '0474', '1');
+INSERT INTO `city_code` VALUES ('362', '152200', '150000', '兴安盟', '内蒙古自治区', '', '0482', '1');
+INSERT INTO `city_code` VALUES ('363', '152500', '150000', '锡林郭勒盟', '内蒙古自治区', '', '0479', '1');
+INSERT INTO `city_code` VALUES ('364', '152900', '150000', '阿拉善盟', '内蒙古自治区', '', '0483', '1');
+INSERT INTO `city_code` VALUES ('365', '150102', '150100', '新城区', '内蒙古自治区', '呼和浩特市', '0471', '2');
+INSERT INTO `city_code` VALUES ('366', '150103', '150100', '回民区', '内蒙古自治区', '呼和浩特市', '0471', '2');
+INSERT INTO `city_code` VALUES ('367', '150104', '150100', '玉泉区', '内蒙古自治区', '呼和浩特市', '0471', '2');
+INSERT INTO `city_code` VALUES ('368', '150105', '150100', '赛罕区', '内蒙古自治区', '呼和浩特市', '0471', '2');
+INSERT INTO `city_code` VALUES ('369', '150121', '150100', '土默特左旗', '内蒙古自治区', '呼和浩特市', '0471', '2');
+INSERT INTO `city_code` VALUES ('370', '150122', '150100', '托克托县', '内蒙古自治区', '呼和浩特市', '0471', '2');
+INSERT INTO `city_code` VALUES ('371', '150123', '150100', '和林格尔县', '内蒙古自治区', '呼和浩特市', '0471', '2');
+INSERT INTO `city_code` VALUES ('372', '150124', '150100', '清水河县', '内蒙古自治区', '呼和浩特市', '0471', '2');
+INSERT INTO `city_code` VALUES ('373', '150125', '150100', '武川县', '内蒙古自治区', '呼和浩特市', '0471', '2');
+INSERT INTO `city_code` VALUES ('374', '150202', '150200', '东河区', '内蒙古自治区', '包头市', '0472', '2');
+INSERT INTO `city_code` VALUES ('375', '150203', '150200', '昆都仑区', '内蒙古自治区', '包头市', '0472', '2');
+INSERT INTO `city_code` VALUES ('376', '150204', '150200', '青山区', '内蒙古自治区', '包头市', '0472', '2');
+INSERT INTO `city_code` VALUES ('377', '150205', '150200', '石拐区', '内蒙古自治区', '包头市', '0472', '2');
+INSERT INTO `city_code` VALUES ('378', '150206', '150200', '白云鄂博矿区', '内蒙古自治区', '包头市', '0472', '2');
+INSERT INTO `city_code` VALUES ('379', '150207', '150200', '九原区', '内蒙古自治区', '包头市', '0472', '2');
+INSERT INTO `city_code` VALUES ('380', '150221', '150200', '土默特右旗', '内蒙古自治区', '包头市', '0472', '2');
+INSERT INTO `city_code` VALUES ('381', '150222', '150200', '固阳县', '内蒙古自治区', '包头市', '0472', '2');
+INSERT INTO `city_code` VALUES ('382', '150223', '150200', '达尔罕茂明安联合旗', '内蒙古自治区', '包头市', '0472', '2');
+INSERT INTO `city_code` VALUES ('383', '150302', '150300', '海勃湾区', '内蒙古自治区', '乌海市', '0473', '2');
+INSERT INTO `city_code` VALUES ('384', '150303', '150300', '海南区', '内蒙古自治区', '乌海市', '0473', '2');
+INSERT INTO `city_code` VALUES ('385', '150304', '150300', '乌达区', '内蒙古自治区', '乌海市', '0473', '2');
+INSERT INTO `city_code` VALUES ('386', '150402', '150400', '红山区', '内蒙古自治区', '赤峰市', '0476', '2');
+INSERT INTO `city_code` VALUES ('387', '150403', '150400', '元宝山区', '内蒙古自治区', '赤峰市', '0476', '2');
+INSERT INTO `city_code` VALUES ('388', '150404', '150400', '松山区', '内蒙古自治区', '赤峰市', '0476', '2');
+INSERT INTO `city_code` VALUES ('389', '150421', '150400', '阿鲁科尔沁旗', '内蒙古自治区', '赤峰市', '0476', '2');
+INSERT INTO `city_code` VALUES ('390', '150422', '150400', '巴林左旗', '内蒙古自治区', '赤峰市', '0476', '2');
+INSERT INTO `city_code` VALUES ('391', '150423', '150400', '巴林右旗', '内蒙古自治区', '赤峰市', '0476', '2');
+INSERT INTO `city_code` VALUES ('392', '150424', '150400', '林西县', '内蒙古自治区', '赤峰市', '0476', '2');
+INSERT INTO `city_code` VALUES ('393', '150425', '150400', '克什克腾旗', '内蒙古自治区', '赤峰市', '0476', '2');
+INSERT INTO `city_code` VALUES ('394', '150426', '150400', '翁牛特旗', '内蒙古自治区', '赤峰市', '0476', '2');
+INSERT INTO `city_code` VALUES ('395', '150428', '150400', '喀喇沁旗', '内蒙古自治区', '赤峰市', '0476', '2');
+INSERT INTO `city_code` VALUES ('396', '150429', '150400', '宁城县', '内蒙古自治区', '赤峰市', '0476', '2');
+INSERT INTO `city_code` VALUES ('397', '150430', '150400', '敖汉旗', '内蒙古自治区', '赤峰市', '0476', '2');
+INSERT INTO `city_code` VALUES ('398', '150502', '150500', '科尔沁区', '内蒙古自治区', '通辽市', '0475', '2');
+INSERT INTO `city_code` VALUES ('399', '150521', '150500', '科尔沁左翼中旗', '内蒙古自治区', '通辽市', '0475', '2');
+INSERT INTO `city_code` VALUES ('400', '150522', '150500', '科尔沁左翼后旗', '内蒙古自治区', '通辽市', '0475', '2');
+INSERT INTO `city_code` VALUES ('401', '150523', '150500', '开鲁县', '内蒙古自治区', '通辽市', '0475', '2');
+INSERT INTO `city_code` VALUES ('402', '150524', '150500', '库伦旗', '内蒙古自治区', '通辽市', '0475', '2');
+INSERT INTO `city_code` VALUES ('403', '150525', '150500', '奈曼旗', '内蒙古自治区', '通辽市', '0475', '2');
+INSERT INTO `city_code` VALUES ('404', '150526', '150500', '扎鲁特旗', '内蒙古自治区', '通辽市', '0475', '2');
+INSERT INTO `city_code` VALUES ('405', '150581', '150500', '霍林郭勒市', '内蒙古自治区', '通辽市', '0475', '2');
+INSERT INTO `city_code` VALUES ('406', '150602', '150600', '东胜区', '内蒙古自治区', '鄂尔多斯市', '0477', '2');
+INSERT INTO `city_code` VALUES ('407', '150621', '150600', '达拉特旗', '内蒙古自治区', '鄂尔多斯市', '0477', '2');
+INSERT INTO `city_code` VALUES ('408', '150622', '150600', '准格尔旗', '内蒙古自治区', '鄂尔多斯市', '0477', '2');
+INSERT INTO `city_code` VALUES ('409', '150623', '150600', '鄂托克前旗', '内蒙古自治区', '鄂尔多斯市', '0477', '2');
+INSERT INTO `city_code` VALUES ('410', '150624', '150600', '鄂托克旗', '内蒙古自治区', '鄂尔多斯市', '0477', '2');
+INSERT INTO `city_code` VALUES ('411', '150625', '150600', '杭锦旗', '内蒙古自治区', '鄂尔多斯市', '0477', '2');
+INSERT INTO `city_code` VALUES ('412', '150626', '150600', '乌审旗', '内蒙古自治区', '鄂尔多斯市', '0477', '2');
+INSERT INTO `city_code` VALUES ('413', '150627', '150600', '伊金霍洛旗', '内蒙古自治区', '鄂尔多斯市', '0477', '2');
+INSERT INTO `city_code` VALUES ('414', '150702', '150700', '海拉尔区', '内蒙古自治区', '呼伦贝尔市', '0470', '2');
+INSERT INTO `city_code` VALUES ('415', '150721', '150700', '阿荣旗', '内蒙古自治区', '呼伦贝尔市', '0470', '2');
+INSERT INTO `city_code` VALUES ('416', '150722', '150700', '莫力达瓦达斡尔族自治旗', '内蒙古自治区', '呼伦贝尔市', '0470', '2');
+INSERT INTO `city_code` VALUES ('417', '150723', '150700', '鄂伦春自治旗', '内蒙古自治区', '呼伦贝尔市', '0470', '2');
+INSERT INTO `city_code` VALUES ('418', '150724', '150700', '鄂温克族自治旗', '内蒙古自治区', '呼伦贝尔市', '0470', '2');
+INSERT INTO `city_code` VALUES ('419', '150725', '150700', '陈巴尔虎旗', '内蒙古自治区', '呼伦贝尔市', '0470', '2');
+INSERT INTO `city_code` VALUES ('420', '150726', '150700', '新巴尔虎左旗', '内蒙古自治区', '呼伦贝尔市', '0470', '2');
+INSERT INTO `city_code` VALUES ('421', '150727', '150700', '新巴尔虎右旗', '内蒙古自治区', '呼伦贝尔市', '0470', '2');
+INSERT INTO `city_code` VALUES ('422', '150781', '150700', '满洲里市', '内蒙古自治区', '呼伦贝尔市', '0470', '2');
+INSERT INTO `city_code` VALUES ('423', '150782', '150700', '牙克石市', '内蒙古自治区', '呼伦贝尔市', '0470', '2');
+INSERT INTO `city_code` VALUES ('424', '150783', '150700', '扎兰屯市', '内蒙古自治区', '呼伦贝尔市', '0470', '2');
+INSERT INTO `city_code` VALUES ('425', '150784', '150700', '额尔古纳市', '内蒙古自治区', '呼伦贝尔市', '0470', '2');
+INSERT INTO `city_code` VALUES ('426', '150785', '150700', '根河市', '内蒙古自治区', '呼伦贝尔市', '0470', '2');
+INSERT INTO `city_code` VALUES ('427', '150802', '150800', '临河区', '内蒙古自治区', '巴彦淖尔市', '0478', '2');
+INSERT INTO `city_code` VALUES ('428', '150821', '150800', '五原县', '内蒙古自治区', '巴彦淖尔市', '0478', '2');
+INSERT INTO `city_code` VALUES ('429', '150822', '150800', '磴口县', '内蒙古自治区', '巴彦淖尔市', '0478', '2');
+INSERT INTO `city_code` VALUES ('430', '150823', '150800', '乌拉特前旗', '内蒙古自治区', '巴彦淖尔市', '0478', '2');
+INSERT INTO `city_code` VALUES ('431', '150824', '150800', '乌拉特中旗', '内蒙古自治区', '巴彦淖尔市', '0478', '2');
+INSERT INTO `city_code` VALUES ('432', '150825', '150800', '乌拉特后旗', '内蒙古自治区', '巴彦淖尔市', '0478', '2');
+INSERT INTO `city_code` VALUES ('433', '150826', '150800', '杭锦后旗', '内蒙古自治区', '巴彦淖尔市', '0478', '2');
+INSERT INTO `city_code` VALUES ('434', '150902', '150900', '集宁区', '内蒙古自治区', '乌兰察布市', '0474', '2');
+INSERT INTO `city_code` VALUES ('435', '150921', '150900', '卓资县', '内蒙古自治区', '乌兰察布市', '0474', '2');
+INSERT INTO `city_code` VALUES ('436', '150922', '150900', '化德县', '内蒙古自治区', '乌兰察布市', '0474', '2');
+INSERT INTO `city_code` VALUES ('437', '150923', '150900', '商都县', '内蒙古自治区', '乌兰察布市', '0474', '2');
+INSERT INTO `city_code` VALUES ('438', '150924', '150900', '兴和县', '内蒙古自治区', '乌兰察布市', '0474', '2');
+INSERT INTO `city_code` VALUES ('439', '150925', '150900', '凉城县', '内蒙古自治区', '乌兰察布市', '0474', '2');
+INSERT INTO `city_code` VALUES ('440', '150926', '150900', '察哈尔右翼前旗', '内蒙古自治区', '乌兰察布市', '0474', '2');
+INSERT INTO `city_code` VALUES ('441', '150927', '150900', '察哈尔右翼中旗', '内蒙古自治区', '乌兰察布市', '0474', '2');
+INSERT INTO `city_code` VALUES ('442', '150928', '150900', '察哈尔右翼后旗', '内蒙古自治区', '乌兰察布市', '0474', '2');
+INSERT INTO `city_code` VALUES ('443', '150929', '150900', '四子王旗', '内蒙古自治区', '乌兰察布市', '0474', '2');
+INSERT INTO `city_code` VALUES ('444', '150981', '150900', '丰镇市', '内蒙古自治区', '乌兰察布市', '0474', '2');
+INSERT INTO `city_code` VALUES ('445', '152201', '152200', '乌兰浩特市', '内蒙古自治区', '兴安盟', '0482', '2');
+INSERT INTO `city_code` VALUES ('446', '152202', '152200', '阿尔山市', '内蒙古自治区', '兴安盟', '0482', '2');
+INSERT INTO `city_code` VALUES ('447', '152221', '152200', '科尔沁右翼前旗', '内蒙古自治区', '兴安盟', '0482', '2');
+INSERT INTO `city_code` VALUES ('448', '152222', '152200', '科尔沁右翼中旗', '内蒙古自治区', '兴安盟', '0482', '2');
+INSERT INTO `city_code` VALUES ('449', '152223', '152200', '扎赉特旗', '内蒙古自治区', '兴安盟', '0482', '2');
+INSERT INTO `city_code` VALUES ('450', '152224', '152200', '突泉县', '内蒙古自治区', '兴安盟', '0482', '2');
+INSERT INTO `city_code` VALUES ('451', '152501', '152500', '二连浩特市', '内蒙古自治区', '锡林郭勒盟', '0479', '2');
+INSERT INTO `city_code` VALUES ('452', '152502', '152500', '锡林浩特市', '内蒙古自治区', '锡林郭勒盟', '0479', '2');
+INSERT INTO `city_code` VALUES ('453', '152522', '152500', '阿巴嘎旗', '内蒙古自治区', '锡林郭勒盟', '0479', '2');
+INSERT INTO `city_code` VALUES ('454', '152523', '152500', '苏尼特左旗', '内蒙古自治区', '锡林郭勒盟', '0479', '2');
+INSERT INTO `city_code` VALUES ('455', '152524', '152500', '苏尼特右旗', '内蒙古自治区', '锡林郭勒盟', '0479', '2');
+INSERT INTO `city_code` VALUES ('456', '152525', '152500', '东乌珠穆沁旗', '内蒙古自治区', '锡林郭勒盟', '0479', '2');
+INSERT INTO `city_code` VALUES ('457', '152526', '152500', '西乌珠穆沁旗', '内蒙古自治区', '锡林郭勒盟', '0479', '2');
+INSERT INTO `city_code` VALUES ('458', '152527', '152500', '太仆寺旗', '内蒙古自治区', '锡林郭勒盟', '0479', '2');
+INSERT INTO `city_code` VALUES ('459', '152528', '152500', '镶黄旗', '内蒙古自治区', '锡林郭勒盟', '0479', '2');
+INSERT INTO `city_code` VALUES ('460', '152529', '152500', '正镶白旗', '内蒙古自治区', '锡林郭勒盟', '0479', '2');
+INSERT INTO `city_code` VALUES ('461', '152530', '152500', '正蓝旗', '内蒙古自治区', '锡林郭勒盟', '0479', '2');
+INSERT INTO `city_code` VALUES ('462', '152531', '152500', '多伦县', '内蒙古自治区', '锡林郭勒盟', '0479', '2');
+INSERT INTO `city_code` VALUES ('463', '152921', '152900', '阿拉善左旗', '内蒙古自治区', '阿拉善盟', '0483', '2');
+INSERT INTO `city_code` VALUES ('464', '152922', '152900', '阿拉善右旗', '内蒙古自治区', '阿拉善盟', '0483', '2');
+INSERT INTO `city_code` VALUES ('465', '152923', '152900', '额济纳旗', '内蒙古自治区', '阿拉善盟', '0483', '2');
+INSERT INTO `city_code` VALUES ('466', '210000', null, '辽宁省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('467', '210100', '210000', '沈阳市', '辽宁省', '', '024', '1');
+INSERT INTO `city_code` VALUES ('468', '210200', '210000', '大连市', '辽宁省', '', '0411', '1');
+INSERT INTO `city_code` VALUES ('469', '210300', '210000', '鞍山市', '辽宁省', '', '0412', '1');
+INSERT INTO `city_code` VALUES ('470', '210400', '210000', '抚顺市', '辽宁省', '', '0413', '1');
+INSERT INTO `city_code` VALUES ('471', '210500', '210000', '本溪市', '辽宁省', '', '0414', '1');
+INSERT INTO `city_code` VALUES ('472', '210600', '210000', '丹东市', '辽宁省', '', '0415', '1');
+INSERT INTO `city_code` VALUES ('473', '210700', '210000', '锦州市', '辽宁省', '', '0416', '1');
+INSERT INTO `city_code` VALUES ('474', '210800', '210000', '营口市', '辽宁省', '', '0417', '1');
+INSERT INTO `city_code` VALUES ('475', '210900', '210000', '阜新市', '辽宁省', '', '0418', '1');
+INSERT INTO `city_code` VALUES ('476', '211000', '210000', '辽阳市', '辽宁省', '', '0419', '1');
+INSERT INTO `city_code` VALUES ('477', '211100', '210000', '盘锦市', '辽宁省', '', '0427', '1');
+INSERT INTO `city_code` VALUES ('478', '211200', '210000', '铁岭市', '辽宁省', '', '0410', '1');
+INSERT INTO `city_code` VALUES ('479', '211300', '210000', '朝阳市', '辽宁省', '', '0421', '1');
+INSERT INTO `city_code` VALUES ('480', '211400', '210000', '葫芦岛市', '辽宁省', '', '0429', '1');
+INSERT INTO `city_code` VALUES ('481', '210102', '210100', '和平区', '辽宁省', '沈阳市', '024', '2');
+INSERT INTO `city_code` VALUES ('482', '210103', '210100', '沈河区', '辽宁省', '沈阳市', '024', '2');
+INSERT INTO `city_code` VALUES ('483', '210104', '210100', '大东区', '辽宁省', '沈阳市', '024', '2');
+INSERT INTO `city_code` VALUES ('484', '210105', '210100', '皇姑区', '辽宁省', '沈阳市', '024', '2');
+INSERT INTO `city_code` VALUES ('485', '210106', '210100', '铁西区', '辽宁省', '沈阳市', '024', '2');
+INSERT INTO `city_code` VALUES ('486', '210111', '210100', '苏家屯区', '辽宁省', '沈阳市', '024', '2');
+INSERT INTO `city_code` VALUES ('487', '210112', '210100', '东陵区', '辽宁省', '沈阳市', '024', '2');
+INSERT INTO `city_code` VALUES ('488', '210113', '210100', '沈北新区', '辽宁省', '沈阳市', '024', '2');
+INSERT INTO `city_code` VALUES ('489', '210114', '210100', '于洪区', '辽宁省', '沈阳市', '024', '2');
+INSERT INTO `city_code` VALUES ('490', '210122', '210100', '辽中县', '辽宁省', '沈阳市', '024', '2');
+INSERT INTO `city_code` VALUES ('491', '210123', '210100', '康平县', '辽宁省', '沈阳市', '024', '2');
+INSERT INTO `city_code` VALUES ('492', '210124', '210100', '法库县', '辽宁省', '沈阳市', '024', '2');
+INSERT INTO `city_code` VALUES ('493', '210181', '210100', '新民市', '辽宁省', '沈阳市', '024', '2');
+INSERT INTO `city_code` VALUES ('494', '210202', '210200', '中山区', '辽宁省', '大连市', '0411', '2');
+INSERT INTO `city_code` VALUES ('495', '210203', '210200', '西岗区', '辽宁省', '大连市', '0411', '2');
+INSERT INTO `city_code` VALUES ('496', '210204', '210200', '沙河口区', '辽宁省', '大连市', '0411', '2');
+INSERT INTO `city_code` VALUES ('497', '210211', '210200', '甘井子区', '辽宁省', '大连市', '0411', '2');
+INSERT INTO `city_code` VALUES ('498', '210212', '210200', '旅顺口区', '辽宁省', '大连市', '0411', '2');
+INSERT INTO `city_code` VALUES ('499', '210213', '210200', '金州区', '辽宁省', '大连市', '0411', '2');
+INSERT INTO `city_code` VALUES ('500', '210224', '210200', '长海县', '辽宁省', '大连市', '0411', '2');
+INSERT INTO `city_code` VALUES ('501', '210281', '210200', '瓦房店市', '辽宁省', '大连市', '0411', '2');
+INSERT INTO `city_code` VALUES ('502', '210282', '210200', '普兰店市', '辽宁省', '大连市', '0411', '2');
+INSERT INTO `city_code` VALUES ('503', '210283', '210200', '庄河市', '辽宁省', '大连市', '0411', '2');
+INSERT INTO `city_code` VALUES ('504', '210302', '210300', '铁东区', '辽宁省', '鞍山市', '0412', '2');
+INSERT INTO `city_code` VALUES ('505', '210303', '210300', '铁西区', '辽宁省', '鞍山市', '0412', '2');
+INSERT INTO `city_code` VALUES ('506', '210304', '210300', '立山区', '辽宁省', '鞍山市', '0412', '2');
+INSERT INTO `city_code` VALUES ('507', '210311', '210300', '千山区', '辽宁省', '鞍山市', '0412', '2');
+INSERT INTO `city_code` VALUES ('508', '210321', '210300', '台安县', '辽宁省', '鞍山市', '0412', '2');
+INSERT INTO `city_code` VALUES ('509', '210323', '210300', '岫岩满族自治县', '辽宁省', '鞍山市', '0412', '2');
+INSERT INTO `city_code` VALUES ('510', '210381', '210300', '海城市', '辽宁省', '鞍山市', '0412', '2');
+INSERT INTO `city_code` VALUES ('511', '210402', '210400', '新抚区', '辽宁省', '抚顺市', '0413', '2');
+INSERT INTO `city_code` VALUES ('512', '210403', '210400', '东洲区', '辽宁省', '抚顺市', '0413', '2');
+INSERT INTO `city_code` VALUES ('513', '210404', '210400', '望花区', '辽宁省', '抚顺市', '0413', '2');
+INSERT INTO `city_code` VALUES ('514', '210411', '210400', '顺城区', '辽宁省', '抚顺市', '0413', '2');
+INSERT INTO `city_code` VALUES ('515', '210421', '210400', '抚顺县', '辽宁省', '抚顺市', '0413', '2');
+INSERT INTO `city_code` VALUES ('516', '210422', '210400', '新宾满族自治县', '辽宁省', '抚顺市', '0413', '2');
+INSERT INTO `city_code` VALUES ('517', '210423', '210400', '清原满族自治县', '辽宁省', '抚顺市', '0413', '2');
+INSERT INTO `city_code` VALUES ('518', '210502', '210500', '平山区', '辽宁省', '本溪市', '0414', '2');
+INSERT INTO `city_code` VALUES ('519', '210503', '210500', '溪湖区', '辽宁省', '本溪市', '0414', '2');
+INSERT INTO `city_code` VALUES ('520', '210504', '210500', '明山区', '辽宁省', '本溪市', '0414', '2');
+INSERT INTO `city_code` VALUES ('521', '210505', '210500', '南芬区', '辽宁省', '本溪市', '0414', '2');
+INSERT INTO `city_code` VALUES ('522', '210521', '210500', '本溪满族自治县', '辽宁省', '本溪市', '0414', '2');
+INSERT INTO `city_code` VALUES ('523', '210522', '210500', '桓仁满族自治县', '辽宁省', '本溪市', '0414', '2');
+INSERT INTO `city_code` VALUES ('524', '210602', '210600', '元宝区', '辽宁省', '丹东市', '0415', '2');
+INSERT INTO `city_code` VALUES ('525', '210603', '210600', '振兴区', '辽宁省', '丹东市', '0415', '2');
+INSERT INTO `city_code` VALUES ('526', '210604', '210600', '振安区', '辽宁省', '丹东市', '0415', '2');
+INSERT INTO `city_code` VALUES ('527', '210624', '210600', '宽甸满族自治县', '辽宁省', '丹东市', '0415', '2');
+INSERT INTO `city_code` VALUES ('528', '210681', '210600', '东港市', '辽宁省', '丹东市', '0415', '2');
+INSERT INTO `city_code` VALUES ('529', '210682', '210600', '凤城市', '辽宁省', '丹东市', '0415', '2');
+INSERT INTO `city_code` VALUES ('530', '210702', '210700', '古塔区', '辽宁省', '锦州市', '0416', '2');
+INSERT INTO `city_code` VALUES ('531', '210703', '210700', '凌河区', '辽宁省', '锦州市', '0416', '2');
+INSERT INTO `city_code` VALUES ('532', '210711', '210700', '太和区', '辽宁省', '锦州市', '0416', '2');
+INSERT INTO `city_code` VALUES ('533', '210726', '210700', '黑山县', '辽宁省', '锦州市', '0416', '2');
+INSERT INTO `city_code` VALUES ('534', '210727', '210700', '义县', '辽宁省', '锦州市', '0416', '2');
+INSERT INTO `city_code` VALUES ('535', '210781', '210700', '凌海市', '辽宁省', '锦州市', '0416', '2');
+INSERT INTO `city_code` VALUES ('536', '210782', '210700', '北镇市', '辽宁省', '锦州市', '0416', '2');
+INSERT INTO `city_code` VALUES ('537', '210802', '210800', '站前区', '辽宁省', '营口市', '0417', '2');
+INSERT INTO `city_code` VALUES ('538', '210803', '210800', '西市区', '辽宁省', '营口市', '0417', '2');
+INSERT INTO `city_code` VALUES ('539', '210804', '210800', '鲅鱼圈区', '辽宁省', '营口市', '0417', '2');
+INSERT INTO `city_code` VALUES ('540', '210811', '210800', '老边区', '辽宁省', '营口市', '0417', '2');
+INSERT INTO `city_code` VALUES ('541', '210881', '210800', '盖州市', '辽宁省', '营口市', '0417', '2');
+INSERT INTO `city_code` VALUES ('542', '210882', '210800', '大石桥市', '辽宁省', '营口市', '0417', '2');
+INSERT INTO `city_code` VALUES ('543', '210902', '210900', '海州区', '辽宁省', '阜新市', '0418', '2');
+INSERT INTO `city_code` VALUES ('544', '210903', '210900', '新邱区', '辽宁省', '阜新市', '0418', '2');
+INSERT INTO `city_code` VALUES ('545', '210904', '210900', '太平区', '辽宁省', '阜新市', '0418', '2');
+INSERT INTO `city_code` VALUES ('546', '210905', '210900', '清河门区', '辽宁省', '阜新市', '0418', '2');
+INSERT INTO `city_code` VALUES ('547', '210911', '210900', '细河区', '辽宁省', '阜新市', '0418', '2');
+INSERT INTO `city_code` VALUES ('548', '210921', '210900', '阜新蒙古族自治县', '辽宁省', '阜新市', '0418', '2');
+INSERT INTO `city_code` VALUES ('549', '210922', '210900', '彰武县', '辽宁省', '阜新市', '0418', '2');
+INSERT INTO `city_code` VALUES ('550', '211002', '211000', '白塔区', '辽宁省', '辽阳市', '0419', '2');
+INSERT INTO `city_code` VALUES ('551', '211003', '211000', '文圣区', '辽宁省', '辽阳市', '0419', '2');
+INSERT INTO `city_code` VALUES ('552', '211004', '211000', '宏伟区', '辽宁省', '辽阳市', '0419', '2');
+INSERT INTO `city_code` VALUES ('553', '211005', '211000', '弓长岭区', '辽宁省', '辽阳市', '0419', '2');
+INSERT INTO `city_code` VALUES ('554', '211011', '211000', '太子河区', '辽宁省', '辽阳市', '0419', '2');
+INSERT INTO `city_code` VALUES ('555', '211021', '211000', '辽阳县', '辽宁省', '辽阳市', '0419', '2');
+INSERT INTO `city_code` VALUES ('556', '211081', '211000', '灯塔市', '辽宁省', '辽阳市', '0419', '2');
+INSERT INTO `city_code` VALUES ('557', '211102', '211100', '双台子区', '辽宁省', '盘锦市', '0427', '2');
+INSERT INTO `city_code` VALUES ('558', '211103', '211100', '兴隆台区', '辽宁省', '盘锦市', '0427', '2');
+INSERT INTO `city_code` VALUES ('559', '211121', '211100', '大洼县', '辽宁省', '盘锦市', '0427', '2');
+INSERT INTO `city_code` VALUES ('560', '211122', '211100', '盘山县', '辽宁省', '盘锦市', '0427', '2');
+INSERT INTO `city_code` VALUES ('561', '211202', '211200', '银州区', '辽宁省', '铁岭市', '0410', '2');
+INSERT INTO `city_code` VALUES ('562', '211204', '211200', '清河区', '辽宁省', '铁岭市', '0410', '2');
+INSERT INTO `city_code` VALUES ('563', '211221', '211200', '铁岭县', '辽宁省', '铁岭市', '0410', '2');
+INSERT INTO `city_code` VALUES ('564', '211223', '211200', '西丰县', '辽宁省', '铁岭市', '0410', '2');
+INSERT INTO `city_code` VALUES ('565', '211224', '211200', '昌图县', '辽宁省', '铁岭市', '0410', '2');
+INSERT INTO `city_code` VALUES ('566', '211281', '211200', '调兵山市', '辽宁省', '铁岭市', '0410', '2');
+INSERT INTO `city_code` VALUES ('567', '211282', '211200', '开原市', '辽宁省', '铁岭市', '0410', '2');
+INSERT INTO `city_code` VALUES ('568', '211302', '211300', '双塔区', '辽宁省', '朝阳市', '0421', '2');
+INSERT INTO `city_code` VALUES ('569', '211303', '211300', '龙城区', '辽宁省', '朝阳市', '0421', '2');
+INSERT INTO `city_code` VALUES ('570', '211321', '211300', '朝阳县', '辽宁省', '朝阳市', '0421', '2');
+INSERT INTO `city_code` VALUES ('571', '211322', '211300', '建平县', '辽宁省', '朝阳市', '0421', '2');
+INSERT INTO `city_code` VALUES ('572', '211324', '211300', '喀喇沁左翼蒙古族自治县', '辽宁省', '朝阳市', '0421', '2');
+INSERT INTO `city_code` VALUES ('573', '211381', '211300', '北票市', '辽宁省', '朝阳市', '0421', '2');
+INSERT INTO `city_code` VALUES ('574', '211382', '211300', '凌源市', '辽宁省', '朝阳市', '0421', '2');
+INSERT INTO `city_code` VALUES ('575', '211402', '211400', '连山区', '辽宁省', '葫芦岛市', '0429', '2');
+INSERT INTO `city_code` VALUES ('576', '211403', '211400', '龙港区', '辽宁省', '葫芦岛市', '0429', '2');
+INSERT INTO `city_code` VALUES ('577', '211404', '211400', '南票区', '辽宁省', '葫芦岛市', '0429', '2');
+INSERT INTO `city_code` VALUES ('578', '211421', '211400', '绥中县', '辽宁省', '葫芦岛市', '0429', '2');
+INSERT INTO `city_code` VALUES ('579', '211422', '211400', '建昌县', '辽宁省', '葫芦岛市', '0429', '2');
+INSERT INTO `city_code` VALUES ('580', '211481', '211400', '兴城市', '辽宁省', '葫芦岛市', '0429', '2');
+INSERT INTO `city_code` VALUES ('581', '220000', null, '吉林省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('582', '220100', '220000', '长春市', '吉林省', '', '0431', '1');
+INSERT INTO `city_code` VALUES ('583', '220200', '220000', '吉林市', '吉林省', '', '0432', '1');
+INSERT INTO `city_code` VALUES ('584', '220300', '220000', '四平市', '吉林省', '', '0434', '1');
+INSERT INTO `city_code` VALUES ('585', '220400', '220000', '辽源市', '吉林省', '', '0437', '1');
+INSERT INTO `city_code` VALUES ('586', '220500', '220000', '通化市', '吉林省', '', '0435', '1');
+INSERT INTO `city_code` VALUES ('587', '220600', '220000', '白山市', '吉林省', '', '0439', '1');
+INSERT INTO `city_code` VALUES ('588', '220700', '220000', '松原市', '吉林省', '', '0438', '1');
+INSERT INTO `city_code` VALUES ('589', '220800', '220000', '白城市', '吉林省', '', '0436', '1');
+INSERT INTO `city_code` VALUES ('590', '222400', '220000', '延边朝鲜族自治州 ', '吉林省', '', '0433', '1');
+INSERT INTO `city_code` VALUES ('591', '220102', '220100', '南关区', '吉林省', '长春市', '0431', '2');
+INSERT INTO `city_code` VALUES ('592', '220103', '220100', '宽城区', '吉林省', '长春市', '0431', '2');
+INSERT INTO `city_code` VALUES ('593', '220104', '220100', '朝阳区', '吉林省', '长春市', '0431', '2');
+INSERT INTO `city_code` VALUES ('594', '220105', '220100', '二道区', '吉林省', '长春市', '0431', '2');
+INSERT INTO `city_code` VALUES ('595', '220106', '220100', '绿园区', '吉林省', '长春市', '0431', '2');
+INSERT INTO `city_code` VALUES ('596', '220112', '220100', '双阳区', '吉林省', '长春市', '0431', '2');
+INSERT INTO `city_code` VALUES ('597', '220122', '220100', '农安县', '吉林省', '长春市', '0431', '2');
+INSERT INTO `city_code` VALUES ('598', '220181', '220100', '九台市', '吉林省', '长春市', '0431', '2');
+INSERT INTO `city_code` VALUES ('599', '220182', '220100', '榆树市', '吉林省', '长春市', '0431', '2');
+INSERT INTO `city_code` VALUES ('600', '220183', '220100', '德惠市', '吉林省', '长春市', '0431', '2');
+INSERT INTO `city_code` VALUES ('601', '220202', '220200', '昌邑区', '吉林省', '吉林市', '0432', '2');
+INSERT INTO `city_code` VALUES ('602', '220203', '220200', '龙潭区', '吉林省', '吉林市', '0432', '2');
+INSERT INTO `city_code` VALUES ('603', '220204', '220200', '船营区', '吉林省', '吉林市', '0432', '2');
+INSERT INTO `city_code` VALUES ('604', '220211', '220200', '丰满区', '吉林省', '吉林市', '0432', '2');
+INSERT INTO `city_code` VALUES ('605', '220221', '220200', '永吉县', '吉林省', '吉林市', '0432', '2');
+INSERT INTO `city_code` VALUES ('606', '220281', '220200', '蛟河市', '吉林省', '吉林市', '0432', '2');
+INSERT INTO `city_code` VALUES ('607', '220282', '220200', '桦甸市', '吉林省', '吉林市', '0432', '2');
+INSERT INTO `city_code` VALUES ('608', '220283', '220200', '舒兰市', '吉林省', '吉林市', '0432', '2');
+INSERT INTO `city_code` VALUES ('609', '220284', '220200', '磐石市', '吉林省', '吉林市', '0432', '2');
+INSERT INTO `city_code` VALUES ('610', '220302', '220300', '铁西区', '吉林省', '四平市', '0434', '2');
+INSERT INTO `city_code` VALUES ('611', '220303', '220300', '铁东区', '吉林省', '四平市', '0434', '2');
+INSERT INTO `city_code` VALUES ('612', '220322', '220300', '梨树县', '吉林省', '四平市', '0434', '2');
+INSERT INTO `city_code` VALUES ('613', '220323', '220300', '伊通满族自治县', '吉林省', '四平市', '0434', '2');
+INSERT INTO `city_code` VALUES ('614', '220381', '220300', '公主岭市', '吉林省', '四平市', '0434', '2');
+INSERT INTO `city_code` VALUES ('615', '220382', '220300', '双辽市', '吉林省', '四平市', '0434', '2');
+INSERT INTO `city_code` VALUES ('616', '220402', '220400', '龙山区', '吉林省', '辽源市', '0437', '2');
+INSERT INTO `city_code` VALUES ('617', '220403', '220400', '西安区', '吉林省', '辽源市', '0437', '2');
+INSERT INTO `city_code` VALUES ('618', '220421', '220400', '东丰县', '吉林省', '辽源市', '0437', '2');
+INSERT INTO `city_code` VALUES ('619', '220422', '220400', '东辽县', '吉林省', '辽源市', '0437', '2');
+INSERT INTO `city_code` VALUES ('620', '220502', '220500', '东昌区', '吉林省', '通化市', '0435', '2');
+INSERT INTO `city_code` VALUES ('621', '220503', '220500', '二道江区', '吉林省', '通化市', '0435', '2');
+INSERT INTO `city_code` VALUES ('622', '220521', '220500', '通化县', '吉林省', '通化市', '0435', '2');
+INSERT INTO `city_code` VALUES ('623', '220523', '220500', '辉南县', '吉林省', '通化市', '0435', '2');
+INSERT INTO `city_code` VALUES ('624', '220524', '220500', '柳河县', '吉林省', '通化市', '0435', '2');
+INSERT INTO `city_code` VALUES ('625', '220581', '220500', '梅河口市', '吉林省', '通化市', '0435', '2');
+INSERT INTO `city_code` VALUES ('626', '220582', '220500', '集安市', '吉林省', '通化市', '0435', '2');
+INSERT INTO `city_code` VALUES ('627', '220602', '220600', '浑江区', '吉林省', '白山市', '0439', '2');
+INSERT INTO `city_code` VALUES ('628', '220605', '220600', '江源区', '吉林省', '白山市', '0439', '2');
+INSERT INTO `city_code` VALUES ('629', '220621', '220600', '抚松县', '吉林省', '白山市', '0439', '2');
+INSERT INTO `city_code` VALUES ('630', '220622', '220600', '靖宇县', '吉林省', '白山市', '0439', '2');
+INSERT INTO `city_code` VALUES ('631', '220623', '220600', '长白朝鲜族自治县', '吉林省', '白山市', '0439', '2');
+INSERT INTO `city_code` VALUES ('632', '220681', '220600', '临江市', '吉林省', '白山市', '0439', '2');
+INSERT INTO `city_code` VALUES ('633', '220702', '220700', '宁江区', '吉林省', '松原市', '0438', '2');
+INSERT INTO `city_code` VALUES ('634', '220721', '220700', '前郭尔罗斯蒙古族自治县', '吉林省', '松原市', '0438', '2');
+INSERT INTO `city_code` VALUES ('635', '220722', '220700', '长岭县', '吉林省', '松原市', '0438', '2');
+INSERT INTO `city_code` VALUES ('636', '220723', '220700', '乾安县', '吉林省', '松原市', '0438', '2');
+INSERT INTO `city_code` VALUES ('637', '220724', '220700', '扶余县', '吉林省', '松原市', '0438', '2');
+INSERT INTO `city_code` VALUES ('638', '220802', '220800', '洮北区', '吉林省', '白城市', '0436', '2');
+INSERT INTO `city_code` VALUES ('639', '220821', '220800', '镇赉县', '吉林省', '白城市', '0436', '2');
+INSERT INTO `city_code` VALUES ('640', '220822', '220800', '通榆县', '吉林省', '白城市', '0436', '2');
+INSERT INTO `city_code` VALUES ('641', '220881', '220800', '洮南市', '吉林省', '白城市', '0436', '2');
+INSERT INTO `city_code` VALUES ('642', '220882', '220800', '大安市', '吉林省', '白城市', '0436', '2');
+INSERT INTO `city_code` VALUES ('643', '222401', '222400', '延吉市', '吉林省', '延边朝鲜族自治州 ', '0433', '2');
+INSERT INTO `city_code` VALUES ('644', '222402', '222400', '图们市', '吉林省', '延边朝鲜族自治州 ', '0433', '2');
+INSERT INTO `city_code` VALUES ('645', '222403', '222400', '敦化市', '吉林省', '延边朝鲜族自治州 ', '0433', '2');
+INSERT INTO `city_code` VALUES ('646', '222404', '222400', '珲春市', '吉林省', '延边朝鲜族自治州 ', '0440', '2');
+INSERT INTO `city_code` VALUES ('647', '222405', '222400', '龙井市', '吉林省', '延边朝鲜族自治州 ', '0433', '2');
+INSERT INTO `city_code` VALUES ('648', '222406', '222400', '和龙市', '吉林省', '延边朝鲜族自治州 ', '0433', '2');
+INSERT INTO `city_code` VALUES ('649', '222424', '222400', '汪清县', '吉林省', '延边朝鲜族自治州 ', '0433', '2');
+INSERT INTO `city_code` VALUES ('650', '222426', '222400', '安图县', '吉林省', '延边朝鲜族自治州 ', '0433', '2');
+INSERT INTO `city_code` VALUES ('651', '230000', null, '黑龙江省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('652', '230100', '230000', '哈尔滨市', '黑龙江省', '', '0451', '1');
+INSERT INTO `city_code` VALUES ('653', '230200', '230000', '齐齐哈尔市', '黑龙江省', '', '0452', '1');
+INSERT INTO `city_code` VALUES ('654', '230300', '230000', '鸡西市', '黑龙江省', '', '0467', '1');
+INSERT INTO `city_code` VALUES ('655', '230400', '230000', '鹤岗市', '黑龙江省', '', '0468', '1');
+INSERT INTO `city_code` VALUES ('656', '230500', '230000', '双鸭山市', '黑龙江省', '', '0469', '1');
+INSERT INTO `city_code` VALUES ('657', '230600', '230000', '大庆市', '黑龙江省', '', '0459', '1');
+INSERT INTO `city_code` VALUES ('658', '230700', '230000', '伊春市', '黑龙江省', '', '0458', '1');
+INSERT INTO `city_code` VALUES ('659', '230800', '230000', '佳木斯市', '黑龙江省', '', '0454', '1');
+INSERT INTO `city_code` VALUES ('660', '230900', '230000', '七台河市', '黑龙江省', '', '0464', '1');
+INSERT INTO `city_code` VALUES ('661', '231000', '230000', '牡丹江市', '黑龙江省', '', '0453', '1');
+INSERT INTO `city_code` VALUES ('662', '231100', '230000', '黑河市', '黑龙江省', '', '0456', '1');
+INSERT INTO `city_code` VALUES ('663', '231200', '230000', '绥化市', '黑龙江省', '', '0455', '1');
+INSERT INTO `city_code` VALUES ('664', '232700', '230000', '大兴安岭地区', '黑龙江省', '', '0457', '1');
+INSERT INTO `city_code` VALUES ('665', '230102', '230100', '道里区', '黑龙江省', '哈尔滨市', '0451', '2');
+INSERT INTO `city_code` VALUES ('666', '230103', '230100', '南岗区', '黑龙江省', '哈尔滨市', '0451', '2');
+INSERT INTO `city_code` VALUES ('667', '230104', '230100', '道外区', '黑龙江省', '哈尔滨市', '0451', '2');
+INSERT INTO `city_code` VALUES ('668', '230108', '230100', '平房区', '黑龙江省', '哈尔滨市', '0451', '2');
+INSERT INTO `city_code` VALUES ('669', '230109', '230100', '松北区', '黑龙江省', '哈尔滨市', '0451', '2');
+INSERT INTO `city_code` VALUES ('670', '230110', '230100', '香坊区', '黑龙江省', '哈尔滨市', '0451', '2');
+INSERT INTO `city_code` VALUES ('671', '230111', '230100', '呼兰区', '黑龙江省', '哈尔滨市', '0451', '2');
+INSERT INTO `city_code` VALUES ('672', '230112', '230100', '阿城区', '黑龙江省', '哈尔滨市', '0451', '2');
+INSERT INTO `city_code` VALUES ('673', '230123', '230100', '依兰县', '黑龙江省', '哈尔滨市', '0451', '2');
+INSERT INTO `city_code` VALUES ('674', '230124', '230100', '方正县', '黑龙江省', '哈尔滨市', '0451', '2');
+INSERT INTO `city_code` VALUES ('675', '230125', '230100', '宾县', '黑龙江省', '哈尔滨市', '0451', '2');
+INSERT INTO `city_code` VALUES ('676', '230126', '230100', '巴彦县', '黑龙江省', '哈尔滨市', '0451', '2');
+INSERT INTO `city_code` VALUES ('677', '230127', '230100', '木兰县', '黑龙江省', '哈尔滨市', '0451', '2');
+INSERT INTO `city_code` VALUES ('678', '230128', '230100', '通河县', '黑龙江省', '哈尔滨市', '0451', '2');
+INSERT INTO `city_code` VALUES ('679', '230129', '230100', '延寿县', '黑龙江省', '哈尔滨市', '0451', '2');
+INSERT INTO `city_code` VALUES ('680', '230182', '230100', '双城市', '黑龙江省', '哈尔滨市', '0451', '2');
+INSERT INTO `city_code` VALUES ('681', '230183', '230100', '尚志市', '黑龙江省', '哈尔滨市', '0451', '2');
+INSERT INTO `city_code` VALUES ('682', '230184', '230100', '五常市', '黑龙江省', '哈尔滨市', '0451', '2');
+INSERT INTO `city_code` VALUES ('683', '230202', '230200', '龙沙区', '黑龙江省', '齐齐哈尔市', '0452', '2');
+INSERT INTO `city_code` VALUES ('684', '230203', '230200', '建华区', '黑龙江省', '齐齐哈尔市', '0452', '2');
+INSERT INTO `city_code` VALUES ('685', '230204', '230200', '铁锋区', '黑龙江省', '齐齐哈尔市', '0452', '2');
+INSERT INTO `city_code` VALUES ('686', '230205', '230200', '昂昂溪区', '黑龙江省', '齐齐哈尔市', '0452', '2');
+INSERT INTO `city_code` VALUES ('687', '230206', '230200', '富拉尔基区', '黑龙江省', '齐齐哈尔市', '0452', '2');
+INSERT INTO `city_code` VALUES ('688', '230207', '230200', '碾子山区', '黑龙江省', '齐齐哈尔市', '0452', '2');
+INSERT INTO `city_code` VALUES ('689', '230208', '230200', '梅里斯达斡尔族区', '黑龙江省', '齐齐哈尔市', '0452', '2');
+INSERT INTO `city_code` VALUES ('690', '230221', '230200', '龙江县', '黑龙江省', '齐齐哈尔市', '0452', '2');
+INSERT INTO `city_code` VALUES ('691', '230223', '230200', '依安县', '黑龙江省', '齐齐哈尔市', '0452', '2');
+INSERT INTO `city_code` VALUES ('692', '230224', '230200', '泰来县', '黑龙江省', '齐齐哈尔市', '0452', '2');
+INSERT INTO `city_code` VALUES ('693', '230225', '230200', '甘南县', '黑龙江省', '齐齐哈尔市', '0452', '2');
+INSERT INTO `city_code` VALUES ('694', '230227', '230200', '富裕县', '黑龙江省', '齐齐哈尔市', '0452', '2');
+INSERT INTO `city_code` VALUES ('695', '230229', '230200', '克山县', '黑龙江省', '齐齐哈尔市', '0452', '2');
+INSERT INTO `city_code` VALUES ('696', '230230', '230200', '克东县', '黑龙江省', '齐齐哈尔市', '0452', '2');
+INSERT INTO `city_code` VALUES ('697', '230231', '230200', '拜泉县', '黑龙江省', '齐齐哈尔市', '0452', '2');
+INSERT INTO `city_code` VALUES ('698', '230281', '230200', '讷河市', '黑龙江省', '齐齐哈尔市', '0452', '2');
+INSERT INTO `city_code` VALUES ('699', '230302', '230300', '鸡冠区', '黑龙江省', '鸡西市', '0467', '2');
+INSERT INTO `city_code` VALUES ('700', '230303', '230300', '恒山区', '黑龙江省', '鸡西市', '0467', '2');
+INSERT INTO `city_code` VALUES ('701', '230304', '230300', '滴道区', '黑龙江省', '鸡西市', '0467', '2');
+INSERT INTO `city_code` VALUES ('702', '230305', '230300', '梨树区', '黑龙江省', '鸡西市', '0467', '2');
+INSERT INTO `city_code` VALUES ('703', '230306', '230300', '城子河区', '黑龙江省', '鸡西市', '0467', '2');
+INSERT INTO `city_code` VALUES ('704', '230307', '230300', '麻山区', '黑龙江省', '鸡西市', '0467', '2');
+INSERT INTO `city_code` VALUES ('705', '230321', '230300', '鸡东县', '黑龙江省', '鸡西市', '0467', '2');
+INSERT INTO `city_code` VALUES ('706', '230381', '230300', '虎林市', '黑龙江省', '鸡西市', '0467', '2');
+INSERT INTO `city_code` VALUES ('707', '230382', '230300', '密山市', '黑龙江省', '鸡西市', '0467', '2');
+INSERT INTO `city_code` VALUES ('708', '230402', '230400', '向阳区', '黑龙江省', '鹤岗市', '0468', '2');
+INSERT INTO `city_code` VALUES ('709', '230403', '230400', '工农区', '黑龙江省', '鹤岗市', '0468', '2');
+INSERT INTO `city_code` VALUES ('710', '230404', '230400', '南山区', '黑龙江省', '鹤岗市', '0468', '2');
+INSERT INTO `city_code` VALUES ('711', '230405', '230400', '兴安区', '黑龙江省', '鹤岗市', '0468', '2');
+INSERT INTO `city_code` VALUES ('712', '230406', '230400', '东山区', '黑龙江省', '鹤岗市', '0468', '2');
+INSERT INTO `city_code` VALUES ('713', '230407', '230400', '兴山区', '黑龙江省', '鹤岗市', '0468', '2');
+INSERT INTO `city_code` VALUES ('714', '230421', '230400', '萝北县', '黑龙江省', '鹤岗市', '0468', '2');
+INSERT INTO `city_code` VALUES ('715', '230422', '230400', '绥滨县', '黑龙江省', '鹤岗市', '0468', '2');
+INSERT INTO `city_code` VALUES ('716', '230502', '230500', '尖山区', '黑龙江省', '双鸭山市', '0469', '2');
+INSERT INTO `city_code` VALUES ('717', '230503', '230500', '岭东区', '黑龙江省', '双鸭山市', '0469', '2');
+INSERT INTO `city_code` VALUES ('718', '230505', '230500', '四方台区', '黑龙江省', '双鸭山市', '0469', '2');
+INSERT INTO `city_code` VALUES ('719', '230506', '230500', '宝山区', '黑龙江省', '双鸭山市', '0469', '2');
+INSERT INTO `city_code` VALUES ('720', '230521', '230500', '集贤县', '黑龙江省', '双鸭山市', '0469', '2');
+INSERT INTO `city_code` VALUES ('721', '230522', '230500', '友谊县', '黑龙江省', '双鸭山市', '0469', '2');
+INSERT INTO `city_code` VALUES ('722', '230523', '230500', '宝清县', '黑龙江省', '双鸭山市', '0469', '2');
+INSERT INTO `city_code` VALUES ('723', '230524', '230500', '饶河县', '黑龙江省', '双鸭山市', '0469', '2');
+INSERT INTO `city_code` VALUES ('724', '230602', '230600', '萨尔图区', '黑龙江省', '大庆市', '0459', '2');
+INSERT INTO `city_code` VALUES ('725', '230603', '230600', '龙凤区', '黑龙江省', '大庆市', '0459', '2');
+INSERT INTO `city_code` VALUES ('726', '230604', '230600', '让胡路区', '黑龙江省', '大庆市', '0459', '2');
+INSERT INTO `city_code` VALUES ('727', '230605', '230600', '红岗区', '黑龙江省', '大庆市', '0459', '2');
+INSERT INTO `city_code` VALUES ('728', '230606', '230600', '大同区', '黑龙江省', '大庆市', '0459', '2');
+INSERT INTO `city_code` VALUES ('729', '230621', '230600', '肇州县', '黑龙江省', '大庆市', '0459', '2');
+INSERT INTO `city_code` VALUES ('730', '230622', '230600', '肇源县', '黑龙江省', '大庆市', '0459', '2');
+INSERT INTO `city_code` VALUES ('731', '230623', '230600', '林甸县', '黑龙江省', '大庆市', '0459', '2');
+INSERT INTO `city_code` VALUES ('732', '230624', '230600', '杜尔伯特蒙古族自治县', '黑龙江省', '大庆市', '0459', '2');
+INSERT INTO `city_code` VALUES ('733', '230702', '230700', '伊春区', '黑龙江省', '伊春市', '0458', '2');
+INSERT INTO `city_code` VALUES ('734', '230703', '230700', '南岔区', '黑龙江省', '伊春市', '0458', '2');
+INSERT INTO `city_code` VALUES ('735', '230704', '230700', '友好区', '黑龙江省', '伊春市', '0458', '2');
+INSERT INTO `city_code` VALUES ('736', '230705', '230700', '西林区', '黑龙江省', '伊春市', '0458', '2');
+INSERT INTO `city_code` VALUES ('737', '230706', '230700', '翠峦区', '黑龙江省', '伊春市', '0458', '2');
+INSERT INTO `city_code` VALUES ('738', '230707', '230700', '新青区', '黑龙江省', '伊春市', '0458', '2');
+INSERT INTO `city_code` VALUES ('739', '230708', '230700', '美溪区', '黑龙江省', '伊春市', '0458', '2');
+INSERT INTO `city_code` VALUES ('740', '230709', '230700', '金山屯区', '黑龙江省', '伊春市', '0458', '2');
+INSERT INTO `city_code` VALUES ('741', '230710', '230700', '五营区', '黑龙江省', '伊春市', '0458', '2');
+INSERT INTO `city_code` VALUES ('742', '230711', '230700', '乌马河区', '黑龙江省', '伊春市', '0458', '2');
+INSERT INTO `city_code` VALUES ('743', '230712', '230700', '汤旺河区', '黑龙江省', '伊春市', '0458', '2');
+INSERT INTO `city_code` VALUES ('744', '230713', '230700', '带岭区', '黑龙江省', '伊春市', '0458', '2');
+INSERT INTO `city_code` VALUES ('745', '230714', '230700', '乌伊岭区', '黑龙江省', '伊春市', '0458', '2');
+INSERT INTO `city_code` VALUES ('746', '230715', '230700', '红星区', '黑龙江省', '伊春市', '0458', '2');
+INSERT INTO `city_code` VALUES ('747', '230716', '230700', '上甘岭区', '黑龙江省', '伊春市', '0458', '2');
+INSERT INTO `city_code` VALUES ('748', '230722', '230700', '嘉荫县', '黑龙江省', '伊春市', '0458', '2');
+INSERT INTO `city_code` VALUES ('749', '230781', '230700', '铁力市', '黑龙江省', '伊春市', '0458', '2');
+INSERT INTO `city_code` VALUES ('750', '230803', '230800', '向阳区', '黑龙江省', '佳木斯市', '0454', '2');
+INSERT INTO `city_code` VALUES ('751', '230804', '230800', '前进区', '黑龙江省', '佳木斯市', '0454', '2');
+INSERT INTO `city_code` VALUES ('752', '230805', '230800', '东风区', '黑龙江省', '佳木斯市', '0454', '2');
+INSERT INTO `city_code` VALUES ('753', '230811', '230800', '郊区', '黑龙江省', '佳木斯市', '0454', '2');
+INSERT INTO `city_code` VALUES ('754', '230822', '230800', '桦南县', '黑龙江省', '佳木斯市', '0454', '2');
+INSERT INTO `city_code` VALUES ('755', '230826', '230800', '桦川县', '黑龙江省', '佳木斯市', '0454', '2');
+INSERT INTO `city_code` VALUES ('756', '230828', '230800', '汤原县', '黑龙江省', '佳木斯市', '0454', '2');
+INSERT INTO `city_code` VALUES ('757', '230833', '230800', '抚远县', '黑龙江省', '佳木斯市', '0454', '2');
+INSERT INTO `city_code` VALUES ('758', '230881', '230800', '同江市', '黑龙江省', '佳木斯市', '0454', '2');
+INSERT INTO `city_code` VALUES ('759', '230882', '230800', '富锦市', '黑龙江省', '佳木斯市', '0454', '2');
+INSERT INTO `city_code` VALUES ('760', '230902', '230900', '新兴区', '黑龙江省', '七台河市', '0464', '2');
+INSERT INTO `city_code` VALUES ('761', '230903', '230900', '桃山区', '黑龙江省', '七台河市', '0464', '2');
+INSERT INTO `city_code` VALUES ('762', '230904', '230900', '茄子河区', '黑龙江省', '七台河市', '0464', '2');
+INSERT INTO `city_code` VALUES ('763', '230921', '230900', '勃利县', '黑龙江省', '七台河市', '0464', '2');
+INSERT INTO `city_code` VALUES ('764', '231002', '231000', '东安区', '黑龙江省', '牡丹江市', '0453', '2');
+INSERT INTO `city_code` VALUES ('765', '231003', '231000', '阳明区', '黑龙江省', '牡丹江市', '0453', '2');
+INSERT INTO `city_code` VALUES ('766', '231004', '231000', '爱民区', '黑龙江省', '牡丹江市', '0453', '2');
+INSERT INTO `city_code` VALUES ('767', '231005', '231000', '西安区', '黑龙江省', '牡丹江市', '0453', '2');
+INSERT INTO `city_code` VALUES ('768', '231024', '231000', '东宁县', '黑龙江省', '牡丹江市', '0453', '2');
+INSERT INTO `city_code` VALUES ('769', '231025', '231000', '林口县', '黑龙江省', '牡丹江市', '0453', '2');
+INSERT INTO `city_code` VALUES ('770', '231081', '231000', '绥芬河市', '黑龙江省', '牡丹江市', '0453', '2');
+INSERT INTO `city_code` VALUES ('771', '231083', '231000', '海林市', '黑龙江省', '牡丹江市', '0453', '2');
+INSERT INTO `city_code` VALUES ('772', '231084', '231000', '宁安市', '黑龙江省', '牡丹江市', '0453', '2');
+INSERT INTO `city_code` VALUES ('773', '231085', '231000', '穆棱市', '黑龙江省', '牡丹江市', '0453', '2');
+INSERT INTO `city_code` VALUES ('774', '231102', '231100', '爱辉区', '黑龙江省', '黑河市', '0456', '2');
+INSERT INTO `city_code` VALUES ('775', '231121', '231100', '嫩江县', '黑龙江省', '黑河市', '0456', '2');
+INSERT INTO `city_code` VALUES ('776', '231123', '231100', '逊克县', '黑龙江省', '黑河市', '0456', '2');
+INSERT INTO `city_code` VALUES ('777', '231124', '231100', '孙吴县', '黑龙江省', '黑河市', '0456', '2');
+INSERT INTO `city_code` VALUES ('778', '231181', '231100', '北安市', '黑龙江省', '黑河市', '0456', '2');
+INSERT INTO `city_code` VALUES ('779', '231182', '231100', '五大连池市', '黑龙江省', '黑河市', '0456', '2');
+INSERT INTO `city_code` VALUES ('780', '231202', '231200', '北林区', '黑龙江省', '绥化市', '0455', '2');
+INSERT INTO `city_code` VALUES ('781', '231221', '231200', '望奎县', '黑龙江省', '绥化市', '0455', '2');
+INSERT INTO `city_code` VALUES ('782', '231222', '231200', '兰西县', '黑龙江省', '绥化市', '0455', '2');
+INSERT INTO `city_code` VALUES ('783', '231223', '231200', '青冈县', '黑龙江省', '绥化市', '0455', '2');
+INSERT INTO `city_code` VALUES ('784', '231224', '231200', '庆安县', '黑龙江省', '绥化市', '0455', '2');
+INSERT INTO `city_code` VALUES ('785', '231225', '231200', '明水县', '黑龙江省', '绥化市', '0455', '2');
+INSERT INTO `city_code` VALUES ('786', '231226', '231200', '绥棱县', '黑龙江省', '绥化市', '0455', '2');
+INSERT INTO `city_code` VALUES ('787', '231281', '231200', '安达市', '黑龙江省', '绥化市', '0455', '2');
+INSERT INTO `city_code` VALUES ('788', '231282', '231200', '肇东市', '黑龙江省', '绥化市', '0455', '2');
+INSERT INTO `city_code` VALUES ('789', '231283', '231200', '海伦市', '黑龙江省', '绥化市', '0455', '2');
+INSERT INTO `city_code` VALUES ('790', '232701', '232700', '加格达奇区', '黑龙江省', '大兴安岭地区', '0457', '2');
+INSERT INTO `city_code` VALUES ('791', '232702', '232700', '松岭区', '黑龙江省', '大兴安岭地区', '0457', '2');
+INSERT INTO `city_code` VALUES ('792', '232703', '232700', '新林区', '黑龙江省', '大兴安岭地区', '0457', '2');
+INSERT INTO `city_code` VALUES ('793', '232704', '232700', '呼中区', '黑龙江省', '大兴安岭地区', '0457', '2');
+INSERT INTO `city_code` VALUES ('794', '232721', '232700', '呼玛县', '黑龙江省', '大兴安岭地区', '0457', '2');
+INSERT INTO `city_code` VALUES ('795', '232722', '232700', '塔河县', '黑龙江省', '大兴安岭地区', '0457', '2');
+INSERT INTO `city_code` VALUES ('796', '232723', '232700', '漠河县', '黑龙江省', '大兴安岭地区', '0457', '2');
+INSERT INTO `city_code` VALUES ('797', '310000', '310000', '上海', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('798', '310000', '310000', '上海市', '上海', '', '021', '1');
+INSERT INTO `city_code` VALUES ('799', '310101', '310000', '黄浦区', '上海', '上海市', '021', '2');
+INSERT INTO `city_code` VALUES ('800', '310104', '310000', '徐汇区', '上海', '上海市', '021', '2');
+INSERT INTO `city_code` VALUES ('801', '310105', '310000', '长宁区', '上海', '上海市', '021', '2');
+INSERT INTO `city_code` VALUES ('802', '310106', '310000', '静安区', '上海', '上海市', '021', '2');
+INSERT INTO `city_code` VALUES ('803', '310107', '310000', '普陀区', '上海', '上海市', '021', '2');
+INSERT INTO `city_code` VALUES ('804', '310108', '310000', '闸北区', '上海', '上海市', '021', '2');
+INSERT INTO `city_code` VALUES ('805', '310109', '310000', '虹口区', '上海', '上海市', '021', '2');
+INSERT INTO `city_code` VALUES ('806', '310110', '310000', '杨浦区', '上海', '上海市', '021', '2');
+INSERT INTO `city_code` VALUES ('807', '310112', '310000', '闵行区', '上海', '上海市', '021', '2');
+INSERT INTO `city_code` VALUES ('808', '310113', '310000', '宝山区', '上海', '上海市', '021', '2');
+INSERT INTO `city_code` VALUES ('809', '310114', '310000', '嘉定区', '上海', '上海市', '021', '2');
+INSERT INTO `city_code` VALUES ('810', '310115', '310000', '浦东新区', '上海', '上海市', '021', '2');
+INSERT INTO `city_code` VALUES ('811', '310116', '310000', '金山区', '上海', '上海市', '021', '2');
+INSERT INTO `city_code` VALUES ('812', '310117', '310000', '松江区', '上海', '上海市', '021', '2');
+INSERT INTO `city_code` VALUES ('813', '310118', '310000', '青浦区', '上海', '上海市', '021', '2');
+INSERT INTO `city_code` VALUES ('814', '310120', '310000', '奉贤区', '上海', '上海市', '021', '2');
+INSERT INTO `city_code` VALUES ('815', '310230', '310000', '崇明县', '上海', '上海市', '021', '2');
+INSERT INTO `city_code` VALUES ('816', '320000', null, '江苏省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('817', '320100', '320000', '南京市', '江苏省', '', '025', '1');
+INSERT INTO `city_code` VALUES ('818', '320200', '320000', '无锡市', '江苏省', '', '0510', '1');
+INSERT INTO `city_code` VALUES ('819', '320300', '320000', '徐州市', '江苏省', '', '0516', '1');
+INSERT INTO `city_code` VALUES ('820', '320400', '320000', '常州市', '江苏省', '', '0519', '1');
+INSERT INTO `city_code` VALUES ('821', '320500', '320000', '苏州市', '江苏省', '', '0512', '1');
+INSERT INTO `city_code` VALUES ('822', '320600', '320000', '南通市', '江苏省', '', '0513', '1');
+INSERT INTO `city_code` VALUES ('823', '320700', '320000', '连云港市', '江苏省', '', '0518', '1');
+INSERT INTO `city_code` VALUES ('824', '320800', '320000', '淮安市', '江苏省', '', '0517', '1');
+INSERT INTO `city_code` VALUES ('825', '320900', '320000', '盐城市', '江苏省', '', '0515', '1');
+INSERT INTO `city_code` VALUES ('826', '321000', '320000', '扬州市', '江苏省', '', '0514', '1');
+INSERT INTO `city_code` VALUES ('827', '321100', '320000', '镇江市', '江苏省', '', '0511', '1');
+INSERT INTO `city_code` VALUES ('828', '321200', '320000', '泰州市', '江苏省', '', '0523', '1');
+INSERT INTO `city_code` VALUES ('829', '321300', '320000', '宿迁市', '江苏省', '', '0527', '1');
+INSERT INTO `city_code` VALUES ('830', '320102', '320100', '玄武区', '江苏省', '南京市', '025', '2');
+INSERT INTO `city_code` VALUES ('831', '320103', '320100', '白下区', '江苏省', '南京市', '025', '2');
+INSERT INTO `city_code` VALUES ('832', '320104', '320100', '秦淮区', '江苏省', '南京市', '025', '2');
+INSERT INTO `city_code` VALUES ('833', '320105', '320100', '建邺区', '江苏省', '南京市', '025', '2');
+INSERT INTO `city_code` VALUES ('834', '320106', '320100', '鼓楼区', '江苏省', '南京市', '025', '2');
+INSERT INTO `city_code` VALUES ('835', '320107', '320100', '下关区', '江苏省', '南京市', '025', '2');
+INSERT INTO `city_code` VALUES ('836', '320111', '320100', '浦口区', '江苏省', '南京市', '025', '2');
+INSERT INTO `city_code` VALUES ('837', '320113', '320100', '栖霞区', '江苏省', '南京市', '025', '2');
+INSERT INTO `city_code` VALUES ('838', '320114', '320100', '雨花台区', '江苏省', '南京市', '025', '2');
+INSERT INTO `city_code` VALUES ('839', '320115', '320100', '江宁区', '江苏省', '南京市', '025', '2');
+INSERT INTO `city_code` VALUES ('840', '320116', '320100', '六合区', '江苏省', '南京市', '025', '2');
+INSERT INTO `city_code` VALUES ('841', '320124', '320100', '溧水县', '江苏省', '南京市', '025', '2');
+INSERT INTO `city_code` VALUES ('842', '320125', '320100', '高淳县', '江苏省', '南京市', '025', '2');
+INSERT INTO `city_code` VALUES ('843', '320202', '320200', '崇安区', '江苏省', '无锡市', '0510', '2');
+INSERT INTO `city_code` VALUES ('844', '320203', '320200', '南长区', '江苏省', '无锡市', '0510', '2');
+INSERT INTO `city_code` VALUES ('845', '320204', '320200', '北塘区', '江苏省', '无锡市', '0510', '2');
+INSERT INTO `city_code` VALUES ('846', '320205', '320200', '锡山区', '江苏省', '无锡市', '0510', '2');
+INSERT INTO `city_code` VALUES ('847', '320206', '320200', '惠山区', '江苏省', '无锡市', '0510', '2');
+INSERT INTO `city_code` VALUES ('848', '320211', '320200', '滨湖区', '江苏省', '无锡市', '0510', '2');
+INSERT INTO `city_code` VALUES ('849', '320281', '320200', '江阴市', '江苏省', '无锡市', '0510', '2');
+INSERT INTO `city_code` VALUES ('850', '320282', '320200', '宜兴市', '江苏省', '无锡市', '0510', '2');
+INSERT INTO `city_code` VALUES ('851', '320302', '320300', '鼓楼区', '江苏省', '徐州市', '0516', '2');
+INSERT INTO `city_code` VALUES ('852', '320303', '320300', '云龙区', '江苏省', '徐州市', '0516', '2');
+INSERT INTO `city_code` VALUES ('853', '320305', '320300', '贾汪区', '江苏省', '徐州市', '0516', '2');
+INSERT INTO `city_code` VALUES ('854', '320311', '320300', '泉山区', '江苏省', '徐州市', '0516', '2');
+INSERT INTO `city_code` VALUES ('855', '320312', '320300', '铜山区', '江苏省', '徐州市', '0516', '2');
+INSERT INTO `city_code` VALUES ('856', '320321', '320300', '丰县', '江苏省', '徐州市', '0516', '2');
+INSERT INTO `city_code` VALUES ('857', '320322', '320300', '沛县', '江苏省', '徐州市', '0516', '2');
+INSERT INTO `city_code` VALUES ('858', '320324', '320300', '睢宁县', '江苏省', '徐州市', '0516', '2');
+INSERT INTO `city_code` VALUES ('859', '320381', '320300', '新沂市', '江苏省', '徐州市', '0516', '2');
+INSERT INTO `city_code` VALUES ('860', '320382', '320300', '邳州市', '江苏省', '徐州市', '0516', '2');
+INSERT INTO `city_code` VALUES ('861', '320402', '320400', '天宁区', '江苏省', '常州市', '0519', '2');
+INSERT INTO `city_code` VALUES ('862', '320404', '320400', '钟楼区', '江苏省', '常州市', '0519', '2');
+INSERT INTO `city_code` VALUES ('863', '320405', '320400', '戚墅堰区', '江苏省', '常州市', '0519', '2');
+INSERT INTO `city_code` VALUES ('864', '320411', '320400', '新北区', '江苏省', '常州市', '0519', '2');
+INSERT INTO `city_code` VALUES ('865', '320412', '320400', '武进区', '江苏省', '常州市', '0519', '2');
+INSERT INTO `city_code` VALUES ('866', '320481', '320400', '溧阳市', '江苏省', '常州市', '0519', '2');
+INSERT INTO `city_code` VALUES ('867', '320482', '320400', '金坛市', '江苏省', '常州市', '0519', '2');
+INSERT INTO `city_code` VALUES ('868', '320503', '320500', '姑苏区', '江苏省', '苏州市', '0512', '2');
+INSERT INTO `city_code` VALUES ('869', '320505', '320500', '虎丘区', '江苏省', '苏州市', '0512', '2');
+INSERT INTO `city_code` VALUES ('870', '320506', '320500', '吴中区', '江苏省', '苏州市', '0512', '2');
+INSERT INTO `city_code` VALUES ('871', '320507', '320500', '相城区', '江苏省', '苏州市', '0512', '2');
+INSERT INTO `city_code` VALUES ('872', '320584', '320500', '吴江区', '江苏省', '苏州市', '0512', '2');
+INSERT INTO `city_code` VALUES ('873', '320581', '320500', '常熟市', '江苏省', '苏州市', '0512', '2');
+INSERT INTO `city_code` VALUES ('874', '320582', '320500', '张家港市', '江苏省', '苏州市', '0512', '2');
+INSERT INTO `city_code` VALUES ('875', '320583', '320500', '昆山市', '江苏省', '苏州市', '0512', '2');
+INSERT INTO `city_code` VALUES ('876', '320585', '320500', '太仓市', '江苏省', '苏州市', '0512', '2');
+INSERT INTO `city_code` VALUES ('877', '320602', '320600', '崇川区', '江苏省', '南通市', '0513', '2');
+INSERT INTO `city_code` VALUES ('878', '320611', '320600', '港闸区', '江苏省', '南通市', '0513', '2');
+INSERT INTO `city_code` VALUES ('879', '320612', '320600', '通州区', '江苏省', '南通市', '0513', '2');
+INSERT INTO `city_code` VALUES ('880', '320621', '320600', '海安县', '江苏省', '南通市', '0513', '2');
+INSERT INTO `city_code` VALUES ('881', '320623', '320600', '如东县', '江苏省', '南通市', '0513', '2');
+INSERT INTO `city_code` VALUES ('882', '320681', '320600', '启东市', '江苏省', '南通市', '0513', '2');
+INSERT INTO `city_code` VALUES ('883', '320682', '320600', '如皋市', '江苏省', '南通市', '0513', '2');
+INSERT INTO `city_code` VALUES ('884', '320684', '320600', '海门市', '江苏省', '南通市', '0513', '2');
+INSERT INTO `city_code` VALUES ('885', '320703', '320700', '连云区', '江苏省', '连云港市', '0518', '2');
+INSERT INTO `city_code` VALUES ('886', '320705', '320700', '新浦区', '江苏省', '连云港市', '0518', '2');
+INSERT INTO `city_code` VALUES ('887', '320706', '320700', '海州区', '江苏省', '连云港市', '0518', '2');
+INSERT INTO `city_code` VALUES ('888', '320721', '320700', '赣榆县', '江苏省', '连云港市', '0518', '2');
+INSERT INTO `city_code` VALUES ('889', '320722', '320700', '东海县', '江苏省', '连云港市', '0518', '2');
+INSERT INTO `city_code` VALUES ('890', '320723', '320700', '灌云县', '江苏省', '连云港市', '0518', '2');
+INSERT INTO `city_code` VALUES ('891', '320724', '320700', '灌南县', '江苏省', '连云港市', '0518', '2');
+INSERT INTO `city_code` VALUES ('892', '320802', '320800', '清河区', '江苏省', '淮安市', '0517', '2');
+INSERT INTO `city_code` VALUES ('893', '320803', '320800', '淮安区', '江苏省', '淮安市', '0517', '2');
+INSERT INTO `city_code` VALUES ('894', '320804', '320800', '淮阴区', '江苏省', '淮安市', '0517', '2');
+INSERT INTO `city_code` VALUES ('895', '320811', '320800', '青浦区', '江苏省', '淮安市', '0517', '2');
+INSERT INTO `city_code` VALUES ('896', '320826', '320800', '涟水县', '江苏省', '淮安市', '0517', '2');
+INSERT INTO `city_code` VALUES ('897', '320829', '320800', '洪泽县', '江苏省', '淮安市', '0517', '2');
+INSERT INTO `city_code` VALUES ('898', '320830', '320800', '盱眙县', '江苏省', '淮安市', '0517', '2');
+INSERT INTO `city_code` VALUES ('899', '320831', '320800', '金湖县', '江苏省', '淮安市', '0517', '2');
+INSERT INTO `city_code` VALUES ('900', '320902', '320900', '亭湖区', '江苏省', '盐城市', '0515', '2');
+INSERT INTO `city_code` VALUES ('901', '320903', '320900', '盐都区', '江苏省', '盐城市', '0515', '2');
+INSERT INTO `city_code` VALUES ('902', '320921', '320900', '响水县', '江苏省', '盐城市', '0515', '2');
+INSERT INTO `city_code` VALUES ('903', '320922', '320900', '滨海县', '江苏省', '盐城市', '0515', '2');
+INSERT INTO `city_code` VALUES ('904', '320923', '320900', '阜宁县', '江苏省', '盐城市', '0515', '2');
+INSERT INTO `city_code` VALUES ('905', '320924', '320900', '射阳县', '江苏省', '盐城市', '0515', '2');
+INSERT INTO `city_code` VALUES ('906', '320925', '320900', '建湖县', '江苏省', '盐城市', '0515', '2');
+INSERT INTO `city_code` VALUES ('907', '320981', '320900', '东台市', '江苏省', '盐城市', '0515', '2');
+INSERT INTO `city_code` VALUES ('908', '320982', '320900', '大丰市', '江苏省', '盐城市', '0515', '2');
+INSERT INTO `city_code` VALUES ('909', '321002', '321000', '广陵区', '江苏省', '扬州市', '0514', '2');
+INSERT INTO `city_code` VALUES ('910', '321003', '321000', '邗江区', '江苏省', '扬州市', '0514', '2');
+INSERT INTO `city_code` VALUES ('911', '321088', '321000', '江都市', '江苏省', '扬州市', '0514', '2');
+INSERT INTO `city_code` VALUES ('912', '321023', '321000', '宝应县', '江苏省', '扬州市', '0514', '2');
+INSERT INTO `city_code` VALUES ('913', '321081', '321000', '仪征市', '江苏省', '扬州市', '0514', '2');
+INSERT INTO `city_code` VALUES ('914', '321084', '321000', '高邮市', '江苏省', '扬州市', '0514', '2');
+INSERT INTO `city_code` VALUES ('915', '321102', '321100', '京口区', '江苏省', '镇江市', '0511', '2');
+INSERT INTO `city_code` VALUES ('916', '321111', '321100', '润州区', '江苏省', '镇江市', '0511', '2');
+INSERT INTO `city_code` VALUES ('917', '321112', '321100', '丹徒区', '江苏省', '镇江市', '0511', '2');
+INSERT INTO `city_code` VALUES ('918', '321181', '321100', '丹阳市', '江苏省', '镇江市', '0511', '2');
+INSERT INTO `city_code` VALUES ('919', '321182', '321100', '扬中市', '江苏省', '镇江市', '0511', '2');
+INSERT INTO `city_code` VALUES ('920', '321183', '321100', '句容市', '江苏省', '镇江市', '0511', '2');
+INSERT INTO `city_code` VALUES ('921', '321202', '321200', '海陵区', '江苏省', '泰州市', '0523', '2');
+INSERT INTO `city_code` VALUES ('922', '321203', '321200', '高港区', '江苏省', '泰州市', '0523', '2');
+INSERT INTO `city_code` VALUES ('923', '321281', '321200', '兴化市', '江苏省', '泰州市', '0523', '2');
+INSERT INTO `city_code` VALUES ('924', '321282', '321200', '靖江市', '江苏省', '泰州市', '0523', '2');
+INSERT INTO `city_code` VALUES ('925', '321283', '321200', '泰兴市', '江苏省', '泰州市', '0523', '2');
+INSERT INTO `city_code` VALUES ('926', '321284', '321200', '姜堰市', '江苏省', '泰州市', '0523', '2');
+INSERT INTO `city_code` VALUES ('927', '321302', '321300', '宿城区', '江苏省', '宿迁市', '0527', '2');
+INSERT INTO `city_code` VALUES ('928', '321311', '321300', '宿豫区', '江苏省', '宿迁市', '0527', '2');
+INSERT INTO `city_code` VALUES ('929', '321322', '321300', '沭阳县', '江苏省', '宿迁市', '0527', '2');
+INSERT INTO `city_code` VALUES ('930', '321323', '321300', '泗阳县', '江苏省', '宿迁市', '0527', '2');
+INSERT INTO `city_code` VALUES ('931', '321324', '321300', '泗洪县', '江苏省', '宿迁市', '0527', '2');
+INSERT INTO `city_code` VALUES ('932', '330000', null, '浙江省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('933', '330100', '330000', '杭州市', '浙江省', '', '0571', '1');
+INSERT INTO `city_code` VALUES ('934', '330200', '330000', '宁波市', '浙江省', '', '0574', '1');
+INSERT INTO `city_code` VALUES ('935', '330300', '330000', '温州市', '浙江省', '', '0577', '1');
+INSERT INTO `city_code` VALUES ('936', '330400', '330000', '嘉兴市', '浙江省', '', '0573', '1');
+INSERT INTO `city_code` VALUES ('937', '330500', '330000', '湖州市', '浙江省', '', '0572', '1');
+INSERT INTO `city_code` VALUES ('938', '330600', '330000', '绍兴市', '浙江省', '', '0575', '1');
+INSERT INTO `city_code` VALUES ('939', '330700', '330000', '金华市', '浙江省', '', '0579', '1');
+INSERT INTO `city_code` VALUES ('940', '330800', '330000', '衢州市', '浙江省', '', '0570', '1');
+INSERT INTO `city_code` VALUES ('941', '330900', '330000', '舟山市', '浙江省', '', '0580', '1');
+INSERT INTO `city_code` VALUES ('942', '331000', '330000', '台州市', '浙江省', '', '0576', '1');
+INSERT INTO `city_code` VALUES ('943', '331100', '330000', '丽水市', '浙江省', '', '0578', '1');
+INSERT INTO `city_code` VALUES ('944', '330102', '330100', '上城区', '浙江省', '杭州市', '0571', '2');
+INSERT INTO `city_code` VALUES ('945', '330103', '330100', '下城区', '浙江省', '杭州市', '0571', '2');
+INSERT INTO `city_code` VALUES ('946', '330104', '330100', '江干区', '浙江省', '杭州市', '0571', '2');
+INSERT INTO `city_code` VALUES ('947', '330105', '330100', '拱墅区', '浙江省', '杭州市', '0571', '2');
+INSERT INTO `city_code` VALUES ('948', '330106', '330100', '西湖区', '浙江省', '杭州市', '0571', '2');
+INSERT INTO `city_code` VALUES ('949', '330108', '330100', '滨江区', '浙江省', '杭州市', '0571', '2');
+INSERT INTO `city_code` VALUES ('950', '330109', '330100', '萧山区', '浙江省', '杭州市', '0571', '2');
+INSERT INTO `city_code` VALUES ('951', '330110', '330100', '余杭区', '浙江省', '杭州市', '0571', '2');
+INSERT INTO `city_code` VALUES ('952', '330122', '330100', '桐庐县', '浙江省', '杭州市', '0571', '2');
+INSERT INTO `city_code` VALUES ('953', '330127', '330100', '淳安县', '浙江省', '杭州市', '0571', '2');
+INSERT INTO `city_code` VALUES ('954', '330182', '330100', '建德市', '浙江省', '杭州市', '0571', '2');
+INSERT INTO `city_code` VALUES ('955', '330183', '330100', '富阳市', '浙江省', '杭州市', '0571', '2');
+INSERT INTO `city_code` VALUES ('956', '330185', '330100', '临安市', '浙江省', '杭州市', '0571', '2');
+INSERT INTO `city_code` VALUES ('957', '330203', '330200', '海曙区', '浙江省', '宁波市', '0574', '2');
+INSERT INTO `city_code` VALUES ('958', '330204', '330200', '江东区', '浙江省', '宁波市', '0574', '2');
+INSERT INTO `city_code` VALUES ('959', '330205', '330200', '江北区', '浙江省', '宁波市', '0574', '2');
+INSERT INTO `city_code` VALUES ('960', '330206', '330200', '北仑区', '浙江省', '宁波市', '0574', '2');
+INSERT INTO `city_code` VALUES ('961', '330211', '330200', '镇海区', '浙江省', '宁波市', '0574', '2');
+INSERT INTO `city_code` VALUES ('962', '330212', '330200', '鄞州区', '浙江省', '宁波市', '0574', '2');
+INSERT INTO `city_code` VALUES ('963', '330225', '330200', '象山县', '浙江省', '宁波市', '0574', '2');
+INSERT INTO `city_code` VALUES ('964', '330226', '330200', '宁海县', '浙江省', '宁波市', '0574', '2');
+INSERT INTO `city_code` VALUES ('965', '330281', '330200', '余姚市', '浙江省', '宁波市', '0574', '2');
+INSERT INTO `city_code` VALUES ('966', '330282', '330200', '慈溪市', '浙江省', '宁波市', '0574', '2');
+INSERT INTO `city_code` VALUES ('967', '330283', '330200', '奉化市', '浙江省', '宁波市', '0574', '2');
+INSERT INTO `city_code` VALUES ('968', '330302', '330300', '鹿城区', '浙江省', '温州市', '0577', '2');
+INSERT INTO `city_code` VALUES ('969', '330303', '330300', '龙湾区', '浙江省', '温州市', '0577', '2');
+INSERT INTO `city_code` VALUES ('970', '330304', '330300', '瓯海区', '浙江省', '温州市', '0577', '2');
+INSERT INTO `city_code` VALUES ('971', '330322', '330300', '洞头县', '浙江省', '温州市', '0577', '2');
+INSERT INTO `city_code` VALUES ('972', '330324', '330300', '永嘉县', '浙江省', '温州市', '0577', '2');
+INSERT INTO `city_code` VALUES ('973', '330326', '330300', '平阳县', '浙江省', '温州市', '0577', '2');
+INSERT INTO `city_code` VALUES ('974', '330327', '330300', '苍南县', '浙江省', '温州市', '0577', '2');
+INSERT INTO `city_code` VALUES ('975', '330328', '330300', '文成县', '浙江省', '温州市', '0577', '2');
+INSERT INTO `city_code` VALUES ('976', '330329', '330300', '泰顺县', '浙江省', '温州市', '0577', '2');
+INSERT INTO `city_code` VALUES ('977', '330381', '330300', '瑞安市', '浙江省', '温州市', '0577', '2');
+INSERT INTO `city_code` VALUES ('978', '330382', '330300', '乐清市', '浙江省', '温州市', '0577', '2');
+INSERT INTO `city_code` VALUES ('979', '330402', '330400', '南湖区', '浙江省', '嘉兴市', '0573', '2');
+INSERT INTO `city_code` VALUES ('980', '330411', '330400', '秀洲区', '浙江省', '嘉兴市', '0573', '2');
+INSERT INTO `city_code` VALUES ('981', '330421', '330400', '嘉善县', '浙江省', '嘉兴市', '0573', '2');
+INSERT INTO `city_code` VALUES ('982', '330424', '330400', '海盐县', '浙江省', '嘉兴市', '0573', '2');
+INSERT INTO `city_code` VALUES ('983', '330481', '330400', '海宁市', '浙江省', '嘉兴市', '0573', '2');
+INSERT INTO `city_code` VALUES ('984', '330482', '330400', '平湖市', '浙江省', '嘉兴市', '0573', '2');
+INSERT INTO `city_code` VALUES ('985', '330483', '330400', '桐乡市', '浙江省', '嘉兴市', '0573', '2');
+INSERT INTO `city_code` VALUES ('986', '330502', '330500', '吴兴区', '浙江省', '湖州市', '0572', '2');
+INSERT INTO `city_code` VALUES ('987', '330503', '330500', '南浔区', '浙江省', '湖州市', '0572', '2');
+INSERT INTO `city_code` VALUES ('988', '330521', '330500', '德清县', '浙江省', '湖州市', '0572', '2');
+INSERT INTO `city_code` VALUES ('989', '330522', '330500', '长兴县', '浙江省', '湖州市', '0572', '2');
+INSERT INTO `city_code` VALUES ('990', '330523', '330500', '安吉县', '浙江省', '湖州市', '0572', '2');
+INSERT INTO `city_code` VALUES ('991', '330602', '330600', '越城区', '浙江省', '绍兴市', '0575', '2');
+INSERT INTO `city_code` VALUES ('992', '330621', '330600', '绍兴县', '浙江省', '绍兴市', '0575', '2');
+INSERT INTO `city_code` VALUES ('993', '330624', '330600', '新昌县', '浙江省', '绍兴市', '0575', '2');
+INSERT INTO `city_code` VALUES ('994', '330681', '330600', '诸暨市', '浙江省', '绍兴市', '0575', '2');
+INSERT INTO `city_code` VALUES ('995', '330682', '330600', '上虞市', '浙江省', '绍兴市', '0575', '2');
+INSERT INTO `city_code` VALUES ('996', '330683', '330600', '嵊州市', '浙江省', '绍兴市', '0575', '2');
+INSERT INTO `city_code` VALUES ('997', '330702', '330700', '婺城区', '浙江省', '金华市', '0579', '2');
+INSERT INTO `city_code` VALUES ('998', '330703', '330700', '金东区', '浙江省', '金华市', '0579', '2');
+INSERT INTO `city_code` VALUES ('999', '330723', '330700', '武义县', '浙江省', '金华市', '0579', '2');
+INSERT INTO `city_code` VALUES ('1000', '330726', '330700', '浦江县', '浙江省', '金华市', '0579', '2');
+INSERT INTO `city_code` VALUES ('1001', '330727', '330700', '磐安县', '浙江省', '金华市', '0579', '2');
+INSERT INTO `city_code` VALUES ('1002', '330781', '330700', '兰溪市', '浙江省', '金华市', '0579', '2');
+INSERT INTO `city_code` VALUES ('1003', '330782', '330700', '义乌市', '浙江省', '金华市', '0579', '2');
+INSERT INTO `city_code` VALUES ('1004', '330783', '330700', '东阳市', '浙江省', '金华市', '0579', '2');
+INSERT INTO `city_code` VALUES ('1005', '330784', '330700', '永康市', '浙江省', '金华市', '0579', '2');
+INSERT INTO `city_code` VALUES ('1006', '330802', '330800', '柯城区', '浙江省', '衢州市', '0570', '2');
+INSERT INTO `city_code` VALUES ('1007', '330803', '330800', '衢江区', '浙江省', '衢州市', '0570', '2');
+INSERT INTO `city_code` VALUES ('1008', '330822', '330800', '常山县', '浙江省', '衢州市', '0570', '2');
+INSERT INTO `city_code` VALUES ('1009', '330824', '330800', '开化县', '浙江省', '衢州市', '0570', '2');
+INSERT INTO `city_code` VALUES ('1010', '330825', '330800', '龙游县', '浙江省', '衢州市', '0570', '2');
+INSERT INTO `city_code` VALUES ('1011', '330881', '330800', '江山市', '浙江省', '衢州市', '0570', '2');
+INSERT INTO `city_code` VALUES ('1012', '330902', '330900', '定海区', '浙江省', '舟山市', '0580', '2');
+INSERT INTO `city_code` VALUES ('1013', '330903', '330900', '普陀区', '浙江省', '舟山市', '0580', '2');
+INSERT INTO `city_code` VALUES ('1014', '330921', '330900', '岱山县', '浙江省', '舟山市', '0580', '2');
+INSERT INTO `city_code` VALUES ('1015', '330922', '330900', '嵊泗县', '浙江省', '舟山市', '0580', '2');
+INSERT INTO `city_code` VALUES ('1016', '331002', '331000', '椒江区', '浙江省', '台州市', '0576', '2');
+INSERT INTO `city_code` VALUES ('1017', '331003', '331000', '黄岩区', '浙江省', '台州市', '0576', '2');
+INSERT INTO `city_code` VALUES ('1018', '331004', '331000', '路桥区', '浙江省', '台州市', '0576', '2');
+INSERT INTO `city_code` VALUES ('1019', '331021', '331000', '玉环县', '浙江省', '台州市', '0576', '2');
+INSERT INTO `city_code` VALUES ('1020', '331022', '331000', '三门县', '浙江省', '台州市', '0576', '2');
+INSERT INTO `city_code` VALUES ('1021', '331023', '331000', '天台县', '浙江省', '台州市', '0576', '2');
+INSERT INTO `city_code` VALUES ('1022', '331024', '331000', '仙居县', '浙江省', '台州市', '0576', '2');
+INSERT INTO `city_code` VALUES ('1023', '331081', '331000', '温岭市', '浙江省', '台州市', '0576', '2');
+INSERT INTO `city_code` VALUES ('1024', '331082', '331000', '临海市', '浙江省', '台州市', '0576', '2');
+INSERT INTO `city_code` VALUES ('1025', '331102', '331100', '莲都区', '浙江省', '丽水市', '0578', '2');
+INSERT INTO `city_code` VALUES ('1026', '331121', '331100', '青田县', '浙江省', '丽水市', '0578', '2');
+INSERT INTO `city_code` VALUES ('1027', '331122', '331100', '缙云县', '浙江省', '丽水市', '0578', '2');
+INSERT INTO `city_code` VALUES ('1028', '331123', '331100', '遂昌县', '浙江省', '丽水市', '0578', '2');
+INSERT INTO `city_code` VALUES ('1029', '331124', '331100', '松阳县', '浙江省', '丽水市', '0578', '2');
+INSERT INTO `city_code` VALUES ('1030', '331125', '331100', '云和县', '浙江省', '丽水市', '0578', '2');
+INSERT INTO `city_code` VALUES ('1031', '331126', '331100', '庆元县', '浙江省', '丽水市', '0578', '2');
+INSERT INTO `city_code` VALUES ('1032', '331127', '331100', '景宁畲族自治县', '浙江省', '丽水市', '0578', '2');
+INSERT INTO `city_code` VALUES ('1033', '331181', '331100', '龙泉市', '浙江省', '丽水市', '0578', '2');
+INSERT INTO `city_code` VALUES ('1034', '340000', null, '安徽省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('1035', '340100', '340000', '合肥市', '安徽省', '', '0551', '1');
+INSERT INTO `city_code` VALUES ('1036', '340200', '340000', '芜湖市', '安徽省', '', '0553', '1');
+INSERT INTO `city_code` VALUES ('1037', '340300', '340000', '蚌埠市', '安徽省', '', '0552', '1');
+INSERT INTO `city_code` VALUES ('1038', '340400', '340000', '淮南市', '安徽省', '', '0554', '1');
+INSERT INTO `city_code` VALUES ('1039', '340500', '340000', '马鞍山市', '安徽省', '', '0555', '1');
+INSERT INTO `city_code` VALUES ('1040', '340600', '340000', '淮北市', '安徽省', '', '0561', '1');
+INSERT INTO `city_code` VALUES ('1041', '340700', '340000', '铜陵市', '安徽省', '', '0562', '1');
+INSERT INTO `city_code` VALUES ('1042', '340800', '340000', '安庆市', '安徽省', '', '0556', '1');
+INSERT INTO `city_code` VALUES ('1043', '341000', '340000', '黄山市', '安徽省', '', '0559', '1');
+INSERT INTO `city_code` VALUES ('1044', '341100', '340000', '滁州市', '安徽省', '', '0550', '1');
+INSERT INTO `city_code` VALUES ('1045', '341200', '340000', '阜阳市', '安徽省', '', '0558', '1');
+INSERT INTO `city_code` VALUES ('1046', '341300', '340000', '宿州市', '安徽省', '', '0557', '1');
+INSERT INTO `city_code` VALUES ('1047', '341500', '340000', '六安市', '安徽省', '', '0564', '1');
+INSERT INTO `city_code` VALUES ('1048', '341600', '340000', '亳州市', '安徽省', '', '0558', '1');
+INSERT INTO `city_code` VALUES ('1049', '341700', '340000', '池州市', '安徽省', '', '0566', '1');
+INSERT INTO `city_code` VALUES ('1050', '341800', '340000', '宣城市', '安徽省', '', '0563', '1');
+INSERT INTO `city_code` VALUES ('1051', '340102', '340100', '瑶海区', '安徽省', '合肥市', '0551', '2');
+INSERT INTO `city_code` VALUES ('1052', '340103', '340100', '庐阳区', '安徽省', '合肥市', '0551', '2');
+INSERT INTO `city_code` VALUES ('1053', '340104', '340100', '蜀山区', '安徽省', '合肥市', '0551', '2');
+INSERT INTO `city_code` VALUES ('1054', '340111', '340100', '包河区', '安徽省', '合肥市', '0551', '2');
+INSERT INTO `city_code` VALUES ('1055', '340121', '340100', '长丰县', '安徽省', '合肥市', '0551', '2');
+INSERT INTO `city_code` VALUES ('1056', '340122', '340100', '肥东县', '安徽省', '合肥市', '0551', '2');
+INSERT INTO `city_code` VALUES ('1057', '340123', '340100', '肥西县', '安徽省', '合肥市', '0551', '2');
+INSERT INTO `city_code` VALUES ('1058', '340124', '340100', '庐江县', '安徽省', '合肥市', '0551', '2');
+INSERT INTO `city_code` VALUES ('1059', '340181', '340100', '巢湖市', '安徽省', '合肥市', '0565', '2');
+INSERT INTO `city_code` VALUES ('1060', '340202', '340200', '镜湖区', '安徽省', '芜湖市', '0553', '2');
+INSERT INTO `city_code` VALUES ('1061', '340203', '340200', '弋江区', '安徽省', '芜湖市', '0553', '2');
+INSERT INTO `city_code` VALUES ('1062', '340207', '340200', '鸠江区', '安徽省', '芜湖市', '0553', '2');
+INSERT INTO `city_code` VALUES ('1063', '340208', '340200', '三山区', '安徽省', '芜湖市', '0553', '2');
+INSERT INTO `city_code` VALUES ('1064', '340221', '340200', '芜湖县', '安徽省', '芜湖市', '0553', '2');
+INSERT INTO `city_code` VALUES ('1065', '340222', '340200', '繁昌县', '安徽省', '芜湖市', '0553', '2');
+INSERT INTO `city_code` VALUES ('1066', '340223', '340200', '南陵县', '安徽省', '芜湖市', '0553', '2');
+INSERT INTO `city_code` VALUES ('1067', '340225', '340200', '无为县', '安徽省', '芜湖市', '0553', '2');
+INSERT INTO `city_code` VALUES ('1068', '340302', '340300', '龙子湖区', '安徽省', '蚌埠市', '0552', '2');
+INSERT INTO `city_code` VALUES ('1069', '340303', '340300', '蚌山区', '安徽省', '蚌埠市', '0552', '2');
+INSERT INTO `city_code` VALUES ('1070', '340304', '340300', '禹会区', '安徽省', '蚌埠市', '0552', '2');
+INSERT INTO `city_code` VALUES ('1071', '340311', '340300', '淮上区', '安徽省', '蚌埠市', '0552', '2');
+INSERT INTO `city_code` VALUES ('1072', '340321', '340300', '怀远县', '安徽省', '蚌埠市', '0552', '2');
+INSERT INTO `city_code` VALUES ('1073', '340322', '340300', '五河县', '安徽省', '蚌埠市', '0552', '2');
+INSERT INTO `city_code` VALUES ('1074', '340323', '340300', '固镇县', '安徽省', '蚌埠市', '0552', '2');
+INSERT INTO `city_code` VALUES ('1075', '340402', '340400', '大通区', '安徽省', '淮南市', '0554', '2');
+INSERT INTO `city_code` VALUES ('1076', '340403', '340400', '田家庵区', '安徽省', '淮南市', '0554', '2');
+INSERT INTO `city_code` VALUES ('1077', '340404', '340400', '谢家集区', '安徽省', '淮南市', '0554', '2');
+INSERT INTO `city_code` VALUES ('1078', '340405', '340400', '八公山区', '安徽省', '淮南市', '0554', '2');
+INSERT INTO `city_code` VALUES ('1079', '340406', '340400', '潘集区', '安徽省', '淮南市', '0554', '2');
+INSERT INTO `city_code` VALUES ('1080', '340421', '340400', '凤台县', '安徽省', '淮南市', '0554', '2');
+INSERT INTO `city_code` VALUES ('1081', '340503', '340500', '花山区', '安徽省', '马鞍山市', '0555', '2');
+INSERT INTO `city_code` VALUES ('1082', '340504', '340500', '雨山区', '安徽省', '马鞍山市', '0555', '2');
+INSERT INTO `city_code` VALUES ('1083', '340596', '340500', '博望区', '安徽省', '马鞍山市', '0555', '2');
+INSERT INTO `city_code` VALUES ('1084', '340521', '340500', '当涂县', '安徽省', '马鞍山市', '0555', '2');
+INSERT INTO `city_code` VALUES ('1085', '340522', '340500', '含山县', '安徽省', '马鞍山市', '0555', '2');
+INSERT INTO `city_code` VALUES ('1086', '340523', '340500', '和县', '安徽省', '马鞍山市', '0555', '2');
+INSERT INTO `city_code` VALUES ('1087', '340602', '340600', '杜集区', '安徽省', '淮北市', '0561', '2');
+INSERT INTO `city_code` VALUES ('1088', '340603', '340600', '相山区', '安徽省', '淮北市', '0561', '2');
+INSERT INTO `city_code` VALUES ('1089', '340604', '340600', '烈山区', '安徽省', '淮北市', '0561', '2');
+INSERT INTO `city_code` VALUES ('1090', '340621', '340600', '濉溪县', '安徽省', '淮北市', '0561', '2');
+INSERT INTO `city_code` VALUES ('1091', '340702', '340700', '铜官山区', '安徽省', '铜陵市', '0562', '2');
+INSERT INTO `city_code` VALUES ('1092', '340703', '340700', '狮子山区', '安徽省', '铜陵市', '0562', '2');
+INSERT INTO `city_code` VALUES ('1093', '340711', '340700', '郊区', '安徽省', '铜陵市', '0562', '2');
+INSERT INTO `city_code` VALUES ('1094', '340721', '340700', '铜陵县', '安徽省', '铜陵市', '0562', '2');
+INSERT INTO `city_code` VALUES ('1095', '340802', '340800', '迎江区', '安徽省', '安庆市', '0556', '2');
+INSERT INTO `city_code` VALUES ('1096', '340803', '340800', '大观区', '安徽省', '安庆市', '0556', '2');
+INSERT INTO `city_code` VALUES ('1097', '340811', '340800', '宜秀区', '安徽省', '安庆市', '0556', '2');
+INSERT INTO `city_code` VALUES ('1098', '340822', '340800', '怀宁县', '安徽省', '安庆市', '0556', '2');
+INSERT INTO `city_code` VALUES ('1099', '340823', '340800', '枞阳县', '安徽省', '安庆市', '0556', '2');
+INSERT INTO `city_code` VALUES ('1100', '340824', '340800', '潜山县', '安徽省', '安庆市', '0556', '2');
+INSERT INTO `city_code` VALUES ('1101', '340825', '340800', '太湖县', '安徽省', '安庆市', '0556', '2');
+INSERT INTO `city_code` VALUES ('1102', '340826', '340800', '宿松县', '安徽省', '安庆市', '0556', '2');
+INSERT INTO `city_code` VALUES ('1103', '340827', '340800', '望江县', '安徽省', '安庆市', '0556', '2');
+INSERT INTO `city_code` VALUES ('1104', '340828', '340800', '岳西县', '安徽省', '安庆市', '0556', '2');
+INSERT INTO `city_code` VALUES ('1105', '340881', '340800', '桐城市', '安徽省', '安庆市', '0556', '2');
+INSERT INTO `city_code` VALUES ('1106', '341002', '341000', '屯溪区', '安徽省', '黄山市', '0559', '2');
+INSERT INTO `city_code` VALUES ('1107', '341003', '341000', '黄山区', '安徽省', '黄山市', '0559', '2');
+INSERT INTO `city_code` VALUES ('1108', '341004', '341000', '徽州区', '安徽省', '黄山市', '0559', '2');
+INSERT INTO `city_code` VALUES ('1109', '341021', '341000', '歙县', '安徽省', '黄山市', '0559', '2');
+INSERT INTO `city_code` VALUES ('1110', '341022', '341000', '休宁县', '安徽省', '黄山市', '0559', '2');
+INSERT INTO `city_code` VALUES ('1111', '341023', '341000', '黟县', '安徽省', '黄山市', '0559', '2');
+INSERT INTO `city_code` VALUES ('1112', '341024', '341000', '祁门县', '安徽省', '黄山市', '0559', '2');
+INSERT INTO `city_code` VALUES ('1113', '341102', '341100', '琅琊区', '安徽省', '滁州市', '0550', '2');
+INSERT INTO `city_code` VALUES ('1114', '341103', '341100', '南谯区', '安徽省', '滁州市', '0550', '2');
+INSERT INTO `city_code` VALUES ('1115', '341122', '341100', '来安县', '安徽省', '滁州市', '0550', '2');
+INSERT INTO `city_code` VALUES ('1116', '341124', '341100', '全椒县', '安徽省', '滁州市', '0550', '2');
+INSERT INTO `city_code` VALUES ('1117', '341125', '341100', '定远县', '安徽省', '滁州市', '0550', '2');
+INSERT INTO `city_code` VALUES ('1118', '341126', '341100', '凤阳县', '安徽省', '滁州市', '0550', '2');
+INSERT INTO `city_code` VALUES ('1119', '341181', '341100', '天长市', '安徽省', '滁州市', '0550', '2');
+INSERT INTO `city_code` VALUES ('1120', '341182', '341100', '明光市', '安徽省', '滁州市', '0550', '2');
+INSERT INTO `city_code` VALUES ('1121', '341202', '341200', '颍州区', '安徽省', '阜阳市', '0558', '2');
+INSERT INTO `city_code` VALUES ('1122', '341203', '341200', '颍东区', '安徽省', '阜阳市', '0558', '2');
+INSERT INTO `city_code` VALUES ('1123', '341204', '341200', '颍泉区', '安徽省', '阜阳市', '0558', '2');
+INSERT INTO `city_code` VALUES ('1124', '341221', '341200', '临泉县', '安徽省', '阜阳市', '0558', '2');
+INSERT INTO `city_code` VALUES ('1125', '341222', '341200', '太和县', '安徽省', '阜阳市', '0558', '2');
+INSERT INTO `city_code` VALUES ('1126', '341225', '341200', '阜南县', '安徽省', '阜阳市', '0558', '2');
+INSERT INTO `city_code` VALUES ('1127', '341226', '341200', '颍上县', '安徽省', '阜阳市', '0558', '2');
+INSERT INTO `city_code` VALUES ('1128', '341282', '341200', '界首市', '安徽省', '阜阳市', '0558', '2');
+INSERT INTO `city_code` VALUES ('1129', '341302', '341300', '埇桥区', '安徽省', '宿州市', '0557', '2');
+INSERT INTO `city_code` VALUES ('1130', '341321', '341300', '砀山县', '安徽省', '宿州市', '0557', '2');
+INSERT INTO `city_code` VALUES ('1131', '341322', '341300', '萧县', '安徽省', '宿州市', '0557', '2');
+INSERT INTO `city_code` VALUES ('1132', '341323', '341300', '灵璧县', '安徽省', '宿州市', '0557', '2');
+INSERT INTO `city_code` VALUES ('1133', '341324', '341300', '泗县', '安徽省', '宿州市', '0557', '2');
+INSERT INTO `city_code` VALUES ('1134', '341502', '341500', '金安区', '安徽省', '六安市', '0564', '2');
+INSERT INTO `city_code` VALUES ('1135', '341503', '341500', '裕安区', '安徽省', '六安市', '0564', '2');
+INSERT INTO `city_code` VALUES ('1136', '341521', '341500', '寿县', '安徽省', '六安市', '0564', '2');
+INSERT INTO `city_code` VALUES ('1137', '341522', '341500', '霍邱县', '安徽省', '六安市', '0564', '2');
+INSERT INTO `city_code` VALUES ('1138', '341523', '341500', '舒城县', '安徽省', '六安市', '0564', '2');
+INSERT INTO `city_code` VALUES ('1139', '341524', '341500', '金寨县', '安徽省', '六安市', '0564', '2');
+INSERT INTO `city_code` VALUES ('1140', '341525', '341500', '霍山县', '安徽省', '六安市', '0564', '2');
+INSERT INTO `city_code` VALUES ('1141', '341602', '341600', '谯城区', '安徽省', '亳州市', '0558', '2');
+INSERT INTO `city_code` VALUES ('1142', '341621', '341600', '涡阳县', '安徽省', '亳州市', '0558', '2');
+INSERT INTO `city_code` VALUES ('1143', '341622', '341600', '蒙城县', '安徽省', '亳州市', '0558', '2');
+INSERT INTO `city_code` VALUES ('1144', '341623', '341600', '利辛县', '安徽省', '亳州市', '0558', '2');
+INSERT INTO `city_code` VALUES ('1145', '341702', '341700', '贵池区', '安徽省', '池州市', '0566', '2');
+INSERT INTO `city_code` VALUES ('1146', '341721', '341700', '东至县', '安徽省', '池州市', '0566', '2');
+INSERT INTO `city_code` VALUES ('1147', '341722', '341700', '石台县', '安徽省', '池州市', '0566', '2');
+INSERT INTO `city_code` VALUES ('1148', '341723', '341700', '青阳县', '安徽省', '池州市', '0566', '2');
+INSERT INTO `city_code` VALUES ('1149', '341802', '341800', '宣州区', '安徽省', '宣城市', '0563', '2');
+INSERT INTO `city_code` VALUES ('1150', '341821', '341800', '郎溪县', '安徽省', '宣城市', '0563', '2');
+INSERT INTO `city_code` VALUES ('1151', '341822', '341800', '广德县', '安徽省', '宣城市', '0563', '2');
+INSERT INTO `city_code` VALUES ('1152', '341823', '341800', '泾县', '安徽省', '宣城市', '0563', '2');
+INSERT INTO `city_code` VALUES ('1153', '341824', '341800', '绩溪县', '安徽省', '宣城市', '0563', '2');
+INSERT INTO `city_code` VALUES ('1154', '341825', '341800', '旌德县', '安徽省', '宣城市', '0563', '2');
+INSERT INTO `city_code` VALUES ('1155', '341881', '341800', '宁国市', '安徽省', '宣城市', '0563', '2');
+INSERT INTO `city_code` VALUES ('1156', '350000', null, '福建省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('1157', '350100', '350000', '福州市', '福建省', '福建省', '0591', '1');
+INSERT INTO `city_code` VALUES ('1158', '350200', '350000', '厦门市', '福建省', '福建省', '0592', '1');
+INSERT INTO `city_code` VALUES ('1159', '350300', '350000', '莆田市', '福建省', '福建省', '0594', '1');
+INSERT INTO `city_code` VALUES ('1160', '350400', '350000', '三明市', '福建省', '福建省', '0598', '1');
+INSERT INTO `city_code` VALUES ('1161', '350500', '350000', '泉州市', '福建省', '福建省', '0595', '1');
+INSERT INTO `city_code` VALUES ('1162', '350600', '350000', '漳州市', '福建省', '福建省', '0596', '1');
+INSERT INTO `city_code` VALUES ('1163', '350700', '350000', '南平市', '福建省', '福建省', '0599', '1');
+INSERT INTO `city_code` VALUES ('1164', '350800', '350000', '龙岩市', '福建省', '福建省', '0597', '1');
+INSERT INTO `city_code` VALUES ('1165', '350900', '350000', '宁德市', '福建省', '福建省', '0593', '1');
+INSERT INTO `city_code` VALUES ('1166', '350102', '350100', '鼓楼区', '福建省', '福州市', '0591', '2');
+INSERT INTO `city_code` VALUES ('1167', '350103', '350100', '台江区', '福建省', '福州市', '0591', '2');
+INSERT INTO `city_code` VALUES ('1168', '350104', '350100', '仓山区', '福建省', '福州市', '0591', '2');
+INSERT INTO `city_code` VALUES ('1169', '350105', '350100', '马尾区', '福建省', '福州市', '0591', '2');
+INSERT INTO `city_code` VALUES ('1170', '350111', '350100', '晋安区', '福建省', '福州市', '0591', '2');
+INSERT INTO `city_code` VALUES ('1171', '350121', '350100', '闽侯县', '福建省', '福州市', '0591', '2');
+INSERT INTO `city_code` VALUES ('1172', '350122', '350100', '连江县', '福建省', '福州市', '0591', '2');
+INSERT INTO `city_code` VALUES ('1173', '350123', '350100', '罗源县', '福建省', '福州市', '0591', '2');
+INSERT INTO `city_code` VALUES ('1174', '350124', '350100', '闽清县', '福建省', '福州市', '0591', '2');
+INSERT INTO `city_code` VALUES ('1175', '350125', '350100', '永泰县', '福建省', '福州市', '0591', '2');
+INSERT INTO `city_code` VALUES ('1176', '350128', '350100', '平潭县', '福建省', '福州市', '0591', '2');
+INSERT INTO `city_code` VALUES ('1177', '350181', '350100', '福清市', '福建省', '福州市', '0591', '2');
+INSERT INTO `city_code` VALUES ('1178', '350182', '350100', '长乐市', '福建省', '福州市', '0591', '2');
+INSERT INTO `city_code` VALUES ('1179', '350203', '350200', '思明区', '福建省', '厦门市', '0592', '2');
+INSERT INTO `city_code` VALUES ('1180', '350205', '350200', '海沧区', '福建省', '厦门市', '0592', '2');
+INSERT INTO `city_code` VALUES ('1181', '350206', '350200', '湖里区', '福建省', '厦门市', '0592', '2');
+INSERT INTO `city_code` VALUES ('1182', '350211', '350200', '集美区', '福建省', '厦门市', '0592', '2');
+INSERT INTO `city_code` VALUES ('1183', '350212', '350200', '同安区', '福建省', '厦门市', '0592', '2');
+INSERT INTO `city_code` VALUES ('1184', '350213', '350200', '翔安区', '福建省', '厦门市', '0592', '2');
+INSERT INTO `city_code` VALUES ('1185', '350302', '350300', '城厢区', '福建省', '莆田市', '0594', '2');
+INSERT INTO `city_code` VALUES ('1186', '350303', '350300', '涵江区', '福建省', '莆田市', '0594', '2');
+INSERT INTO `city_code` VALUES ('1187', '350304', '350300', '荔城区', '福建省', '莆田市', '0594', '2');
+INSERT INTO `city_code` VALUES ('1188', '350305', '350300', '秀屿区', '福建省', '莆田市', '0594', '2');
+INSERT INTO `city_code` VALUES ('1189', '350322', '350300', '仙游县', '福建省', '莆田市', '0594', '2');
+INSERT INTO `city_code` VALUES ('1190', '350402', '350400', '梅列区', '福建省', '三明市', '0598', '2');
+INSERT INTO `city_code` VALUES ('1191', '350403', '350400', '三元区', '福建省', '三明市', '0598', '2');
+INSERT INTO `city_code` VALUES ('1192', '350421', '350400', '明溪县', '福建省', '三明市', '0598', '2');
+INSERT INTO `city_code` VALUES ('1193', '350423', '350400', '清流县', '福建省', '三明市', '0598', '2');
+INSERT INTO `city_code` VALUES ('1194', '350424', '350400', '宁化县', '福建省', '三明市', '0598', '2');
+INSERT INTO `city_code` VALUES ('1195', '350425', '350400', '大田县', '福建省', '三明市', '0598', '2');
+INSERT INTO `city_code` VALUES ('1196', '350426', '350400', '尤溪县', '福建省', '三明市', '0598', '2');
+INSERT INTO `city_code` VALUES ('1197', '350427', '350400', '沙县', '福建省', '三明市', '0598', '2');
+INSERT INTO `city_code` VALUES ('1198', '350428', '350400', '将乐县', '福建省', '三明市', '0598', '2');
+INSERT INTO `city_code` VALUES ('1199', '350429', '350400', '泰宁县', '福建省', '三明市', '0598', '2');
+INSERT INTO `city_code` VALUES ('1200', '350430', '350400', '建宁县', '福建省', '三明市', '0598', '2');
+INSERT INTO `city_code` VALUES ('1201', '350481', '350400', '永安市', '福建省', '三明市', '0598', '2');
+INSERT INTO `city_code` VALUES ('1202', '350502', '350500', '鲤城区', '福建省', '泉州市', '0595', '2');
+INSERT INTO `city_code` VALUES ('1203', '350503', '350500', '丰泽区', '福建省', '泉州市', '0595', '2');
+INSERT INTO `city_code` VALUES ('1204', '350504', '350500', '洛江区', '福建省', '泉州市', '0595', '2');
+INSERT INTO `city_code` VALUES ('1205', '350505', '350500', '泉港区', '福建省', '泉州市', '0595', '2');
+INSERT INTO `city_code` VALUES ('1206', '350521', '350500', '惠安县', '福建省', '泉州市', '0595', '2');
+INSERT INTO `city_code` VALUES ('1207', '350524', '350500', '安溪县', '福建省', '泉州市', '0595', '2');
+INSERT INTO `city_code` VALUES ('1208', '350525', '350500', '永春县', '福建省', '泉州市', '0595', '2');
+INSERT INTO `city_code` VALUES ('1209', '350526', '350500', '德化县', '福建省', '泉州市', '0595', '2');
+INSERT INTO `city_code` VALUES ('1210', '350527', '350500', '金门县', '福建省', '泉州市', '0595', '2');
+INSERT INTO `city_code` VALUES ('1211', '350581', '350500', '石狮市', '福建省', '泉州市', '0595', '2');
+INSERT INTO `city_code` VALUES ('1212', '350582', '350500', '晋江市', '福建省', '泉州市', '0595', '2');
+INSERT INTO `city_code` VALUES ('1213', '350583', '350500', '南安市', '福建省', '泉州市', '0595', '2');
+INSERT INTO `city_code` VALUES ('1214', '350602', '350600', '芗城区', '福建省', '漳州市', '0596', '2');
+INSERT INTO `city_code` VALUES ('1215', '350603', '350600', '龙文区', '福建省', '漳州市', '0596', '2');
+INSERT INTO `city_code` VALUES ('1216', '350622', '350600', '云霄县', '福建省', '漳州市', '0596', '2');
+INSERT INTO `city_code` VALUES ('1217', '350623', '350600', '漳浦县', '福建省', '漳州市', '0596', '2');
+INSERT INTO `city_code` VALUES ('1218', '350624', '350600', '诏安县', '福建省', '漳州市', '0596', '2');
+INSERT INTO `city_code` VALUES ('1219', '350625', '350600', '长泰县', '福建省', '漳州市', '0596', '2');
+INSERT INTO `city_code` VALUES ('1220', '350626', '350600', '东山县', '福建省', '漳州市', '0596', '2');
+INSERT INTO `city_code` VALUES ('1221', '350627', '350600', '南靖县', '福建省', '漳州市', '0596', '2');
+INSERT INTO `city_code` VALUES ('1222', '350628', '350600', '平和县', '福建省', '漳州市', '0596', '2');
+INSERT INTO `city_code` VALUES ('1223', '350629', '350600', '华安县', '福建省', '漳州市', '0596', '2');
+INSERT INTO `city_code` VALUES ('1224', '350681', '350600', '龙海市', '福建省', '漳州市', '0596', '2');
+INSERT INTO `city_code` VALUES ('1225', '350702', '350700', '延平区', '福建省', '南平市', '0599', '2');
+INSERT INTO `city_code` VALUES ('1226', '350721', '350700', '顺昌县', '福建省', '南平市', '0599', '2');
+INSERT INTO `city_code` VALUES ('1227', '350722', '350700', '浦城县', '福建省', '南平市', '0599', '2');
+INSERT INTO `city_code` VALUES ('1228', '350723', '350700', '光泽县', '福建省', '南平市', '0599', '2');
+INSERT INTO `city_code` VALUES ('1229', '350724', '350700', '松溪县', '福建省', '南平市', '0599', '2');
+INSERT INTO `city_code` VALUES ('1230', '350725', '350700', '政和县', '福建省', '南平市', '0599', '2');
+INSERT INTO `city_code` VALUES ('1231', '350781', '350700', '邵武市', '福建省', '南平市', '0599', '2');
+INSERT INTO `city_code` VALUES ('1232', '350782', '350700', '武夷山市', '福建省', '南平市', '0599', '2');
+INSERT INTO `city_code` VALUES ('1233', '350783', '350700', '建瓯市', '福建省', '南平市', '0599', '2');
+INSERT INTO `city_code` VALUES ('1234', '350784', '350700', '建阳市', '福建省', '南平市', '0599', '2');
+INSERT INTO `city_code` VALUES ('1235', '350802', '350800', '新罗区', '福建省', '龙岩市', '0597', '2');
+INSERT INTO `city_code` VALUES ('1236', '350821', '350800', '长汀县', '福建省', '龙岩市', '0597', '2');
+INSERT INTO `city_code` VALUES ('1237', '350822', '350800', '永定县', '福建省', '龙岩市', '0597', '2');
+INSERT INTO `city_code` VALUES ('1238', '350823', '350800', '上杭县', '福建省', '龙岩市', '0597', '2');
+INSERT INTO `city_code` VALUES ('1239', '350824', '350800', '武平县', '福建省', '龙岩市', '0597', '2');
+INSERT INTO `city_code` VALUES ('1240', '350825', '350800', '连城县', '福建省', '龙岩市', '0597', '2');
+INSERT INTO `city_code` VALUES ('1241', '350881', '350800', '漳平市', '福建省', '龙岩市', '0597', '2');
+INSERT INTO `city_code` VALUES ('1242', '350902', '350900', '蕉城区', '福建省', '宁德市', '0593', '2');
+INSERT INTO `city_code` VALUES ('1243', '350921', '350900', '霞浦县', '福建省', '宁德市', '0593', '2');
+INSERT INTO `city_code` VALUES ('1244', '350922', '350900', '古田县', '福建省', '宁德市', '0593', '2');
+INSERT INTO `city_code` VALUES ('1245', '350923', '350900', '屏南县', '福建省', '宁德市', '0593', '2');
+INSERT INTO `city_code` VALUES ('1246', '350924', '350900', '寿宁县', '福建省', '宁德市', '0593', '2');
+INSERT INTO `city_code` VALUES ('1247', '350925', '350900', '周宁县', '福建省', '宁德市', '0593', '2');
+INSERT INTO `city_code` VALUES ('1248', '350926', '350900', '柘荣县', '福建省', '宁德市', '0593', '2');
+INSERT INTO `city_code` VALUES ('1249', '350981', '350900', '福安市', '福建省', '宁德市', '0593', '2');
+INSERT INTO `city_code` VALUES ('1250', '350982', '350900', '福鼎市', '福建省', '宁德市', '0593', '2');
+INSERT INTO `city_code` VALUES ('1251', '360000', null, '江西省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('1252', '360100', '360000', '南昌市', '江西省', '', '0791', '1');
+INSERT INTO `city_code` VALUES ('1253', '360200', '360000', '景德镇市', '江西省', '', '0798', '1');
+INSERT INTO `city_code` VALUES ('1254', '360300', '360000', '萍乡市', '江西省', '', '0799', '1');
+INSERT INTO `city_code` VALUES ('1255', '360400', '360000', '九江市', '江西省', '', '0792', '1');
+INSERT INTO `city_code` VALUES ('1256', '360500', '360000', '新余市', '江西省', '', '0790', '1');
+INSERT INTO `city_code` VALUES ('1257', '360600', '360000', '鹰潭市', '江西省', '', '0701', '1');
+INSERT INTO `city_code` VALUES ('1258', '360700', '360000', '赣州市', '江西省', '', '0797', '1');
+INSERT INTO `city_code` VALUES ('1259', '360800', '360000', '吉安市', '江西省', '', '0796', '1');
+INSERT INTO `city_code` VALUES ('1260', '360900', '360000', '宜春市', '江西省', '', '0795', '1');
+INSERT INTO `city_code` VALUES ('1261', '361000', '360000', '抚州市', '江西省', '', '0794', '1');
+INSERT INTO `city_code` VALUES ('1262', '361100', '360000', '上饶市', '江西省', '', '0793', '1');
+INSERT INTO `city_code` VALUES ('1263', '360102', '360100', '东湖区', '江西省', '南昌市', '0791', '2');
+INSERT INTO `city_code` VALUES ('1264', '360103', '360100', '西湖区', '江西省', '南昌市', '0791', '2');
+INSERT INTO `city_code` VALUES ('1265', '360104', '360100', '青云谱区', '江西省', '南昌市', '0791', '2');
+INSERT INTO `city_code` VALUES ('1266', '360105', '360100', '湾里区', '江西省', '南昌市', '0791', '2');
+INSERT INTO `city_code` VALUES ('1267', '360111', '360100', '青山湖区', '江西省', '南昌市', '0791', '2');
+INSERT INTO `city_code` VALUES ('1268', '360121', '360100', '南昌县', '江西省', '南昌市', '0791', '2');
+INSERT INTO `city_code` VALUES ('1269', '360122', '360100', '新建县', '江西省', '南昌市', '0791', '2');
+INSERT INTO `city_code` VALUES ('1270', '360123', '360100', '安义县', '江西省', '南昌市', '0791', '2');
+INSERT INTO `city_code` VALUES ('1271', '360124', '360100', '进贤县', '江西省', '南昌市', '0791', '2');
+INSERT INTO `city_code` VALUES ('1272', '360202', '360200', '昌江区', '江西省', '景德镇市', '0798', '2');
+INSERT INTO `city_code` VALUES ('1273', '360203', '360200', '珠山区', '江西省', '景德镇市', '0798', '2');
+INSERT INTO `city_code` VALUES ('1274', '360222', '360200', '浮梁县', '江西省', '景德镇市', '0798', '2');
+INSERT INTO `city_code` VALUES ('1275', '360281', '360200', '乐平市', '江西省', '景德镇市', '0798', '2');
+INSERT INTO `city_code` VALUES ('1276', '360302', '360300', '安源区', '江西省', '萍乡市', '0799', '2');
+INSERT INTO `city_code` VALUES ('1277', '360313', '360300', '湘东区', '江西省', '萍乡市', '0799', '2');
+INSERT INTO `city_code` VALUES ('1278', '360321', '360300', '莲花县', '江西省', '萍乡市', '0799', '2');
+INSERT INTO `city_code` VALUES ('1279', '360322', '360300', '上栗县', '江西省', '萍乡市', '0799', '2');
+INSERT INTO `city_code` VALUES ('1280', '360323', '360300', '芦溪县', '江西省', '萍乡市', '0799', '2');
+INSERT INTO `city_code` VALUES ('1281', '360402', '360400', '庐山区', '江西省', '九江市', '0792', '2');
+INSERT INTO `city_code` VALUES ('1282', '360403', '360400', '浔阳区', '江西省', '九江市', '0792', '2');
+INSERT INTO `city_code` VALUES ('1283', '360421', '360400', '九江县', '江西省', '九江市', '0792', '2');
+INSERT INTO `city_code` VALUES ('1284', '360423', '360400', '武宁县', '江西省', '九江市', '0792', '2');
+INSERT INTO `city_code` VALUES ('1285', '360424', '360400', '修水县', '江西省', '九江市', '0792', '2');
+INSERT INTO `city_code` VALUES ('1286', '360425', '360400', '永修县', '江西省', '九江市', '0792', '2');
+INSERT INTO `city_code` VALUES ('1287', '360426', '360400', '德安县', '江西省', '九江市', '0792', '2');
+INSERT INTO `city_code` VALUES ('1288', '360427', '360400', '星子县', '江西省', '九江市', '0792', '2');
+INSERT INTO `city_code` VALUES ('1289', '360428', '360400', '都昌县', '江西省', '九江市', '0792', '2');
+INSERT INTO `city_code` VALUES ('1290', '360429', '360400', '湖口县', '江西省', '九江市', '0792', '2');
+INSERT INTO `city_code` VALUES ('1291', '360430', '360400', '彭泽县', '江西省', '九江市', '0792', '2');
+INSERT INTO `city_code` VALUES ('1292', '360481', '360400', '瑞昌市', '江西省', '九江市', '0792', '2');
+INSERT INTO `city_code` VALUES ('1293', '360482', '360400', '共青城市', '江西省', '九江市', '0792', '2');
+INSERT INTO `city_code` VALUES ('1294', '360502', '360500', '渝水区', '江西省', '新余市', '0790', '2');
+INSERT INTO `city_code` VALUES ('1295', '360521', '360500', '分宜县', '江西省', '新余市', '0790', '2');
+INSERT INTO `city_code` VALUES ('1296', '360602', '360600', '月湖区', '江西省', '鹰潭市', '0701', '2');
+INSERT INTO `city_code` VALUES ('1297', '360622', '360600', '余江县', '江西省', '鹰潭市', '0701', '2');
+INSERT INTO `city_code` VALUES ('1298', '360681', '360600', '贵溪市', '江西省', '鹰潭市', '0701', '2');
+INSERT INTO `city_code` VALUES ('1299', '360702', '360700', '章贡区', '江西省', '赣州市', '0797', '2');
+INSERT INTO `city_code` VALUES ('1300', '360721', '360700', '赣县', '江西省', '赣州市', '0797', '2');
+INSERT INTO `city_code` VALUES ('1301', '360722', '360700', '信丰县', '江西省', '赣州市', '0797', '2');
+INSERT INTO `city_code` VALUES ('1302', '360723', '360700', '大余县', '江西省', '赣州市', '0797', '2');
+INSERT INTO `city_code` VALUES ('1303', '360724', '360700', '上犹县', '江西省', '赣州市', '0797', '2');
+INSERT INTO `city_code` VALUES ('1304', '360725', '360700', '崇义县', '江西省', '赣州市', '0797', '2');
+INSERT INTO `city_code` VALUES ('1305', '360726', '360700', '安远县', '江西省', '赣州市', '0797', '2');
+INSERT INTO `city_code` VALUES ('1306', '360727', '360700', '龙南县', '江西省', '赣州市', '0797', '2');
+INSERT INTO `city_code` VALUES ('1307', '360728', '360700', '定南县', '江西省', '赣州市', '0797', '2');
+INSERT INTO `city_code` VALUES ('1308', '360729', '360700', '全南县', '江西省', '赣州市', '0797', '2');
+INSERT INTO `city_code` VALUES ('1309', '360730', '360700', '宁都县', '江西省', '赣州市', '0797', '2');
+INSERT INTO `city_code` VALUES ('1310', '360731', '360700', '于都县', '江西省', '赣州市', '0797', '2');
+INSERT INTO `city_code` VALUES ('1311', '360732', '360700', '兴国县', '江西省', '赣州市', '0797', '2');
+INSERT INTO `city_code` VALUES ('1312', '360733', '360700', '会昌县', '江西省', '赣州市', '0797', '2');
+INSERT INTO `city_code` VALUES ('1313', '360734', '360700', '寻乌县', '江西省', '赣州市', '0797', '2');
+INSERT INTO `city_code` VALUES ('1314', '360735', '360700', '石城县', '江西省', '赣州市', '0797', '2');
+INSERT INTO `city_code` VALUES ('1315', '360781', '360700', '瑞金市', '江西省', '赣州市', '0797', '2');
+INSERT INTO `city_code` VALUES ('1316', '360782', '360700', '南康市', '江西省', '赣州市', '0797', '2');
+INSERT INTO `city_code` VALUES ('1317', '360802', '360800', '吉州区', '江西省', '吉安市', '0796', '2');
+INSERT INTO `city_code` VALUES ('1318', '360803', '360800', '青原区', '江西省', '吉安市', '0796', '2');
+INSERT INTO `city_code` VALUES ('1319', '360821', '360800', '吉安县', '江西省', '吉安市', '0796', '2');
+INSERT INTO `city_code` VALUES ('1320', '360822', '360800', '吉水县', '江西省', '吉安市', '0796', '2');
+INSERT INTO `city_code` VALUES ('1321', '360823', '360800', '峡江县', '江西省', '吉安市', '0796', '2');
+INSERT INTO `city_code` VALUES ('1322', '360824', '360800', '新干县', '江西省', '吉安市', '0796', '2');
+INSERT INTO `city_code` VALUES ('1323', '360825', '360800', '永丰县', '江西省', '吉安市', '0796', '2');
+INSERT INTO `city_code` VALUES ('1324', '360826', '360800', '泰和县', '江西省', '吉安市', '0796', '2');
+INSERT INTO `city_code` VALUES ('1325', '360827', '360800', '遂川县', '江西省', '吉安市', '0796', '2');
+INSERT INTO `city_code` VALUES ('1326', '360828', '360800', '万安县', '江西省', '吉安市', '0796', '2');
+INSERT INTO `city_code` VALUES ('1327', '360829', '360800', '安福县', '江西省', '吉安市', '0796', '2');
+INSERT INTO `city_code` VALUES ('1328', '360830', '360800', '永新县', '江西省', '吉安市', '0796', '2');
+INSERT INTO `city_code` VALUES ('1329', '360881', '360800', '井冈山市', '江西省', '吉安市', '0796', '2');
+INSERT INTO `city_code` VALUES ('1330', '360902', '360900', '袁州区', '江西省', '宜春市', '0795', '2');
+INSERT INTO `city_code` VALUES ('1331', '360921', '360900', '奉新县', '江西省', '宜春市', '0795', '2');
+INSERT INTO `city_code` VALUES ('1332', '360922', '360900', '万载县', '江西省', '宜春市', '0795', '2');
+INSERT INTO `city_code` VALUES ('1333', '360923', '360900', '上高县', '江西省', '宜春市', '0795', '2');
+INSERT INTO `city_code` VALUES ('1334', '360924', '360900', '宜丰县', '江西省', '宜春市', '0795', '2');
+INSERT INTO `city_code` VALUES ('1335', '360925', '360900', '靖安县', '江西省', '宜春市', '0795', '2');
+INSERT INTO `city_code` VALUES ('1336', '360926', '360900', '铜鼓县', '江西省', '宜春市', '0795', '2');
+INSERT INTO `city_code` VALUES ('1337', '360981', '360900', '丰城市', '江西省', '宜春市', '0795', '2');
+INSERT INTO `city_code` VALUES ('1338', '360982', '360900', '樟树市', '江西省', '宜春市', '0795', '2');
+INSERT INTO `city_code` VALUES ('1339', '360983', '360900', '高安市', '江西省', '宜春市', '0795', '2');
+INSERT INTO `city_code` VALUES ('1340', '361002', '361000', '临川区', '江西省', '抚州市', '0794', '2');
+INSERT INTO `city_code` VALUES ('1341', '361021', '361000', '南城县', '江西省', '抚州市', '0794', '2');
+INSERT INTO `city_code` VALUES ('1342', '361022', '361000', '黎川县', '江西省', '抚州市', '0794', '2');
+INSERT INTO `city_code` VALUES ('1343', '361023', '361000', '南丰县', '江西省', '抚州市', '0794', '2');
+INSERT INTO `city_code` VALUES ('1344', '361024', '361000', '崇仁县', '江西省', '抚州市', '0794', '2');
+INSERT INTO `city_code` VALUES ('1345', '361025', '361000', '乐安县', '江西省', '抚州市', '0794', '2');
+INSERT INTO `city_code` VALUES ('1346', '361026', '361000', '宜黄县', '江西省', '抚州市', '0794', '2');
+INSERT INTO `city_code` VALUES ('1347', '361027', '361000', '金溪县', '江西省', '抚州市', '0794', '2');
+INSERT INTO `city_code` VALUES ('1348', '361028', '361000', '资溪县', '江西省', '抚州市', '0794', '2');
+INSERT INTO `city_code` VALUES ('1349', '361029', '361000', '东乡县', '江西省', '抚州市', '0794', '2');
+INSERT INTO `city_code` VALUES ('1350', '361030', '361000', '广昌县', '江西省', '抚州市', '0794', '2');
+INSERT INTO `city_code` VALUES ('1351', '361102', '361100', '信州区', '江西省', '上饶市', '0793', '2');
+INSERT INTO `city_code` VALUES ('1352', '361121', '361100', '上饶县', '江西省', '上饶市', '0793', '2');
+INSERT INTO `city_code` VALUES ('1353', '361122', '361100', '广丰县', '江西省', '上饶市', '0793', '2');
+INSERT INTO `city_code` VALUES ('1354', '361123', '361100', '玉山县', '江西省', '上饶市', '0793', '2');
+INSERT INTO `city_code` VALUES ('1355', '361124', '361100', '铅山县', '江西省', '上饶市', '0793', '2');
+INSERT INTO `city_code` VALUES ('1356', '361125', '361100', '横峰县', '江西省', '上饶市', '0793', '2');
+INSERT INTO `city_code` VALUES ('1357', '361126', '361100', '弋阳县', '江西省', '上饶市', '0793', '2');
+INSERT INTO `city_code` VALUES ('1358', '361127', '361100', '余干县', '江西省', '上饶市', '0793', '2');
+INSERT INTO `city_code` VALUES ('1359', '361128', '361100', '鄱阳县', '江西省', '上饶市', '0793', '2');
+INSERT INTO `city_code` VALUES ('1360', '361129', '361100', '万年县', '江西省', '上饶市', '0793', '2');
+INSERT INTO `city_code` VALUES ('1361', '361130', '361100', '婺源县', '江西省', '上饶市', '0793', '2');
+INSERT INTO `city_code` VALUES ('1362', '361181', '361100', '德兴市', '江西省', '上饶市', '0793', '2');
+INSERT INTO `city_code` VALUES ('1363', '370000', null, '山东省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('1364', '370100', '370000', '济南市', '山东省', '', '0531', '1');
+INSERT INTO `city_code` VALUES ('1365', '370200', '370000', '青岛市', '山东省', '', '0532', '1');
+INSERT INTO `city_code` VALUES ('1366', '370300', '370000', '淄博市', '山东省', '', '0533', '1');
+INSERT INTO `city_code` VALUES ('1367', '370400', '370000', '枣庄市', '山东省', '', '0632', '1');
+INSERT INTO `city_code` VALUES ('1368', '370500', '370000', '东营市', '山东省', '', '0546', '1');
+INSERT INTO `city_code` VALUES ('1369', '370600', '370000', '烟台市', '山东省', '', '0535', '1');
+INSERT INTO `city_code` VALUES ('1370', '370700', '370000', '潍坊市', '山东省', '', '0536', '1');
+INSERT INTO `city_code` VALUES ('1371', '370800', '370000', '济宁市', '山东省', '', '0537', '1');
+INSERT INTO `city_code` VALUES ('1372', '370900', '370000', '泰安市', '山东省', '', '0538', '1');
+INSERT INTO `city_code` VALUES ('1373', '371000', '370000', '威海市', '山东省', '', '0631', '1');
+INSERT INTO `city_code` VALUES ('1374', '371100', '370000', '日照市', '山东省', '', '0633', '1');
+INSERT INTO `city_code` VALUES ('1375', '371200', '370000', '莱芜市', '山东省', '', '0634', '1');
+INSERT INTO `city_code` VALUES ('1376', '371300', '370000', '临沂市', '山东省', '', '0539', '1');
+INSERT INTO `city_code` VALUES ('1377', '371400', '370000', '德州市', '山东省', '', '0534', '1');
+INSERT INTO `city_code` VALUES ('1378', '371500', '370000', '聊城市', '山东省', '', '0635', '1');
+INSERT INTO `city_code` VALUES ('1379', '371600', '370000', '滨州市', '山东省', '', '0543', '1');
+INSERT INTO `city_code` VALUES ('1380', '371700', '370000', '菏泽市', '山东省', '', '0530', '1');
+INSERT INTO `city_code` VALUES ('1381', '370102', '370100', '历下区', '山东省', '济南市', '0531', '2');
+INSERT INTO `city_code` VALUES ('1382', '370103', '370100', '市中区', '山东省', '济南市', '0531', '2');
+INSERT INTO `city_code` VALUES ('1383', '370104', '370100', '槐荫区', '山东省', '济南市', '0531', '2');
+INSERT INTO `city_code` VALUES ('1384', '370105', '370100', '天桥区', '山东省', '济南市', '0531', '2');
+INSERT INTO `city_code` VALUES ('1385', '370112', '370100', '历城区', '山东省', '济南市', '0531', '2');
+INSERT INTO `city_code` VALUES ('1386', '370113', '370100', '长清区', '山东省', '济南市', '0531', '2');
+INSERT INTO `city_code` VALUES ('1387', '370124', '370100', '平阴县', '山东省', '济南市', '0531', '2');
+INSERT INTO `city_code` VALUES ('1388', '370125', '370100', '济阳县', '山东省', '济南市', '0531', '2');
+INSERT INTO `city_code` VALUES ('1389', '370126', '370100', '商河县', '山东省', '济南市', '0531', '2');
+INSERT INTO `city_code` VALUES ('1390', '370181', '370100', '章丘市', '山东省', '济南市', '0531', '2');
+INSERT INTO `city_code` VALUES ('1391', '370202', '370200', '市南区', '山东省', '青岛市', '0532', '2');
+INSERT INTO `city_code` VALUES ('1392', '370203', '370200', '市北区', '山东省', '青岛市', '0532', '2');
+INSERT INTO `city_code` VALUES ('1393', '370205', '370200', '四方区', '山东省', '青岛市', '0532', '2');
+INSERT INTO `city_code` VALUES ('1394', '370211', '370200', '黄岛区', '山东省', '青岛市', '0532', '2');
+INSERT INTO `city_code` VALUES ('1395', '370212', '370200', '崂山区', '山东省', '青岛市', '0532', '2');
+INSERT INTO `city_code` VALUES ('1396', '370213', '370200', '李沧区', '山东省', '青岛市', '0532', '2');
+INSERT INTO `city_code` VALUES ('1397', '370214', '370200', '城阳区', '山东省', '青岛市', '0532', '2');
+INSERT INTO `city_code` VALUES ('1398', '370281', '370200', '胶州市', '山东省', '青岛市', '0532', '2');
+INSERT INTO `city_code` VALUES ('1399', '370282', '370200', '即墨市', '山东省', '青岛市', '0532', '2');
+INSERT INTO `city_code` VALUES ('1400', '370283', '370200', '平度市', '山东省', '青岛市', '0532', '2');
+INSERT INTO `city_code` VALUES ('1401', '370284', '370200', '胶南市', '山东省', '青岛市', '0532', '2');
+INSERT INTO `city_code` VALUES ('1402', '370285', '370200', '莱西市', '山东省', '青岛市', '0532', '2');
+INSERT INTO `city_code` VALUES ('1403', '370302', '370300', '淄川区', '山东省', '淄博市', '0533', '2');
+INSERT INTO `city_code` VALUES ('1404', '370303', '370300', '张店区', '山东省', '淄博市', '0533', '2');
+INSERT INTO `city_code` VALUES ('1405', '370304', '370300', '博山区', '山东省', '淄博市', '0533', '2');
+INSERT INTO `city_code` VALUES ('1406', '370305', '370300', '临淄区', '山东省', '淄博市', '0533', '2');
+INSERT INTO `city_code` VALUES ('1407', '370306', '370300', '周村区', '山东省', '淄博市', '0533', '2');
+INSERT INTO `city_code` VALUES ('1408', '370321', '370300', '桓台县', '山东省', '淄博市', '0533', '2');
+INSERT INTO `city_code` VALUES ('1409', '370322', '370300', '高青县', '山东省', '淄博市', '0533', '2');
+INSERT INTO `city_code` VALUES ('1410', '370323', '370300', '沂源县', '山东省', '淄博市', '0533', '2');
+INSERT INTO `city_code` VALUES ('1411', '370402', '370400', '市中区', '山东省', '枣庄市', '0632', '2');
+INSERT INTO `city_code` VALUES ('1412', '370403', '370400', '薛城区', '山东省', '枣庄市', '0632', '2');
+INSERT INTO `city_code` VALUES ('1413', '370404', '370400', '峄城区', '山东省', '枣庄市', '0632', '2');
+INSERT INTO `city_code` VALUES ('1414', '370405', '370400', '台儿庄区', '山东省', '枣庄市', '0632', '2');
+INSERT INTO `city_code` VALUES ('1415', '370406', '370400', '山亭区', '山东省', '枣庄市', '0632', '2');
+INSERT INTO `city_code` VALUES ('1416', '370481', '370400', '滕州市', '山东省', '枣庄市', '0632', '2');
+INSERT INTO `city_code` VALUES ('1417', '370502', '370500', '东营区', '山东省', '东营市', '0546', '2');
+INSERT INTO `city_code` VALUES ('1418', '370503', '370500', '河口区', '山东省', '东营市', '0546', '2');
+INSERT INTO `city_code` VALUES ('1419', '370521', '370500', '垦利县', '山东省', '东营市', '0546', '2');
+INSERT INTO `city_code` VALUES ('1420', '370522', '370500', '利津县', '山东省', '东营市', '0546', '2');
+INSERT INTO `city_code` VALUES ('1421', '370523', '370500', '广饶县', '山东省', '东营市', '0546', '2');
+INSERT INTO `city_code` VALUES ('1422', '370602', '370600', '芝罘区', '山东省', '烟台市', '0535', '2');
+INSERT INTO `city_code` VALUES ('1423', '370611', '370600', '福山区', '山东省', '烟台市', '0535', '2');
+INSERT INTO `city_code` VALUES ('1424', '370612', '370600', '牟平区', '山东省', '烟台市', '0535', '2');
+INSERT INTO `city_code` VALUES ('1425', '370613', '370600', '莱山区', '山东省', '烟台市', '0535', '2');
+INSERT INTO `city_code` VALUES ('1426', '370634', '370600', '长岛县', '山东省', '烟台市', '0535', '2');
+INSERT INTO `city_code` VALUES ('1427', '370681', '370600', '龙口市', '山东省', '烟台市', '0535', '2');
+INSERT INTO `city_code` VALUES ('1428', '370682', '370600', '莱阳市', '山东省', '烟台市', '0535', '2');
+INSERT INTO `city_code` VALUES ('1429', '370683', '370600', '莱州市', '山东省', '烟台市', '0535', '2');
+INSERT INTO `city_code` VALUES ('1430', '370684', '370600', '蓬莱市', '山东省', '烟台市', '0535', '2');
+INSERT INTO `city_code` VALUES ('1431', '370685', '370600', '招远市', '山东省', '烟台市', '0535', '2');
+INSERT INTO `city_code` VALUES ('1432', '370686', '370600', '栖霞市', '山东省', '烟台市', '0535', '2');
+INSERT INTO `city_code` VALUES ('1433', '370687', '370600', '海阳市', '山东省', '烟台市', '0535', '2');
+INSERT INTO `city_code` VALUES ('1434', '370702', '370700', '潍城区', '山东省', '潍坊市', '0536', '2');
+INSERT INTO `city_code` VALUES ('1435', '370703', '370700', '寒亭区', '山东省', '潍坊市', '0536', '2');
+INSERT INTO `city_code` VALUES ('1436', '370704', '370700', '坊子区', '山东省', '潍坊市', '0536', '2');
+INSERT INTO `city_code` VALUES ('1437', '370705', '370700', '奎文区', '山东省', '潍坊市', '0536', '2');
+INSERT INTO `city_code` VALUES ('1438', '370724', '370700', '临朐县', '山东省', '潍坊市', '0536', '2');
+INSERT INTO `city_code` VALUES ('1439', '370725', '370700', '昌乐县', '山东省', '潍坊市', '0536', '2');
+INSERT INTO `city_code` VALUES ('1440', '370781', '370700', '青州市', '山东省', '潍坊市', '0536', '2');
+INSERT INTO `city_code` VALUES ('1441', '370782', '370700', '诸城市', '山东省', '潍坊市', '0536', '2');
+INSERT INTO `city_code` VALUES ('1442', '370783', '370700', '寿光市', '山东省', '潍坊市', '0536', '2');
+INSERT INTO `city_code` VALUES ('1443', '370784', '370700', '安丘市', '山东省', '潍坊市', '0536', '2');
+INSERT INTO `city_code` VALUES ('1444', '370785', '370700', '高密市', '山东省', '潍坊市', '0536', '2');
+INSERT INTO `city_code` VALUES ('1445', '370786', '370700', '昌邑市', '山东省', '潍坊市', '0536', '2');
+INSERT INTO `city_code` VALUES ('1446', '370802', '370800', '市中区', '山东省', '济宁市', '0537', '2');
+INSERT INTO `city_code` VALUES ('1447', '370811', '370800', '任城区', '山东省', '济宁市', '0537', '2');
+INSERT INTO `city_code` VALUES ('1448', '370826', '370800', '微山县', '山东省', '济宁市', '0537', '2');
+INSERT INTO `city_code` VALUES ('1449', '370827', '370800', '鱼台县', '山东省', '济宁市', '0537', '2');
+INSERT INTO `city_code` VALUES ('1450', '370828', '370800', '金乡县', '山东省', '济宁市', '0537', '2');
+INSERT INTO `city_code` VALUES ('1451', '370829', '370800', '嘉祥县', '山东省', '济宁市', '0537', '2');
+INSERT INTO `city_code` VALUES ('1452', '370830', '370800', '汶上县', '山东省', '济宁市', '0537', '2');
+INSERT INTO `city_code` VALUES ('1453', '370831', '370800', '泗水县', '山东省', '济宁市', '0537', '2');
+INSERT INTO `city_code` VALUES ('1454', '370832', '370800', '梁山县', '山东省', '济宁市', '0537', '2');
+INSERT INTO `city_code` VALUES ('1455', '370881', '370800', '曲阜市', '山东省', '济宁市', '0537', '2');
+INSERT INTO `city_code` VALUES ('1456', '370882', '370800', '兖州市', '山东省', '济宁市', '0537', '2');
+INSERT INTO `city_code` VALUES ('1457', '370883', '370800', '邹城市', '山东省', '济宁市', '0537', '2');
+INSERT INTO `city_code` VALUES ('1458', '370902', '370900', '泰山区', '山东省', '泰安市', '0538', '2');
+INSERT INTO `city_code` VALUES ('1459', '370911', '370900', '岱岳区', '山东省', '泰安市', '0538', '2');
+INSERT INTO `city_code` VALUES ('1460', '370921', '370900', '宁阳县', '山东省', '泰安市', '0538', '2');
+INSERT INTO `city_code` VALUES ('1461', '370923', '370900', '东平县', '山东省', '泰安市', '0538', '2');
+INSERT INTO `city_code` VALUES ('1462', '370982', '370900', '新泰市', '山东省', '泰安市', '0538', '2');
+INSERT INTO `city_code` VALUES ('1463', '370983', '370900', '肥城市', '山东省', '泰安市', '0538', '2');
+INSERT INTO `city_code` VALUES ('1464', '371002', '371000', '环翠区', '山东省', '威海市', '0631', '2');
+INSERT INTO `city_code` VALUES ('1465', '371081', '371000', '文登市', '山东省', '威海市', '0631', '2');
+INSERT INTO `city_code` VALUES ('1466', '371082', '371000', '荣成市', '山东省', '威海市', '0631', '2');
+INSERT INTO `city_code` VALUES ('1467', '371083', '371000', '乳山市', '山东省', '威海市', '0631', '2');
+INSERT INTO `city_code` VALUES ('1468', '371102', '371100', '东港区', '山东省', '日照市', '0633', '2');
+INSERT INTO `city_code` VALUES ('1469', '371103', '371100', '岚山区', '山东省', '日照市', '0633', '2');
+INSERT INTO `city_code` VALUES ('1470', '371121', '371100', '五莲县', '山东省', '日照市', '0633', '2');
+INSERT INTO `city_code` VALUES ('1471', '371122', '371100', '莒县', '山东省', '日照市', '0633', '2');
+INSERT INTO `city_code` VALUES ('1472', '371202', '371200', '莱城区', '山东省', '莱芜市', '0634', '2');
+INSERT INTO `city_code` VALUES ('1473', '371203', '371200', '钢城区', '山东省', '莱芜市', '0634', '2');
+INSERT INTO `city_code` VALUES ('1474', '371302', '371300', '兰山区', '山东省', '临沂市', '0539', '2');
+INSERT INTO `city_code` VALUES ('1475', '371311', '371300', '罗庄区', '山东省', '临沂市', '0539', '2');
+INSERT INTO `city_code` VALUES ('1476', '371312', '371300', '河东区', '山东省', '临沂市', '0539', '2');
+INSERT INTO `city_code` VALUES ('1477', '371321', '371300', '沂南县', '山东省', '临沂市', '0539', '2');
+INSERT INTO `city_code` VALUES ('1478', '371322', '371300', '郯城县', '山东省', '临沂市', '0539', '2');
+INSERT INTO `city_code` VALUES ('1479', '371323', '371300', '沂水县', '山东省', '临沂市', '0539', '2');
+INSERT INTO `city_code` VALUES ('1480', '371324', '371300', '苍山县', '山东省', '临沂市', '0539', '2');
+INSERT INTO `city_code` VALUES ('1481', '371325', '371300', '费县', '山东省', '临沂市', '0539', '2');
+INSERT INTO `city_code` VALUES ('1482', '371326', '371300', '平邑县', '山东省', '临沂市', '0539', '2');
+INSERT INTO `city_code` VALUES ('1483', '371327', '371300', '莒南县', '山东省', '临沂市', '0539', '2');
+INSERT INTO `city_code` VALUES ('1484', '371328', '371300', '蒙阴县', '山东省', '临沂市', '0539', '2');
+INSERT INTO `city_code` VALUES ('1485', '371329', '371300', '临沭县', '山东省', '临沂市', '0539', '2');
+INSERT INTO `city_code` VALUES ('1486', '371402', '371400', '德城区', '山东省', '德州市', '0534', '2');
+INSERT INTO `city_code` VALUES ('1487', '371421', '371400', '陵县', '山东省', '德州市', '0534', '2');
+INSERT INTO `city_code` VALUES ('1488', '371422', '371400', '宁津县', '山东省', '德州市', '0534', '2');
+INSERT INTO `city_code` VALUES ('1489', '371423', '371400', '庆云县', '山东省', '德州市', '0534', '2');
+INSERT INTO `city_code` VALUES ('1490', '371424', '371400', '临邑县', '山东省', '德州市', '0534', '2');
+INSERT INTO `city_code` VALUES ('1491', '371425', '371400', '齐河县', '山东省', '德州市', '0534', '2');
+INSERT INTO `city_code` VALUES ('1492', '371426', '371400', '平原县', '山东省', '德州市', '0534', '2');
+INSERT INTO `city_code` VALUES ('1493', '371427', '371400', '夏津县', '山东省', '德州市', '0534', '2');
+INSERT INTO `city_code` VALUES ('1494', '371428', '371400', '武城县', '山东省', '德州市', '0534', '2');
+INSERT INTO `city_code` VALUES ('1495', '371481', '371400', '乐陵市', '山东省', '德州市', '0534', '2');
+INSERT INTO `city_code` VALUES ('1496', '371482', '371400', '禹城市', '山东省', '德州市', '0534', '2');
+INSERT INTO `city_code` VALUES ('1497', '371502', '371500', '东昌府区', '山东省', '聊城市', '0635', '2');
+INSERT INTO `city_code` VALUES ('1498', '371521', '371500', '阳谷县', '山东省', '聊城市', '0635', '2');
+INSERT INTO `city_code` VALUES ('1499', '371522', '371500', '莘县', '山东省', '聊城市', '0635', '2');
+INSERT INTO `city_code` VALUES ('1500', '371523', '371500', '茌平县', '山东省', '聊城市', '0635', '2');
+INSERT INTO `city_code` VALUES ('1501', '371524', '371500', '东阿县', '山东省', '聊城市', '0635', '2');
+INSERT INTO `city_code` VALUES ('1502', '371525', '371500', '冠县', '山东省', '聊城市', '0635', '2');
+INSERT INTO `city_code` VALUES ('1503', '371526', '371500', '高唐县', '山东省', '聊城市', '0635', '2');
+INSERT INTO `city_code` VALUES ('1504', '371581', '371500', '临清市', '山东省', '聊城市', '0635', '2');
+INSERT INTO `city_code` VALUES ('1505', '371602', '371600', '滨城区', '山东省', '滨州市', '0543', '2');
+INSERT INTO `city_code` VALUES ('1506', '371621', '371600', '惠民县', '山东省', '滨州市', '0543', '2');
+INSERT INTO `city_code` VALUES ('1507', '371622', '371600', '阳信县', '山东省', '滨州市', '0543', '2');
+INSERT INTO `city_code` VALUES ('1508', '371623', '371600', '无棣县', '山东省', '滨州市', '0543', '2');
+INSERT INTO `city_code` VALUES ('1509', '371624', '371600', '沾化县', '山东省', '滨州市', '0543', '2');
+INSERT INTO `city_code` VALUES ('1510', '371625', '371600', '博兴县', '山东省', '滨州市', '0543', '2');
+INSERT INTO `city_code` VALUES ('1511', '371626', '371600', '邹平县', '山东省', '滨州市', '0543', '2');
+INSERT INTO `city_code` VALUES ('1512', '371702', '371700', '牡丹区', '山东省', '菏泽市', '0530', '2');
+INSERT INTO `city_code` VALUES ('1513', '371721', '371700', '曹县', '山东省', '菏泽市', '0530', '2');
+INSERT INTO `city_code` VALUES ('1514', '371722', '371700', '单县', '山东省', '菏泽市', '0530', '2');
+INSERT INTO `city_code` VALUES ('1515', '371723', '371700', '成武县', '山东省', '菏泽市', '0530', '2');
+INSERT INTO `city_code` VALUES ('1516', '371724', '371700', '巨野县', '山东省', '菏泽市', '0530', '2');
+INSERT INTO `city_code` VALUES ('1517', '371725', '371700', '郓城县', '山东省', '菏泽市', '0530', '2');
+INSERT INTO `city_code` VALUES ('1518', '371726', '371700', '鄄城县', '山东省', '菏泽市', '0530', '2');
+INSERT INTO `city_code` VALUES ('1519', '371727', '371700', '定陶县', '山东省', '菏泽市', '0530', '2');
+INSERT INTO `city_code` VALUES ('1520', '371728', '371700', '东明县', '山东省', '菏泽市', '0530', '2');
+INSERT INTO `city_code` VALUES ('1521', '410000', null, '河南省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('1522', '410100', '410000', '郑州市', '河南省', '河南省', '0371', '1');
+INSERT INTO `city_code` VALUES ('1523', '410200', '410000', '开封市', '河南省', '河南省', '0378', '1');
+INSERT INTO `city_code` VALUES ('1524', '410300', '410000', '洛阳市', '河南省', '河南省', '0379', '1');
+INSERT INTO `city_code` VALUES ('1525', '410400', '410000', '平顶山市', '河南省', '河南省', '0375', '1');
+INSERT INTO `city_code` VALUES ('1526', '410500', '410000', '安阳市', '河南省', '河南省', '0372', '1');
+INSERT INTO `city_code` VALUES ('1527', '410600', '410000', '鹤壁市', '河南省', '河南省', '0392', '1');
+INSERT INTO `city_code` VALUES ('1528', '410700', '410000', '新乡市', '河南省', '河南省', '0373', '1');
+INSERT INTO `city_code` VALUES ('1529', '410800', '410000', '焦作市', '河南省', '河南省', '0391', '1');
+INSERT INTO `city_code` VALUES ('1530', '410900', '410000', '濮阳市', '河南省', '河南省', '0393', '1');
+INSERT INTO `city_code` VALUES ('1531', '411000', '410000', '许昌市', '河南省', '河南省', '0374', '1');
+INSERT INTO `city_code` VALUES ('1532', '411100', '410000', '漯河市', '河南省', '河南省', '0395', '1');
+INSERT INTO `city_code` VALUES ('1533', '411200', '410000', '三门峡市', '河南省', '河南省', '0398', '1');
+INSERT INTO `city_code` VALUES ('1534', '411300', '410000', '南阳市', '河南省', '河南省', '0377', '1');
+INSERT INTO `city_code` VALUES ('1535', '411400', '410000', '商丘市', '河南省', '河南省', '0370', '1');
+INSERT INTO `city_code` VALUES ('1536', '411500', '410000', '信阳市', '河南省', '河南省', '0376', '1');
+INSERT INTO `city_code` VALUES ('1537', '411600', '410000', '周口市', '河南省', '河南省', '0394', '1');
+INSERT INTO `city_code` VALUES ('1538', '411700', '410000', '驻马店市', '河南省', '河南省', '0396', '1');
+INSERT INTO `city_code` VALUES ('1539', '419000', '410000', '省直辖', '河南省', '河南省', '', '1');
+INSERT INTO `city_code` VALUES ('1540', '410102', '410100', '中原区', '河南省', '郑州市', '0371', '2');
+INSERT INTO `city_code` VALUES ('1541', '410103', '410100', '二七区', '河南省', '郑州市', '0371', '2');
+INSERT INTO `city_code` VALUES ('1542', '410104', '410100', '管城回族区', '河南省', '郑州市', '0371', '2');
+INSERT INTO `city_code` VALUES ('1543', '410105', '410100', '金水区', '河南省', '郑州市', '0371', '2');
+INSERT INTO `city_code` VALUES ('1544', '410106', '410100', '上街区', '河南省', '郑州市', '0371', '2');
+INSERT INTO `city_code` VALUES ('1545', '410108', '410100', '惠济区', '河南省', '郑州市', '0371', '2');
+INSERT INTO `city_code` VALUES ('1546', '410122', '410100', '中牟县', '河南省', '郑州市', '0371', '2');
+INSERT INTO `city_code` VALUES ('1547', '410181', '410100', '巩义市', '河南省', '郑州市', '0371', '2');
+INSERT INTO `city_code` VALUES ('1548', '410182', '410100', '荥阳市', '河南省', '郑州市', '0371', '2');
+INSERT INTO `city_code` VALUES ('1549', '410183', '410100', '新密市', '河南省', '郑州市', '0371', '2');
+INSERT INTO `city_code` VALUES ('1550', '410184', '410100', '新郑市', '河南省', '郑州市', '0371', '2');
+INSERT INTO `city_code` VALUES ('1551', '410185', '410100', '登封市', '河南省', '郑州市', '0371', '2');
+INSERT INTO `city_code` VALUES ('1552', '410202', '410200', '龙亭区', '河南省', '开封市', '0378', '2');
+INSERT INTO `city_code` VALUES ('1553', '410203', '410200', '顺河回族区', '河南省', '开封市', '0378', '2');
+INSERT INTO `city_code` VALUES ('1554', '410204', '410200', '鼓楼区', '河南省', '开封市', '0378', '2');
+INSERT INTO `city_code` VALUES ('1555', '410205', '410200', '禹王台区', '河南省', '开封市', '0378', '2');
+INSERT INTO `city_code` VALUES ('1556', '410211', '410200', '金明区', '河南省', '开封市', '0378', '2');
+INSERT INTO `city_code` VALUES ('1557', '410221', '410200', '杞县', '河南省', '开封市', '0378', '2');
+INSERT INTO `city_code` VALUES ('1558', '410222', '410200', '通许县', '河南省', '开封市', '0378', '2');
+INSERT INTO `city_code` VALUES ('1559', '410223', '410200', '尉氏县', '河南省', '开封市', '0378', '2');
+INSERT INTO `city_code` VALUES ('1560', '410224', '410200', '开封县', '河南省', '开封市', '0378', '2');
+INSERT INTO `city_code` VALUES ('1561', '410225', '410200', '兰考县', '河南省', '开封市', '0378', '2');
+INSERT INTO `city_code` VALUES ('1562', '410302', '410300', '老城区', '河南省', '洛阳市', '0379', '2');
+INSERT INTO `city_code` VALUES ('1563', '410303', '410300', '西工区', '河南省', '洛阳市', '0379', '2');
+INSERT INTO `city_code` VALUES ('1564', '410304', '410300', '瀍河回族区', '河南省', '洛阳市', '0379', '2');
+INSERT INTO `city_code` VALUES ('1565', '410305', '410300', '涧西区', '河南省', '洛阳市', '0379', '2');
+INSERT INTO `city_code` VALUES ('1566', '410306', '410300', '吉利区', '河南省', '洛阳市', '0379', '2');
+INSERT INTO `city_code` VALUES ('1567', '410311', '410300', '洛龙区', '河南省', '洛阳市', '0379', '2');
+INSERT INTO `city_code` VALUES ('1568', '410322', '410300', '孟津县', '河南省', '洛阳市', '0379', '2');
+INSERT INTO `city_code` VALUES ('1569', '410323', '410300', '新安县', '河南省', '洛阳市', '0379', '2');
+INSERT INTO `city_code` VALUES ('1570', '410324', '410300', '栾川县', '河南省', '洛阳市', '0379', '2');
+INSERT INTO `city_code` VALUES ('1571', '410325', '410300', '嵩县', '河南省', '洛阳市', '0379', '2');
+INSERT INTO `city_code` VALUES ('1572', '410326', '410300', '汝阳县', '河南省', '洛阳市', '0379', '2');
+INSERT INTO `city_code` VALUES ('1573', '410327', '410300', '宜阳县', '河南省', '洛阳市', '0379', '2');
+INSERT INTO `city_code` VALUES ('1574', '410328', '410300', '洛宁县', '河南省', '洛阳市', '0379', '2');
+INSERT INTO `city_code` VALUES ('1575', '410329', '410300', '伊川县', '河南省', '洛阳市', '0379', '2');
+INSERT INTO `city_code` VALUES ('1576', '410381', '410300', '偃师市', '河南省', '洛阳市', '0379', '2');
+INSERT INTO `city_code` VALUES ('1577', '410402', '410400', '新华区', '河南省', '平顶山市', '0375', '2');
+INSERT INTO `city_code` VALUES ('1578', '410403', '410400', '卫东区', '河南省', '平顶山市', '0375', '2');
+INSERT INTO `city_code` VALUES ('1579', '410404', '410400', '石龙区', '河南省', '平顶山市', '0375', '2');
+INSERT INTO `city_code` VALUES ('1580', '410411', '410400', '湛河区', '河南省', '平顶山市', '0375', '2');
+INSERT INTO `city_code` VALUES ('1581', '410421', '410400', '宝丰县', '河南省', '平顶山市', '0375', '2');
+INSERT INTO `city_code` VALUES ('1582', '410422', '410400', '叶县', '河南省', '平顶山市', '0375', '2');
+INSERT INTO `city_code` VALUES ('1583', '410423', '410400', '鲁山县', '河南省', '平顶山市', '0375', '2');
+INSERT INTO `city_code` VALUES ('1584', '410425', '410400', '郏县', '河南省', '平顶山市', '0375', '2');
+INSERT INTO `city_code` VALUES ('1585', '410481', '410400', '舞钢市', '河南省', '平顶山市', '0375', '2');
+INSERT INTO `city_code` VALUES ('1586', '410482', '410400', '汝州市', '河南省', '平顶山市', '0375', '2');
+INSERT INTO `city_code` VALUES ('1587', '410502', '410500', '文峰区', '河南省', '安阳市', '0372', '2');
+INSERT INTO `city_code` VALUES ('1588', '410503', '410500', '北关区', '河南省', '安阳市', '0372', '2');
+INSERT INTO `city_code` VALUES ('1589', '410505', '410500', '殷都区', '河南省', '安阳市', '0372', '2');
+INSERT INTO `city_code` VALUES ('1590', '410506', '410500', '龙安区', '河南省', '安阳市', '0372', '2');
+INSERT INTO `city_code` VALUES ('1591', '410522', '410500', '安阳县', '河南省', '安阳市', '0372', '2');
+INSERT INTO `city_code` VALUES ('1592', '410523', '410500', '汤阴县', '河南省', '安阳市', '0372', '2');
+INSERT INTO `city_code` VALUES ('1593', '410526', '410500', '滑县', '河南省', '安阳市', '0372', '2');
+INSERT INTO `city_code` VALUES ('1594', '410527', '410500', '内黄县', '河南省', '安阳市', '0372', '2');
+INSERT INTO `city_code` VALUES ('1595', '410581', '410500', '林州市', '河南省', '安阳市', '0372', '2');
+INSERT INTO `city_code` VALUES ('1596', '410602', '410600', '鹤山区', '河南省', '鹤壁市', '0392', '2');
+INSERT INTO `city_code` VALUES ('1597', '410603', '410600', '山城区', '河南省', '鹤壁市', '0392', '2');
+INSERT INTO `city_code` VALUES ('1598', '410611', '410600', '淇滨区', '河南省', '鹤壁市', '0392', '2');
+INSERT INTO `city_code` VALUES ('1599', '410621', '410600', '浚县', '河南省', '鹤壁市', '0392', '2');
+INSERT INTO `city_code` VALUES ('1600', '410622', '410600', '淇县', '河南省', '鹤壁市', '0392', '2');
+INSERT INTO `city_code` VALUES ('1601', '410702', '410700', '红旗区', '河南省', '新乡市', '0373', '2');
+INSERT INTO `city_code` VALUES ('1602', '410703', '410700', '卫滨区', '河南省', '新乡市', '0373', '2');
+INSERT INTO `city_code` VALUES ('1603', '410704', '410700', '凤泉区', '河南省', '新乡市', '0373', '2');
+INSERT INTO `city_code` VALUES ('1604', '410711', '410700', '牧野区', '河南省', '新乡市', '0373', '2');
+INSERT INTO `city_code` VALUES ('1605', '410721', '410700', '新乡县', '河南省', '新乡市', '0373', '2');
+INSERT INTO `city_code` VALUES ('1606', '410724', '410700', '获嘉县', '河南省', '新乡市', '0373', '2');
+INSERT INTO `city_code` VALUES ('1607', '410725', '410700', '原阳县', '河南省', '新乡市', '0373', '2');
+INSERT INTO `city_code` VALUES ('1608', '410726', '410700', '延津县', '河南省', '新乡市', '0373', '2');
+INSERT INTO `city_code` VALUES ('1609', '410727', '410700', '封丘县', '河南省', '新乡市', '0373', '2');
+INSERT INTO `city_code` VALUES ('1610', '410728', '410700', '长垣县', '河南省', '新乡市', '0373', '2');
+INSERT INTO `city_code` VALUES ('1611', '410781', '410700', '卫辉市', '河南省', '新乡市', '0373', '2');
+INSERT INTO `city_code` VALUES ('1612', '410782', '410700', '辉县市', '河南省', '新乡市', '0373', '2');
+INSERT INTO `city_code` VALUES ('1613', '410802', '410800', '解放区', '河南省', '焦作市', '0391', '2');
+INSERT INTO `city_code` VALUES ('1614', '410803', '410800', '中站区', '河南省', '焦作市', '0391', '2');
+INSERT INTO `city_code` VALUES ('1615', '410804', '410800', '马村区', '河南省', '焦作市', '0391', '2');
+INSERT INTO `city_code` VALUES ('1616', '410811', '410800', '山阳区', '河南省', '焦作市', '0391', '2');
+INSERT INTO `city_code` VALUES ('1617', '410821', '410800', '修武县', '河南省', '焦作市', '0391', '2');
+INSERT INTO `city_code` VALUES ('1618', '410822', '410800', '博爱县', '河南省', '焦作市', '0391', '2');
+INSERT INTO `city_code` VALUES ('1619', '410823', '410800', '武陟县', '河南省', '焦作市', '0391', '2');
+INSERT INTO `city_code` VALUES ('1620', '410825', '410800', '温县', '河南省', '焦作市', '0391', '2');
+INSERT INTO `city_code` VALUES ('1621', '410882', '410800', '沁阳市', '河南省', '焦作市', '0391', '2');
+INSERT INTO `city_code` VALUES ('1622', '410883', '410800', '孟州市', '河南省', '焦作市', '0391', '2');
+INSERT INTO `city_code` VALUES ('1623', '410902', '410900', '华龙区', '河南省', '濮阳市', '0393', '2');
+INSERT INTO `city_code` VALUES ('1624', '410922', '410900', '清丰县', '河南省', '濮阳市', '0393', '2');
+INSERT INTO `city_code` VALUES ('1625', '410923', '410900', '南乐县', '河南省', '濮阳市', '0393', '2');
+INSERT INTO `city_code` VALUES ('1626', '410926', '410900', '范县', '河南省', '濮阳市', '0393', '2');
+INSERT INTO `city_code` VALUES ('1627', '410927', '410900', '台前县', '河南省', '濮阳市', '0393', '2');
+INSERT INTO `city_code` VALUES ('1628', '410928', '410900', '濮阳县', '河南省', '濮阳市', '0393', '2');
+INSERT INTO `city_code` VALUES ('1629', '411002', '411000', '魏都区', '河南省', '许昌市', '0374', '2');
+INSERT INTO `city_code` VALUES ('1630', '411023', '411000', '许昌县', '河南省', '许昌市', '0374', '2');
+INSERT INTO `city_code` VALUES ('1631', '411024', '411000', '鄢陵县', '河南省', '许昌市', '0374', '2');
+INSERT INTO `city_code` VALUES ('1632', '411025', '411000', '襄城县', '河南省', '许昌市', '0374', '2');
+INSERT INTO `city_code` VALUES ('1633', '411081', '411000', '禹州市', '河南省', '许昌市', '0374', '2');
+INSERT INTO `city_code` VALUES ('1634', '411082', '411000', '长葛市', '河南省', '许昌市', '0374', '2');
+INSERT INTO `city_code` VALUES ('1635', '411102', '411100', '源汇区', '河南省', '漯河市', '0395', '2');
+INSERT INTO `city_code` VALUES ('1636', '411103', '411100', '郾城区', '河南省', '漯河市', '0395', '2');
+INSERT INTO `city_code` VALUES ('1637', '411104', '411100', '召陵区', '河南省', '漯河市', '0395', '2');
+INSERT INTO `city_code` VALUES ('1638', '411121', '411100', '舞阳县', '河南省', '漯河市', '0395', '2');
+INSERT INTO `city_code` VALUES ('1639', '411122', '411100', '临颍县', '河南省', '漯河市', '0395', '2');
+INSERT INTO `city_code` VALUES ('1640', '411202', '411200', '湖滨区', '河南省', '三门峡市', '0398', '2');
+INSERT INTO `city_code` VALUES ('1641', '411221', '411200', '渑池县', '河南省', '三门峡市', '0398', '2');
+INSERT INTO `city_code` VALUES ('1642', '411222', '411200', '陕县', '河南省', '三门峡市', '0398', '2');
+INSERT INTO `city_code` VALUES ('1643', '411224', '411200', '卢氏县', '河南省', '三门峡市', '0398', '2');
+INSERT INTO `city_code` VALUES ('1644', '411281', '411200', '义马市', '河南省', '三门峡市', '0398', '2');
+INSERT INTO `city_code` VALUES ('1645', '411282', '411200', '灵宝市', '河南省', '三门峡市', '0398', '2');
+INSERT INTO `city_code` VALUES ('1646', '411302', '411300', '宛城区', '河南省', '南阳市', '0377', '2');
+INSERT INTO `city_code` VALUES ('1647', '411303', '411300', '卧龙区', '河南省', '南阳市', '0377', '2');
+INSERT INTO `city_code` VALUES ('1648', '411321', '411300', '南召县', '河南省', '南阳市', '0377', '2');
+INSERT INTO `city_code` VALUES ('1649', '411322', '411300', '方城县', '河南省', '南阳市', '0377', '2');
+INSERT INTO `city_code` VALUES ('1650', '411323', '411300', '西峡县', '河南省', '南阳市', '0377', '2');
+INSERT INTO `city_code` VALUES ('1651', '411324', '411300', '镇平县', '河南省', '南阳市', '0377', '2');
+INSERT INTO `city_code` VALUES ('1652', '411325', '411300', '内乡县', '河南省', '南阳市', '0377', '2');
+INSERT INTO `city_code` VALUES ('1653', '411326', '411300', '淅川县', '河南省', '南阳市', '0377', '2');
+INSERT INTO `city_code` VALUES ('1654', '411327', '411300', '社旗县', '河南省', '南阳市', '0377', '2');
+INSERT INTO `city_code` VALUES ('1655', '411328', '411300', '唐河县', '河南省', '南阳市', '0377', '2');
+INSERT INTO `city_code` VALUES ('1656', '411329', '411300', '新野县', '河南省', '南阳市', '0377', '2');
+INSERT INTO `city_code` VALUES ('1657', '411330', '411300', '桐柏县', '河南省', '南阳市', '0377', '2');
+INSERT INTO `city_code` VALUES ('1658', '411381', '411300', '邓州市', '河南省', '南阳市', '0377', '2');
+INSERT INTO `city_code` VALUES ('1659', '411402', '411400', '梁园区', '河南省', '商丘市', '0370', '2');
+INSERT INTO `city_code` VALUES ('1660', '411403', '411400', '睢阳区', '河南省', '商丘市', '0370', '2');
+INSERT INTO `city_code` VALUES ('1661', '411421', '411400', '民权县', '河南省', '商丘市', '0370', '2');
+INSERT INTO `city_code` VALUES ('1662', '411422', '411400', '睢县', '河南省', '商丘市', '0370', '2');
+INSERT INTO `city_code` VALUES ('1663', '411423', '411400', '宁陵县', '河南省', '商丘市', '0370', '2');
+INSERT INTO `city_code` VALUES ('1664', '411424', '411400', '柘城县', '河南省', '商丘市', '0370', '2');
+INSERT INTO `city_code` VALUES ('1665', '411425', '411400', '虞城县', '河南省', '商丘市', '0370', '2');
+INSERT INTO `city_code` VALUES ('1666', '411426', '411400', '夏邑县', '河南省', '商丘市', '0370', '2');
+INSERT INTO `city_code` VALUES ('1667', '411481', '411400', '永城市', '河南省', '商丘市', '0370', '2');
+INSERT INTO `city_code` VALUES ('1668', '411502', '411500', '浉河区', '河南省', '信阳市', '0376', '2');
+INSERT INTO `city_code` VALUES ('1669', '411503', '411500', '平桥区', '河南省', '信阳市', '0376', '2');
+INSERT INTO `city_code` VALUES ('1670', '411521', '411500', '罗山县', '河南省', '信阳市', '0376', '2');
+INSERT INTO `city_code` VALUES ('1671', '411522', '411500', '光山县', '河南省', '信阳市', '0376', '2');
+INSERT INTO `city_code` VALUES ('1672', '411523', '411500', '新县', '河南省', '信阳市', '0376', '2');
+INSERT INTO `city_code` VALUES ('1673', '411524', '411500', '商城县', '河南省', '信阳市', '0376', '2');
+INSERT INTO `city_code` VALUES ('1674', '411525', '411500', '固始县', '河南省', '信阳市', '0376', '2');
+INSERT INTO `city_code` VALUES ('1675', '411526', '411500', '潢川县', '河南省', '信阳市', '0376', '2');
+INSERT INTO `city_code` VALUES ('1676', '411527', '411500', '淮滨县', '河南省', '信阳市', '0376', '2');
+INSERT INTO `city_code` VALUES ('1677', '411528', '411500', '息县', '河南省', '信阳市', '0376', '2');
+INSERT INTO `city_code` VALUES ('1678', '411602', '411600', '川汇区', '河南省', '周口市', '0394', '2');
+INSERT INTO `city_code` VALUES ('1679', '411621', '411600', '扶沟县', '河南省', '周口市', '0394', '2');
+INSERT INTO `city_code` VALUES ('1680', '411622', '411600', '西华县', '河南省', '周口市', '0394', '2');
+INSERT INTO `city_code` VALUES ('1681', '411623', '411600', '商水县', '河南省', '周口市', '0394', '2');
+INSERT INTO `city_code` VALUES ('1682', '411624', '411600', '沈丘县', '河南省', '周口市', '0394', '2');
+INSERT INTO `city_code` VALUES ('1683', '411625', '411600', '郸城县', '河南省', '周口市', '0394', '2');
+INSERT INTO `city_code` VALUES ('1684', '411626', '411600', '淮阳县', '河南省', '周口市', '0394', '2');
+INSERT INTO `city_code` VALUES ('1685', '411627', '411600', '太康县', '河南省', '周口市', '0394', '2');
+INSERT INTO `city_code` VALUES ('1686', '411628', '411600', '鹿邑县', '河南省', '周口市', '0394', '2');
+INSERT INTO `city_code` VALUES ('1687', '411681', '411600', '项城市', '河南省', '周口市', '0394', '2');
+INSERT INTO `city_code` VALUES ('1688', '411702', '411700', '驿城区', '河南省', '驻马店市', '0396', '2');
+INSERT INTO `city_code` VALUES ('1689', '411721', '411700', '西平县', '河南省', '驻马店市', '0396', '2');
+INSERT INTO `city_code` VALUES ('1690', '411722', '411700', '上蔡县', '河南省', '驻马店市', '0396', '2');
+INSERT INTO `city_code` VALUES ('1691', '411723', '411700', '平舆县', '河南省', '驻马店市', '0396', '2');
+INSERT INTO `city_code` VALUES ('1692', '411724', '411700', '正阳县', '河南省', '驻马店市', '0396', '2');
+INSERT INTO `city_code` VALUES ('1693', '411725', '411700', '确山县', '河南省', '驻马店市', '0396', '2');
+INSERT INTO `city_code` VALUES ('1694', '411726', '411700', '泌阳县', '河南省', '驻马店市', '0396', '2');
+INSERT INTO `city_code` VALUES ('1695', '411727', '411700', '汝南县', '河南省', '驻马店市', '0396', '2');
+INSERT INTO `city_code` VALUES ('1696', '411728', '411700', '遂平县', '河南省', '驻马店市', '0396', '2');
+INSERT INTO `city_code` VALUES ('1697', '411729', '411700', '新蔡县', '河南省', '驻马店市', '0396', '2');
+INSERT INTO `city_code` VALUES ('1698', '419001', '419000', '济源市', '河南省', '省直辖', '0391', '2');
+INSERT INTO `city_code` VALUES ('1699', '420000', null, '湖北省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('1700', '420100', '420000', '武汉市', '湖北省', '', '027', '1');
+INSERT INTO `city_code` VALUES ('1701', '420200', '420000', '黄石市', '湖北省', '', '0714', '1');
+INSERT INTO `city_code` VALUES ('1702', '420300', '420000', '十堰市', '湖北省', '', '0719', '1');
+INSERT INTO `city_code` VALUES ('1703', '420500', '420000', '宜昌市', '湖北省', '', '0717', '1');
+INSERT INTO `city_code` VALUES ('1704', '420600', '420000', '襄阳市', '湖北省', '', '0710', '1');
+INSERT INTO `city_code` VALUES ('1705', '420700', '420000', '鄂州市', '湖北省', '', '0711', '1');
+INSERT INTO `city_code` VALUES ('1706', '420800', '420000', '荆门市', '湖北省', '', '0724', '1');
+INSERT INTO `city_code` VALUES ('1707', '420900', '420000', '孝感市', '湖北省', '', '0712', '1');
+INSERT INTO `city_code` VALUES ('1708', '421000', '420000', '荆州市', '湖北省', '', '0716', '1');
+INSERT INTO `city_code` VALUES ('1709', '421100', '420000', '黄冈市', '湖北省', '', '0713', '1');
+INSERT INTO `city_code` VALUES ('1710', '421200', '420000', '咸宁市', '湖北省', '', '0715', '1');
+INSERT INTO `city_code` VALUES ('1711', '421300', '420000', '随州市', '湖北省', '', '0722', '1');
+INSERT INTO `city_code` VALUES ('1712', '422800', '420000', '恩施土家族苗族自治州 ', '湖北省', '', '0718', '1');
+INSERT INTO `city_code` VALUES ('1713', '429000', '420000', '省直辖', '湖北省', '', '', '1');
+INSERT INTO `city_code` VALUES ('1714', '420102', '420100', '江岸区', '湖北省', '武汉市', '027', '2');
+INSERT INTO `city_code` VALUES ('1715', '420103', '420100', '江汉区', '湖北省', '武汉市', '0728', '2');
+INSERT INTO `city_code` VALUES ('1716', '420104', '420100', '硚口区', '湖北省', '武汉市', '027', '2');
+INSERT INTO `city_code` VALUES ('1717', '420105', '420100', '汉阳区', '湖北省', '武汉市', '027', '2');
+INSERT INTO `city_code` VALUES ('1718', '420106', '420100', '武昌区', '湖北省', '武汉市', '027', '2');
+INSERT INTO `city_code` VALUES ('1719', '420107', '420100', '青山区', '湖北省', '武汉市', '027', '2');
+INSERT INTO `city_code` VALUES ('1720', '420111', '420100', '洪山区', '湖北省', '武汉市', '027', '2');
+INSERT INTO `city_code` VALUES ('1721', '420112', '420100', '东西湖区', '湖北省', '武汉市', '027', '2');
+INSERT INTO `city_code` VALUES ('1722', '420113', '420100', '汉南区', '湖北省', '武汉市', '027', '2');
+INSERT INTO `city_code` VALUES ('1723', '420114', '420100', '蔡甸区', '湖北省', '武汉市', '027', '2');
+INSERT INTO `city_code` VALUES ('1724', '420115', '420100', '江夏区', '湖北省', '武汉市', '027', '2');
+INSERT INTO `city_code` VALUES ('1725', '420116', '420100', '黄陂区', '湖北省', '武汉市', '027', '2');
+INSERT INTO `city_code` VALUES ('1726', '420117', '420100', '新洲区', '湖北省', '武汉市', '027', '2');
+INSERT INTO `city_code` VALUES ('1727', '420202', '420200', '黄石港区', '湖北省', '黄石市', '0714', '2');
+INSERT INTO `city_code` VALUES ('1728', '420203', '420200', '西塞山区', '湖北省', '黄石市', '0714', '2');
+INSERT INTO `city_code` VALUES ('1729', '420204', '420200', '下陆区', '湖北省', '黄石市', '0714', '2');
+INSERT INTO `city_code` VALUES ('1730', '420205', '420200', '铁山区', '湖北省', '黄石市', '0714', '2');
+INSERT INTO `city_code` VALUES ('1731', '420222', '420200', '阳新县', '湖北省', '黄石市', '0714', '2');
+INSERT INTO `city_code` VALUES ('1732', '420281', '420200', '大冶市', '湖北省', '黄石市', '0714', '2');
+INSERT INTO `city_code` VALUES ('1733', '420302', '420300', '茅箭区', '湖北省', '十堰市', '0719', '2');
+INSERT INTO `city_code` VALUES ('1734', '420303', '420300', '张湾区', '湖北省', '十堰市', '0719', '2');
+INSERT INTO `city_code` VALUES ('1735', '420321', '420300', '郧县', '湖北省', '十堰市', '0719', '2');
+INSERT INTO `city_code` VALUES ('1736', '420322', '420300', '郧西县', '湖北省', '十堰市', '0719', '2');
+INSERT INTO `city_code` VALUES ('1737', '420323', '420300', '竹山县', '湖北省', '十堰市', '0719', '2');
+INSERT INTO `city_code` VALUES ('1738', '420324', '420300', '竹溪县', '湖北省', '十堰市', '0719', '2');
+INSERT INTO `city_code` VALUES ('1739', '420325', '420300', '房县', '湖北省', '十堰市', '0719', '2');
+INSERT INTO `city_code` VALUES ('1740', '420381', '420300', '丹江口市', '湖北省', '十堰市', '0719', '2');
+INSERT INTO `city_code` VALUES ('1741', '420502', '420500', '西陵区', '湖北省', '宜昌市', '0717', '2');
+INSERT INTO `city_code` VALUES ('1742', '420503', '420500', '伍家岗区', '湖北省', '宜昌市', '0717', '2');
+INSERT INTO `city_code` VALUES ('1743', '420504', '420500', '点军区', '湖北省', '宜昌市', '0717', '2');
+INSERT INTO `city_code` VALUES ('1744', '420505', '420500', '猇亭区', '湖北省', '宜昌市', '0717', '2');
+INSERT INTO `city_code` VALUES ('1745', '420506', '420500', '夷陵区', '湖北省', '宜昌市', '0717', '2');
+INSERT INTO `city_code` VALUES ('1746', '420525', '420500', '远安县', '湖北省', '宜昌市', '0717', '2');
+INSERT INTO `city_code` VALUES ('1747', '420526', '420500', '兴山县', '湖北省', '宜昌市', '0717', '2');
+INSERT INTO `city_code` VALUES ('1748', '420527', '420500', '秭归县', '湖北省', '宜昌市', '0717', '2');
+INSERT INTO `city_code` VALUES ('1749', '420528', '420500', '长阳土家族自治县', '湖北省', '宜昌市', '0717', '2');
+INSERT INTO `city_code` VALUES ('1750', '420529', '420500', '五峰土家族自治县', '湖北省', '宜昌市', '0717', '2');
+INSERT INTO `city_code` VALUES ('1751', '420581', '420500', '宜都市', '湖北省', '宜昌市', '0717', '2');
+INSERT INTO `city_code` VALUES ('1752', '420582', '420500', '当阳市', '湖北省', '宜昌市', '0717', '2');
+INSERT INTO `city_code` VALUES ('1753', '420583', '420500', '枝江市', '湖北省', '宜昌市', '0717', '2');
+INSERT INTO `city_code` VALUES ('1754', '420602', '420600', '襄城区', '湖北省', '襄阳市', '0710', '2');
+INSERT INTO `city_code` VALUES ('1755', '420606', '420600', '樊城区', '湖北省', '襄阳市', '0710', '2');
+INSERT INTO `city_code` VALUES ('1756', '420607', '420600', '襄州区', '湖北省', '襄阳市', '0710', '2');
+INSERT INTO `city_code` VALUES ('1757', '420624', '420600', '南漳县', '湖北省', '襄阳市', '0710', '2');
+INSERT INTO `city_code` VALUES ('1758', '420625', '420600', '谷城县', '湖北省', '襄阳市', '0710', '2');
+INSERT INTO `city_code` VALUES ('1759', '420626', '420600', '保康县', '湖北省', '襄阳市', '0710', '2');
+INSERT INTO `city_code` VALUES ('1760', '420682', '420600', '老河口市', '湖北省', '襄阳市', '0710', '2');
+INSERT INTO `city_code` VALUES ('1761', '420683', '420600', '枣阳市', '湖北省', '襄阳市', '0710', '2');
+INSERT INTO `city_code` VALUES ('1762', '420684', '420600', '宜城市', '湖北省', '襄阳市', '0710', '2');
+INSERT INTO `city_code` VALUES ('1763', '420702', '420700', '梁子湖区', '湖北省', '鄂州市', '0711', '2');
+INSERT INTO `city_code` VALUES ('1764', '420703', '420700', '华容区', '湖北省', '鄂州市', '0711', '2');
+INSERT INTO `city_code` VALUES ('1765', '420704', '420700', '鄂城区', '湖北省', '鄂州市', '0711', '2');
+INSERT INTO `city_code` VALUES ('1766', '420802', '420800', '东宝区', '湖北省', '荆门市', '0724', '2');
+INSERT INTO `city_code` VALUES ('1767', '420804', '420800', '掇刀区', '湖北省', '荆门市', '0724', '2');
+INSERT INTO `city_code` VALUES ('1768', '420821', '420800', '京山县', '湖北省', '荆门市', '0724', '2');
+INSERT INTO `city_code` VALUES ('1769', '420822', '420800', '沙洋县', '湖北省', '荆门市', '0724', '2');
+INSERT INTO `city_code` VALUES ('1770', '420881', '420800', '钟祥市', '湖北省', '荆门市', '0724', '2');
+INSERT INTO `city_code` VALUES ('1771', '420902', '420900', '孝南区', '湖北省', '孝感市', '0712', '2');
+INSERT INTO `city_code` VALUES ('1772', '420921', '420900', '孝昌县', '湖北省', '孝感市', '0712', '2');
+INSERT INTO `city_code` VALUES ('1773', '420922', '420900', '大悟县', '湖北省', '孝感市', '0712', '2');
+INSERT INTO `city_code` VALUES ('1774', '420923', '420900', '云梦县', '湖北省', '孝感市', '0712', '2');
+INSERT INTO `city_code` VALUES ('1775', '420981', '420900', '应城市', '湖北省', '孝感市', '0712', '2');
+INSERT INTO `city_code` VALUES ('1776', '420982', '420900', '安陆市', '湖北省', '孝感市', '0712', '2');
+INSERT INTO `city_code` VALUES ('1777', '420984', '420900', '汉川市', '湖北省', '孝感市', '0712', '2');
+INSERT INTO `city_code` VALUES ('1778', '421002', '421000', '沙市区', '湖北省', '荆州市', '0716', '2');
+INSERT INTO `city_code` VALUES ('1779', '421003', '421000', '荆州区', '湖北省', '荆州市', '0716', '2');
+INSERT INTO `city_code` VALUES ('1780', '421022', '421000', '公安县', '湖北省', '荆州市', '0716', '2');
+INSERT INTO `city_code` VALUES ('1781', '421023', '421000', '监利县', '湖北省', '荆州市', '0716', '2');
+INSERT INTO `city_code` VALUES ('1782', '421024', '421000', '江陵县', '湖北省', '荆州市', '0716', '2');
+INSERT INTO `city_code` VALUES ('1783', '421081', '421000', '石首市', '湖北省', '荆州市', '0716', '2');
+INSERT INTO `city_code` VALUES ('1784', '421083', '421000', '洪湖市', '湖北省', '荆州市', '0716', '2');
+INSERT INTO `city_code` VALUES ('1785', '421087', '421000', '松滋市', '湖北省', '荆州市', '0716', '2');
+INSERT INTO `city_code` VALUES ('1786', '421102', '421100', '黄州区', '湖北省', '黄冈市', '0713', '2');
+INSERT INTO `city_code` VALUES ('1787', '421121', '421100', '团风县', '湖北省', '黄冈市', '0713', '2');
+INSERT INTO `city_code` VALUES ('1788', '421122', '421100', '红安县', '湖北省', '黄冈市', '0713', '2');
+INSERT INTO `city_code` VALUES ('1789', '421123', '421100', '罗田县', '湖北省', '黄冈市', '0713', '2');
+INSERT INTO `city_code` VALUES ('1790', '421124', '421100', '英山县', '湖北省', '黄冈市', '0713', '2');
+INSERT INTO `city_code` VALUES ('1791', '421125', '421100', '浠水县', '湖北省', '黄冈市', '0713', '2');
+INSERT INTO `city_code` VALUES ('1792', '421126', '421100', '蕲春县', '湖北省', '黄冈市', '0713', '2');
+INSERT INTO `city_code` VALUES ('1793', '421127', '421100', '黄梅县', '湖北省', '黄冈市', '0713', '2');
+INSERT INTO `city_code` VALUES ('1794', '421181', '421100', '麻城市', '湖北省', '黄冈市', '0713', '2');
+INSERT INTO `city_code` VALUES ('1795', '421182', '421100', '武穴市', '湖北省', '黄冈市', '0713', '2');
+INSERT INTO `city_code` VALUES ('1796', '421202', '421200', '咸安区', '湖北省', '咸宁市', '0715', '2');
+INSERT INTO `city_code` VALUES ('1797', '421221', '421200', '嘉鱼县', '湖北省', '咸宁市', '0715', '2');
+INSERT INTO `city_code` VALUES ('1798', '421222', '421200', '通城县', '湖北省', '咸宁市', '0715', '2');
+INSERT INTO `city_code` VALUES ('1799', '421223', '421200', '崇阳县', '湖北省', '咸宁市', '0715', '2');
+INSERT INTO `city_code` VALUES ('1800', '421224', '421200', '通山县', '湖北省', '咸宁市', '0715', '2');
+INSERT INTO `city_code` VALUES ('1801', '421281', '421200', '赤壁市', '湖北省', '咸宁市', '0715', '2');
+INSERT INTO `city_code` VALUES ('1802', '421303', '421300', '曾都区', '湖北省', '随州市', '0722', '2');
+INSERT INTO `city_code` VALUES ('1803', '421321', '421300', '随县', '湖北省', '随州市', '0722', '2');
+INSERT INTO `city_code` VALUES ('1804', '421381', '421300', '广水市', '湖北省', '随州市', '0722', '2');
+INSERT INTO `city_code` VALUES ('1805', '422801', '422800', '恩施市', '湖北省', '恩施土家族苗族自治州 ', '0718', '2');
+INSERT INTO `city_code` VALUES ('1806', '422802', '422800', '利川市', '湖北省', '恩施土家族苗族自治州 ', '0718', '2');
+INSERT INTO `city_code` VALUES ('1807', '422822', '422800', '建始县', '湖北省', '恩施土家族苗族自治州 ', '0718', '2');
+INSERT INTO `city_code` VALUES ('1808', '422823', '422800', '巴东县', '湖北省', '恩施土家族苗族自治州 ', '0718', '2');
+INSERT INTO `city_code` VALUES ('1809', '422825', '422800', '宣恩县', '湖北省', '恩施土家族苗族自治州 ', '0718', '2');
+INSERT INTO `city_code` VALUES ('1810', '422826', '422800', '咸丰县', '湖北省', '恩施土家族苗族自治州 ', '0718', '2');
+INSERT INTO `city_code` VALUES ('1811', '422827', '422800', '来凤县', '湖北省', '恩施土家族苗族自治州 ', '0718', '2');
+INSERT INTO `city_code` VALUES ('1812', '422828', '422800', '鹤峰县', '湖北省', '恩施土家族苗族自治州 ', '0718', '2');
+INSERT INTO `city_code` VALUES ('1813', '429004', '419000', '仙桃市', '湖北省', '省直辖', '0728', '2');
+INSERT INTO `city_code` VALUES ('1814', '429005', '419000', '潜江市', '湖北省', '省直辖', '0728', '2');
+INSERT INTO `city_code` VALUES ('1815', '429006', '419000', '天门市', '湖北省', '省直辖', '0728', '2');
+INSERT INTO `city_code` VALUES ('1816', '429021', '419000', '神农架林区', '湖北省', '省直辖', '0719', '2');
+INSERT INTO `city_code` VALUES ('1817', '430000', null, '湖南省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('1818', '430100', '430000', '长沙市', '湖南省', '', '0731', '1');
+INSERT INTO `city_code` VALUES ('1819', '430200', '430000', '株洲市', '湖南省', '', '0733', '1');
+INSERT INTO `city_code` VALUES ('1820', '430300', '430000', '湘潭市', '湖南省', '', '0732', '1');
+INSERT INTO `city_code` VALUES ('1821', '430400', '430000', '衡阳市', '湖南省', '', '0734', '1');
+INSERT INTO `city_code` VALUES ('1822', '430500', '430000', '邵阳市', '湖南省', '', '0739', '1');
+INSERT INTO `city_code` VALUES ('1823', '430600', '430000', '岳阳市', '湖南省', '', '0730', '1');
+INSERT INTO `city_code` VALUES ('1824', '430700', '430000', '常德市', '湖南省', '', '0736', '1');
+INSERT INTO `city_code` VALUES ('1825', '430800', '430000', '张家界市', '湖南省', '', '0744', '1');
+INSERT INTO `city_code` VALUES ('1826', '430900', '430000', '益阳市', '湖南省', '', '0737', '1');
+INSERT INTO `city_code` VALUES ('1827', '431000', '430000', '郴州市', '湖南省', '', '0735', '1');
+INSERT INTO `city_code` VALUES ('1828', '431100', '430000', '永州市', '湖南省', '', '0746', '1');
+INSERT INTO `city_code` VALUES ('1829', '431200', '430000', '怀化市', '湖南省', '', '0745', '1');
+INSERT INTO `city_code` VALUES ('1830', '431300', '430000', '娄底市', '湖南省', '', '0738', '1');
+INSERT INTO `city_code` VALUES ('1831', '433100', '430000', '湘西土家族苗族自治州 ', '湖南省', '', '0743', '1');
+INSERT INTO `city_code` VALUES ('1832', '430102', '430100', '芙蓉区', '湖南省', '长沙市', '0731', '2');
+INSERT INTO `city_code` VALUES ('1833', '430103', '430100', '天心区', '湖南省', '长沙市', '0731', '2');
+INSERT INTO `city_code` VALUES ('1834', '430104', '430100', '岳麓区', '湖南省', '长沙市', '0731', '2');
+INSERT INTO `city_code` VALUES ('1835', '430105', '430100', '开福区', '湖南省', '长沙市', '0731', '2');
+INSERT INTO `city_code` VALUES ('1836', '430111', '430100', '雨花区', '湖南省', '长沙市', '0731', '2');
+INSERT INTO `city_code` VALUES ('1837', '430112', '430100', '望城区', '湖南省', '长沙市', '0731', '2');
+INSERT INTO `city_code` VALUES ('1838', '430121', '430100', '长沙县', '湖南省', '长沙市', '0731', '2');
+INSERT INTO `city_code` VALUES ('1839', '430124', '430100', '宁乡县', '湖南省', '长沙市', '0731', '2');
+INSERT INTO `city_code` VALUES ('1840', '430181', '430100', '浏阳市', '湖南省', '长沙市', '0731', '2');
+INSERT INTO `city_code` VALUES ('1841', '430202', '430200', '荷塘区', '湖南省', '株洲市', '0733', '2');
+INSERT INTO `city_code` VALUES ('1842', '430203', '430200', '芦淞区', '湖南省', '株洲市', '0733', '2');
+INSERT INTO `city_code` VALUES ('1843', '430204', '430200', '石峰区', '湖南省', '株洲市', '0733', '2');
+INSERT INTO `city_code` VALUES ('1844', '430211', '430200', '天元区', '湖南省', '株洲市', '0733', '2');
+INSERT INTO `city_code` VALUES ('1845', '430221', '430200', '株洲县', '湖南省', '株洲市', '0733', '2');
+INSERT INTO `city_code` VALUES ('1846', '430223', '430200', '攸县', '湖南省', '株洲市', '0733', '2');
+INSERT INTO `city_code` VALUES ('1847', '430224', '430200', '茶陵县', '湖南省', '株洲市', '0733', '2');
+INSERT INTO `city_code` VALUES ('1848', '430225', '430200', '炎陵县', '湖南省', '株洲市', '0733', '2');
+INSERT INTO `city_code` VALUES ('1849', '430281', '430200', '醴陵市', '湖南省', '株洲市', '0733', '2');
+INSERT INTO `city_code` VALUES ('1850', '430302', '430300', '雨湖区', '湖南省', '湘潭市', '0732', '2');
+INSERT INTO `city_code` VALUES ('1851', '430304', '430300', '岳塘区', '湖南省', '湘潭市', '0732', '2');
+INSERT INTO `city_code` VALUES ('1852', '430321', '430300', '湘潭县', '湖南省', '湘潭市', '0732', '2');
+INSERT INTO `city_code` VALUES ('1853', '430381', '430300', '湘乡市', '湖南省', '湘潭市', '0732', '2');
+INSERT INTO `city_code` VALUES ('1854', '430382', '430300', '韶山市', '湖南省', '湘潭市', '0732', '2');
+INSERT INTO `city_code` VALUES ('1855', '430405', '430400', '珠晖区', '湖南省', '衡阳市', '0734', '2');
+INSERT INTO `city_code` VALUES ('1856', '430406', '430400', '雁峰区', '湖南省', '衡阳市', '0734', '2');
+INSERT INTO `city_code` VALUES ('1857', '430407', '430400', '石鼓区', '湖南省', '衡阳市', '0734', '2');
+INSERT INTO `city_code` VALUES ('1858', '430408', '430400', '蒸湘区', '湖南省', '衡阳市', '0734', '2');
+INSERT INTO `city_code` VALUES ('1859', '430412', '430400', '南岳区', '湖南省', '衡阳市', '0734', '2');
+INSERT INTO `city_code` VALUES ('1860', '430421', '430400', '衡阳县', '湖南省', '衡阳市', '0734', '2');
+INSERT INTO `city_code` VALUES ('1861', '430422', '430400', '衡南县', '湖南省', '衡阳市', '0734', '2');
+INSERT INTO `city_code` VALUES ('1862', '430423', '430400', '衡山县', '湖南省', '衡阳市', '0734', '2');
+INSERT INTO `city_code` VALUES ('1863', '430424', '430400', '衡东县', '湖南省', '衡阳市', '0734', '2');
+INSERT INTO `city_code` VALUES ('1864', '430426', '430400', '祁东县', '湖南省', '衡阳市', '0734', '2');
+INSERT INTO `city_code` VALUES ('1865', '430481', '430400', '耒阳市', '湖南省', '衡阳市', '0734', '2');
+INSERT INTO `city_code` VALUES ('1866', '430482', '430400', '常宁市', '湖南省', '衡阳市', '0734', '2');
+INSERT INTO `city_code` VALUES ('1867', '430502', '430500', '双清区', '湖南省', '邵阳市', '0739', '2');
+INSERT INTO `city_code` VALUES ('1868', '430503', '430500', '大祥区', '湖南省', '邵阳市', '0739', '2');
+INSERT INTO `city_code` VALUES ('1869', '430511', '430500', '北塔区', '湖南省', '邵阳市', '0739', '2');
+INSERT INTO `city_code` VALUES ('1870', '430521', '430500', '邵东县', '湖南省', '邵阳市', '0739', '2');
+INSERT INTO `city_code` VALUES ('1871', '430522', '430500', '新邵县', '湖南省', '邵阳市', '0739', '2');
+INSERT INTO `city_code` VALUES ('1872', '430523', '430500', '邵阳县', '湖南省', '邵阳市', '0739', '2');
+INSERT INTO `city_code` VALUES ('1873', '430524', '430500', '隆回县', '湖南省', '邵阳市', '0739', '2');
+INSERT INTO `city_code` VALUES ('1874', '430525', '430500', '洞口县', '湖南省', '邵阳市', '0739', '2');
+INSERT INTO `city_code` VALUES ('1875', '430527', '430500', '绥宁县', '湖南省', '邵阳市', '0739', '2');
+INSERT INTO `city_code` VALUES ('1876', '430528', '430500', '新宁县', '湖南省', '邵阳市', '0739', '2');
+INSERT INTO `city_code` VALUES ('1877', '430529', '430500', '城步苗族自治县', '湖南省', '邵阳市', '0739', '2');
+INSERT INTO `city_code` VALUES ('1878', '430581', '430500', '武冈市', '湖南省', '邵阳市', '0739', '2');
+INSERT INTO `city_code` VALUES ('1879', '430602', '430600', '岳阳楼区', '湖南省', '岳阳市', '0730', '2');
+INSERT INTO `city_code` VALUES ('1880', '430603', '430600', '云溪区', '湖南省', '岳阳市', '0730', '2');
+INSERT INTO `city_code` VALUES ('1881', '430611', '430600', '君山区', '湖南省', '岳阳市', '0730', '2');
+INSERT INTO `city_code` VALUES ('1882', '430621', '430600', '岳阳县', '湖南省', '岳阳市', '0730', '2');
+INSERT INTO `city_code` VALUES ('1883', '430623', '430600', '华容县', '湖南省', '岳阳市', '0730', '2');
+INSERT INTO `city_code` VALUES ('1884', '430624', '430600', '湘阴县', '湖南省', '岳阳市', '0730', '2');
+INSERT INTO `city_code` VALUES ('1885', '430626', '430600', '平江县', '湖南省', '岳阳市', '0730', '2');
+INSERT INTO `city_code` VALUES ('1886', '430681', '430600', '汨罗市', '湖南省', '岳阳市', '0730', '2');
+INSERT INTO `city_code` VALUES ('1887', '430682', '430600', '临湘市', '湖南省', '岳阳市', '0730', '2');
+INSERT INTO `city_code` VALUES ('1888', '430702', '430700', '武陵区', '湖南省', '常德市', '0736', '2');
+INSERT INTO `city_code` VALUES ('1889', '430703', '430700', '鼎城区', '湖南省', '常德市', '0736', '2');
+INSERT INTO `city_code` VALUES ('1890', '430721', '430700', '安乡县', '湖南省', '常德市', '0736', '2');
+INSERT INTO `city_code` VALUES ('1891', '430722', '430700', '汉寿县', '湖南省', '常德市', '0736', '2');
+INSERT INTO `city_code` VALUES ('1892', '430723', '430700', '澧县', '湖南省', '常德市', '0736', '2');
+INSERT INTO `city_code` VALUES ('1893', '430724', '430700', '临澧县', '湖南省', '常德市', '0736', '2');
+INSERT INTO `city_code` VALUES ('1894', '430725', '430700', '桃源县', '湖南省', '常德市', '0736', '2');
+INSERT INTO `city_code` VALUES ('1895', '430726', '430700', '石门县', '湖南省', '常德市', '0736', '2');
+INSERT INTO `city_code` VALUES ('1896', '430781', '430700', '津市市', '湖南省', '常德市', '0736', '2');
+INSERT INTO `city_code` VALUES ('1897', '430802', '430800', '永定区', '湖南省', '张家界市', '0744', '2');
+INSERT INTO `city_code` VALUES ('1898', '430811', '430800', '武陵源区', '湖南省', '张家界市', '0744', '2');
+INSERT INTO `city_code` VALUES ('1899', '430821', '430800', '慈利县', '湖南省', '张家界市', '0744', '2');
+INSERT INTO `city_code` VALUES ('1900', '430822', '430800', '桑植县', '湖南省', '张家界市', '0744', '2');
+INSERT INTO `city_code` VALUES ('1901', '430902', '430900', '资阳区', '湖南省', '益阳市', '0737', '2');
+INSERT INTO `city_code` VALUES ('1902', '430903', '430900', '赫山区', '湖南省', '益阳市', '0737', '2');
+INSERT INTO `city_code` VALUES ('1903', '430921', '430900', '南县', '湖南省', '益阳市', '0737', '2');
+INSERT INTO `city_code` VALUES ('1904', '430922', '430900', '桃江县', '湖南省', '益阳市', '0737', '2');
+INSERT INTO `city_code` VALUES ('1905', '430923', '430900', '安化县', '湖南省', '益阳市', '0737', '2');
+INSERT INTO `city_code` VALUES ('1906', '430981', '430900', '沅江市', '湖南省', '益阳市', '0737', '2');
+INSERT INTO `city_code` VALUES ('1907', '431002', '431000', '北湖区', '湖南省', '郴州市', '0735', '2');
+INSERT INTO `city_code` VALUES ('1908', '431003', '431000', '苏仙区', '湖南省', '郴州市', '0735', '2');
+INSERT INTO `city_code` VALUES ('1909', '431021', '431000', '桂阳县', '湖南省', '郴州市', '0735', '2');
+INSERT INTO `city_code` VALUES ('1910', '431022', '431000', '宜章县', '湖南省', '郴州市', '0735', '2');
+INSERT INTO `city_code` VALUES ('1911', '431023', '431000', '永兴县', '湖南省', '郴州市', '0735', '2');
+INSERT INTO `city_code` VALUES ('1912', '431024', '431000', '嘉禾县', '湖南省', '郴州市', '0735', '2');
+INSERT INTO `city_code` VALUES ('1913', '431025', '431000', '临武县', '湖南省', '郴州市', '0735', '2');
+INSERT INTO `city_code` VALUES ('1914', '431026', '431000', '汝城县', '湖南省', '郴州市', '0735', '2');
+INSERT INTO `city_code` VALUES ('1915', '431027', '431000', '桂东县', '湖南省', '郴州市', '0735', '2');
+INSERT INTO `city_code` VALUES ('1916', '431028', '431000', '安仁县', '湖南省', '郴州市', '0735', '2');
+INSERT INTO `city_code` VALUES ('1917', '431081', '431000', '资兴市', '湖南省', '郴州市', '0735', '2');
+INSERT INTO `city_code` VALUES ('1918', '431102', '431100', '零陵区', '湖南省', '永州市', '0746', '2');
+INSERT INTO `city_code` VALUES ('1919', '431103', '431100', '冷水滩区', '湖南省', '永州市', '0746', '2');
+INSERT INTO `city_code` VALUES ('1920', '431121', '431100', '祁阳县', '湖南省', '永州市', '0746', '2');
+INSERT INTO `city_code` VALUES ('1921', '431122', '431100', '东安县', '湖南省', '永州市', '0746', '2');
+INSERT INTO `city_code` VALUES ('1922', '431123', '431100', '双牌县', '湖南省', '永州市', '0746', '2');
+INSERT INTO `city_code` VALUES ('1923', '431124', '431100', '道县', '湖南省', '永州市', '0746', '2');
+INSERT INTO `city_code` VALUES ('1924', '431125', '431100', '江永县', '湖南省', '永州市', '0746', '2');
+INSERT INTO `city_code` VALUES ('1925', '431126', '431100', '宁远县', '湖南省', '永州市', '0746', '2');
+INSERT INTO `city_code` VALUES ('1926', '431127', '431100', '蓝山县', '湖南省', '永州市', '0746', '2');
+INSERT INTO `city_code` VALUES ('1927', '431128', '431100', '新田县', '湖南省', '永州市', '0746', '2');
+INSERT INTO `city_code` VALUES ('1928', '431129', '431100', '江华瑶族自治县', '湖南省', '永州市', '0746', '2');
+INSERT INTO `city_code` VALUES ('1929', '431202', '431200', '鹤城区', '湖南省', '怀化市', '0745', '2');
+INSERT INTO `city_code` VALUES ('1930', '431221', '431200', '中方县', '湖南省', '怀化市', '0745', '2');
+INSERT INTO `city_code` VALUES ('1931', '431222', '431200', '沅陵县', '湖南省', '怀化市', '0745', '2');
+INSERT INTO `city_code` VALUES ('1932', '431223', '431200', '辰溪县', '湖南省', '怀化市', '0745', '2');
+INSERT INTO `city_code` VALUES ('1933', '431224', '431200', '溆浦县', '湖南省', '怀化市', '0745', '2');
+INSERT INTO `city_code` VALUES ('1934', '431225', '431200', '会同县', '湖南省', '怀化市', '0745', '2');
+INSERT INTO `city_code` VALUES ('1935', '431226', '431200', '麻阳苗族自治县', '湖南省', '怀化市', '0745', '2');
+INSERT INTO `city_code` VALUES ('1936', '431227', '431200', '新晃侗族自治县', '湖南省', '怀化市', '0745', '2');
+INSERT INTO `city_code` VALUES ('1937', '431228', '431200', '芷江侗族自治县', '湖南省', '怀化市', '0745', '2');
+INSERT INTO `city_code` VALUES ('1938', '431229', '431200', '靖州苗族侗族自治县', '湖南省', '怀化市', '0745', '2');
+INSERT INTO `city_code` VALUES ('1939', '431230', '431200', '通道侗族自治县', '湖南省', '怀化市', '0745', '2');
+INSERT INTO `city_code` VALUES ('1940', '431281', '431200', '洪江市', '湖南省', '怀化市', '0745', '2');
+INSERT INTO `city_code` VALUES ('1941', '431302', '431300', '娄星区', '湖南省', '娄底市', '0738', '2');
+INSERT INTO `city_code` VALUES ('1942', '431321', '431300', '双峰县', '湖南省', '娄底市', '0738', '2');
+INSERT INTO `city_code` VALUES ('1943', '431322', '431300', '新化县', '湖南省', '娄底市', '0738', '2');
+INSERT INTO `city_code` VALUES ('1944', '431381', '431300', '冷水江市', '湖南省', '娄底市', '0738', '2');
+INSERT INTO `city_code` VALUES ('1945', '431382', '431300', '涟源市', '湖南省', '娄底市', '0738', '2');
+INSERT INTO `city_code` VALUES ('1946', '433101', '433100', '吉首市', '湖南省', '湘西土家族苗族自治州 ', '0743', '2');
+INSERT INTO `city_code` VALUES ('1947', '433122', '433100', '泸溪县', '湖南省', '湘西土家族苗族自治州 ', '0743', '2');
+INSERT INTO `city_code` VALUES ('1948', '433123', '433100', '凤凰县', '湖南省', '湘西土家族苗族自治州 ', '0743', '2');
+INSERT INTO `city_code` VALUES ('1949', '433124', '433100', '花垣县', '湖南省', '湘西土家族苗族自治州 ', '0743', '2');
+INSERT INTO `city_code` VALUES ('1950', '433125', '433100', '保靖县', '湖南省', '湘西土家族苗族自治州 ', '0743', '2');
+INSERT INTO `city_code` VALUES ('1951', '433126', '433100', '古丈县', '湖南省', '湘西土家族苗族自治州 ', '0743', '2');
+INSERT INTO `city_code` VALUES ('1952', '433127', '433100', '永顺县', '湖南省', '湘西土家族苗族自治州 ', '0743', '2');
+INSERT INTO `city_code` VALUES ('1953', '433130', '433100', '龙山县', '湖南省', '湘西土家族苗族自治州 ', '0743', '2');
+INSERT INTO `city_code` VALUES ('1954', '440000', null, '广东省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('1955', '440100', '440000', '广州市', '广东省', '', '020', '1');
+INSERT INTO `city_code` VALUES ('1956', '440200', '440000', '韶关市', '广东省', '', '0751', '1');
+INSERT INTO `city_code` VALUES ('1957', '440300', '440000', '深圳市', '广东省', '', '0755', '1');
+INSERT INTO `city_code` VALUES ('1958', '440400', '440000', '珠海市', '广东省', '', '0756', '1');
+INSERT INTO `city_code` VALUES ('1959', '440500', '440000', '汕头市', '广东省', '', '0754', '1');
+INSERT INTO `city_code` VALUES ('1960', '440600', '440000', '佛山市', '广东省', '', '0757', '1');
+INSERT INTO `city_code` VALUES ('1961', '440700', '440000', '江门市', '广东省', '', '0750', '1');
+INSERT INTO `city_code` VALUES ('1962', '440800', '440000', '湛江市', '广东省', '', '0759', '1');
+INSERT INTO `city_code` VALUES ('1963', '440900', '440000', '茂名市', '广东省', '', '0668', '1');
+INSERT INTO `city_code` VALUES ('1964', '441200', '440000', '肇庆市', '广东省', '', '0758', '1');
+INSERT INTO `city_code` VALUES ('1965', '441300', '440000', '惠州市', '广东省', '', '0752', '1');
+INSERT INTO `city_code` VALUES ('1966', '441400', '440000', '梅州市', '广东省', '', '0753', '1');
+INSERT INTO `city_code` VALUES ('1967', '441500', '440000', '汕尾市', '广东省', '', '0660', '1');
+INSERT INTO `city_code` VALUES ('1968', '441600', '440000', '河源市', '广东省', '', '0762', '1');
+INSERT INTO `city_code` VALUES ('1969', '441700', '440000', '阳江市', '广东省', '', '0662', '1');
+INSERT INTO `city_code` VALUES ('1970', '441800', '440000', '清远市', '广东省', '', '0763', '1');
+INSERT INTO `city_code` VALUES ('1971', '441900', '440000', '东莞市', '广东省', '', '0769', '1');
+INSERT INTO `city_code` VALUES ('1972', '442000', '440000', '中山市', '广东省', '', '0760', '1');
+INSERT INTO `city_code` VALUES ('1973', '445100', '440000', '潮州市', '广东省', '', '0768', '1');
+INSERT INTO `city_code` VALUES ('1974', '445200', '440000', '揭阳市', '广东省', '', '0663', '1');
+INSERT INTO `city_code` VALUES ('1975', '445300', '440000', '云浮市', '广东省', '', '0766', '1');
+INSERT INTO `city_code` VALUES ('1976', '440103', '440100', '荔湾区', '广东省', '广州市', '020', '2');
+INSERT INTO `city_code` VALUES ('1977', '440104', '440100', '越秀区', '广东省', '广州市', '020', '2');
+INSERT INTO `city_code` VALUES ('1978', '440105', '440100', '海珠区', '广东省', '广州市', '020', '2');
+INSERT INTO `city_code` VALUES ('1979', '440106', '440100', '天河区', '广东省', '广州市', '020', '2');
+INSERT INTO `city_code` VALUES ('1980', '440111', '440100', '白云区', '广东省', '广州市', '020', '2');
+INSERT INTO `city_code` VALUES ('1981', '440112', '440100', '黄埔区', '广东省', '广州市', '020', '2');
+INSERT INTO `city_code` VALUES ('1982', '440113', '440100', '番禺区', '广东省', '广州市', '020', '2');
+INSERT INTO `city_code` VALUES ('1983', '440114', '440100', '花都区', '广东省', '广州市', '020', '2');
+INSERT INTO `city_code` VALUES ('1984', '440115', '440100', '南沙区', '广东省', '广州市', '020', '2');
+INSERT INTO `city_code` VALUES ('1985', '440116', '440100', '萝岗区', '广东省', '广州市', '020', '2');
+INSERT INTO `city_code` VALUES ('1986', '440183', '440100', '增城市', '广东省', '广州市', '020', '2');
+INSERT INTO `city_code` VALUES ('1987', '440184', '440100', '从化市', '广东省', '广州市', '020', '2');
+INSERT INTO `city_code` VALUES ('1988', '440203', '440200', '武江区', '广东省', '韶关市', '0751', '2');
+INSERT INTO `city_code` VALUES ('1989', '440204', '440200', '浈江区', '广东省', '韶关市', '0751', '2');
+INSERT INTO `city_code` VALUES ('1990', '440205', '440200', '曲江区', '广东省', '韶关市', '0751', '2');
+INSERT INTO `city_code` VALUES ('1991', '440222', '440200', '始兴县', '广东省', '韶关市', '0751', '2');
+INSERT INTO `city_code` VALUES ('1992', '440224', '440200', '仁化县', '广东省', '韶关市', '0751', '2');
+INSERT INTO `city_code` VALUES ('1993', '440229', '440200', '翁源县', '广东省', '韶关市', '0751', '2');
+INSERT INTO `city_code` VALUES ('1994', '440232', '440200', '乳源瑶族自治县', '广东省', '韶关市', '0751', '2');
+INSERT INTO `city_code` VALUES ('1995', '440233', '440200', '新丰县', '广东省', '韶关市', '0751', '2');
+INSERT INTO `city_code` VALUES ('1996', '440281', '440200', '乐昌市', '广东省', '韶关市', '0751', '2');
+INSERT INTO `city_code` VALUES ('1997', '440282', '440200', '南雄市', '广东省', '韶关市', '0751', '2');
+INSERT INTO `city_code` VALUES ('1998', '440303', '440300', '罗湖区', '广东省', '深圳市', '0755', '2');
+INSERT INTO `city_code` VALUES ('1999', '440304', '440300', '福田区', '广东省', '深圳市', '0755', '2');
+INSERT INTO `city_code` VALUES ('2000', '440305', '440300', '南山区', '广东省', '深圳市', '0755', '2');
+INSERT INTO `city_code` VALUES ('2001', '440306', '440300', '宝安区', '广东省', '深圳市', '0755', '2');
+INSERT INTO `city_code` VALUES ('2002', '440307', '440300', '龙岗区', '广东省', '深圳市', '0755', '2');
+INSERT INTO `city_code` VALUES ('2003', '440308', '440300', '盐田区', '广东省', '深圳市', '0755', '2');
+INSERT INTO `city_code` VALUES ('2004', '440402', '440400', '香洲区', '广东省', '珠海市', '0756', '2');
+INSERT INTO `city_code` VALUES ('2005', '440403', '440400', '斗门区', '广东省', '珠海市', '0756', '2');
+INSERT INTO `city_code` VALUES ('2006', '440404', '440400', '金湾区', '广东省', '珠海市', '0756', '2');
+INSERT INTO `city_code` VALUES ('2007', '440507', '440500', '龙湖区', '广东省', '汕头市', '0754', '2');
+INSERT INTO `city_code` VALUES ('2008', '440511', '440500', '金平区', '广东省', '汕头市', '0754', '2');
+INSERT INTO `city_code` VALUES ('2009', '440512', '440500', '濠江区', '广东省', '汕头市', '0754', '2');
+INSERT INTO `city_code` VALUES ('2010', '440513', '440500', '潮阳区', '广东省', '汕头市', '0661', '2');
+INSERT INTO `city_code` VALUES ('2011', '440514', '440500', '潮南区', '广东省', '汕头市', '0754', '2');
+INSERT INTO `city_code` VALUES ('2012', '440515', '440500', '澄海区', '广东省', '汕头市', '0754', '2');
+INSERT INTO `city_code` VALUES ('2013', '440523', '440500', '南澳县', '广东省', '汕头市', '0754', '2');
+INSERT INTO `city_code` VALUES ('2014', '440604', '440600', '禅城区', '广东省', '佛山市', '0757', '2');
+INSERT INTO `city_code` VALUES ('2015', '440605', '440600', '南海区', '广东省', '佛山市', '0757', '2');
+INSERT INTO `city_code` VALUES ('2016', '440606', '440600', '顺德区', '广东省', '佛山市', '0765', '2');
+INSERT INTO `city_code` VALUES ('2017', '440607', '440600', '三水区', '广东省', '佛山市', '0757', '2');
+INSERT INTO `city_code` VALUES ('2018', '440608', '440600', '高明区', '广东省', '佛山市', '0757', '2');
+INSERT INTO `city_code` VALUES ('2019', '440703', '440700', '蓬江区', '广东省', '江门市', '0750', '2');
+INSERT INTO `city_code` VALUES ('2020', '440704', '440700', '江海区', '广东省', '江门市', '0750', '2');
+INSERT INTO `city_code` VALUES ('2021', '440705', '440700', '新会区', '广东省', '江门市', '0750', '2');
+INSERT INTO `city_code` VALUES ('2022', '440781', '440700', '台山市', '广东省', '江门市', '0750', '2');
+INSERT INTO `city_code` VALUES ('2023', '440783', '440700', '开平市', '广东省', '江门市', '0750', '2');
+INSERT INTO `city_code` VALUES ('2024', '440784', '440700', '鹤山市', '广东省', '江门市', '0750', '2');
+INSERT INTO `city_code` VALUES ('2025', '440785', '440700', '恩平市', '广东省', '江门市', '0750', '2');
+INSERT INTO `city_code` VALUES ('2026', '440802', '440800', '赤坎区', '广东省', '湛江市', '0759', '2');
+INSERT INTO `city_code` VALUES ('2027', '440803', '440800', '霞山区', '广东省', '湛江市', '0759', '2');
+INSERT INTO `city_code` VALUES ('2028', '440804', '440800', '坡头区', '广东省', '湛江市', '0759', '2');
+INSERT INTO `city_code` VALUES ('2029', '440811', '440800', '麻章区', '广东省', '湛江市', '0759', '2');
+INSERT INTO `city_code` VALUES ('2030', '440823', '440800', '遂溪县', '广东省', '湛江市', '0759', '2');
+INSERT INTO `city_code` VALUES ('2031', '440825', '440800', '徐闻县', '广东省', '湛江市', '0759', '2');
+INSERT INTO `city_code` VALUES ('2032', '440881', '440800', '廉江市', '广东省', '湛江市', '0759', '2');
+INSERT INTO `city_code` VALUES ('2033', '440882', '440800', '雷州市', '广东省', '湛江市', '0759', '2');
+INSERT INTO `city_code` VALUES ('2034', '440883', '440800', '吴川市', '广东省', '湛江市', '0759', '2');
+INSERT INTO `city_code` VALUES ('2035', '440902', '440900', '茂南区', '广东省', '茂名市', '0668', '2');
+INSERT INTO `city_code` VALUES ('2036', '440903', '440900', '茂港区', '广东省', '茂名市', '0668', '2');
+INSERT INTO `city_code` VALUES ('2037', '440923', '440900', '电白县', '广东省', '茂名市', '0668', '2');
+INSERT INTO `city_code` VALUES ('2038', '440981', '440900', '高州市', '广东省', '茂名市', '0668', '2');
+INSERT INTO `city_code` VALUES ('2039', '440982', '440900', '化州市', '广东省', '茂名市', '0668', '2');
+INSERT INTO `city_code` VALUES ('2040', '440983', '440900', '信宜市', '广东省', '茂名市', '0668', '2');
+INSERT INTO `city_code` VALUES ('2041', '441202', '441200', '端州区', '广东省', '肇庆市', '0758', '2');
+INSERT INTO `city_code` VALUES ('2042', '441203', '441200', '鼎湖区', '广东省', '肇庆市', '0758', '2');
+INSERT INTO `city_code` VALUES ('2043', '441223', '441200', '广宁县', '广东省', '肇庆市', '0758', '2');
+INSERT INTO `city_code` VALUES ('2044', '441224', '441200', '怀集县', '广东省', '肇庆市', '0758', '2');
+INSERT INTO `city_code` VALUES ('2045', '441225', '441200', '封开县', '广东省', '肇庆市', '0758', '2');
+INSERT INTO `city_code` VALUES ('2046', '441226', '441200', '德庆县', '广东省', '肇庆市', '0758', '2');
+INSERT INTO `city_code` VALUES ('2047', '441283', '441200', '高要市', '广东省', '肇庆市', '0758', '2');
+INSERT INTO `city_code` VALUES ('2048', '441284', '441200', '四会市', '广东省', '肇庆市', '0758', '2');
+INSERT INTO `city_code` VALUES ('2049', '441302', '441300', '惠城区', '广东省', '惠州市', '0752', '2');
+INSERT INTO `city_code` VALUES ('2050', '441303', '441300', '惠阳区', '广东省', '惠州市', '0752', '2');
+INSERT INTO `city_code` VALUES ('2051', '441322', '441300', '博罗县', '广东省', '惠州市', '0752', '2');
+INSERT INTO `city_code` VALUES ('2052', '441323', '441300', '惠东县', '广东省', '惠州市', '0752', '2');
+INSERT INTO `city_code` VALUES ('2053', '441324', '441300', '龙门县', '广东省', '惠州市', '0752', '2');
+INSERT INTO `city_code` VALUES ('2054', '441402', '441400', '梅江区', '广东省', '梅州市', '0753', '2');
+INSERT INTO `city_code` VALUES ('2055', '441421', '441400', '梅县', '广东省', '梅州市', '0753', '2');
+INSERT INTO `city_code` VALUES ('2056', '441422', '441400', '大埔县', '广东省', '梅州市', '0753', '2');
+INSERT INTO `city_code` VALUES ('2057', '441423', '441400', '丰顺县', '广东省', '梅州市', '0753', '2');
+INSERT INTO `city_code` VALUES ('2058', '441424', '441400', '五华县', '广东省', '梅州市', '0753', '2');
+INSERT INTO `city_code` VALUES ('2059', '441426', '441400', '平远县', '广东省', '梅州市', '0753', '2');
+INSERT INTO `city_code` VALUES ('2060', '441427', '441400', '蕉岭县', '广东省', '梅州市', '0753', '2');
+INSERT INTO `city_code` VALUES ('2061', '441481', '441400', '兴宁市', '广东省', '梅州市', '0753', '2');
+INSERT INTO `city_code` VALUES ('2062', '441502', '441500', '城区', '广东省', '汕尾市', '0660', '2');
+INSERT INTO `city_code` VALUES ('2063', '441521', '441500', '海丰县', '广东省', '汕尾市', '0660', '2');
+INSERT INTO `city_code` VALUES ('2064', '441523', '441500', '陆河县', '广东省', '汕尾市', '0660', '2');
+INSERT INTO `city_code` VALUES ('2065', '441581', '441500', '陆丰市', '广东省', '汕尾市', '0660', '2');
+INSERT INTO `city_code` VALUES ('2066', '441602', '441600', '源城区', '广东省', '河源市', '0762', '2');
+INSERT INTO `city_code` VALUES ('2067', '441621', '441600', '紫金县', '广东省', '河源市', '0762', '2');
+INSERT INTO `city_code` VALUES ('2068', '441622', '441600', '龙川县', '广东省', '河源市', '0762', '2');
+INSERT INTO `city_code` VALUES ('2069', '441623', '441600', '连平县', '广东省', '河源市', '0762', '2');
+INSERT INTO `city_code` VALUES ('2070', '441624', '441600', '和平县', '广东省', '河源市', '0762', '2');
+INSERT INTO `city_code` VALUES ('2071', '441625', '441600', '东源县', '广东省', '河源市', '0762', '2');
+INSERT INTO `city_code` VALUES ('2072', '441702', '441700', '江城区', '广东省', '阳江市', '0662', '2');
+INSERT INTO `city_code` VALUES ('2073', '441721', '441700', '阳西县', '广东省', '阳江市', '0662', '2');
+INSERT INTO `city_code` VALUES ('2074', '441723', '441700', '阳东县', '广东省', '阳江市', '0662', '2');
+INSERT INTO `city_code` VALUES ('2075', '441781', '441700', '阳春市', '广东省', '阳江市', '0662', '2');
+INSERT INTO `city_code` VALUES ('2076', '441802', '441800', '清城区', '广东省', '清远市', '0763', '2');
+INSERT INTO `city_code` VALUES ('2077', '441821', '441800', '佛冈县', '广东省', '清远市', '0763', '2');
+INSERT INTO `city_code` VALUES ('2078', '441823', '441800', '阳山县', '广东省', '清远市', '0763', '2');
+INSERT INTO `city_code` VALUES ('2079', '441825', '441800', '连山壮族瑶族自治县', '广东省', '清远市', '0763', '2');
+INSERT INTO `city_code` VALUES ('2080', '441826', '441800', '连南瑶族自治县', '广东省', '清远市', '0763', '2');
+INSERT INTO `city_code` VALUES ('2081', '441827', '441800', '清新县', '广东省', '清远市', '0763', '2');
+INSERT INTO `city_code` VALUES ('2082', '441881', '441800', '英德市', '广东省', '清远市', '0763', '2');
+INSERT INTO `city_code` VALUES ('2083', '441882', '441800', '连州市', '广东省', '清远市', '0763', '2');
+INSERT INTO `city_code` VALUES ('2084', '441901', '441900', '东莞市', '广东省', '东莞市', '0769', '2');
+INSERT INTO `city_code` VALUES ('2085', '442001', '442000', '中山市', '广东省', '中山市', '0760', '2');
+INSERT INTO `city_code` VALUES ('2086', '445102', '445100', '湘桥区', '广东省', '潮州市', '0768', '2');
+INSERT INTO `city_code` VALUES ('2087', '445121', '445100', '潮安县', '广东省', '潮州市', '0768', '2');
+INSERT INTO `city_code` VALUES ('2088', '445122', '445100', '饶平县', '广东省', '潮州市', '0768', '2');
+INSERT INTO `city_code` VALUES ('2089', '445202', '445200', '榕城区', '广东省', '揭阳市', '0663', '2');
+INSERT INTO `city_code` VALUES ('2090', '445221', '445200', '揭东县', '广东省', '揭阳市', '0663', '2');
+INSERT INTO `city_code` VALUES ('2091', '445222', '445200', '揭西县', '广东省', '揭阳市', '0663', '2');
+INSERT INTO `city_code` VALUES ('2092', '445224', '445200', '惠来县', '广东省', '揭阳市', '0663', '2');
+INSERT INTO `city_code` VALUES ('2093', '445281', '445200', '普宁市', '广东省', '揭阳市', '0663', '2');
+INSERT INTO `city_code` VALUES ('2094', '445302', '445300', '云城区', '广东省', '云浮市', '0766', '2');
+INSERT INTO `city_code` VALUES ('2095', '445321', '445300', '新兴县', '广东省', '云浮市', '0766', '2');
+INSERT INTO `city_code` VALUES ('2096', '445322', '445300', '郁南县', '广东省', '云浮市', '0766', '2');
+INSERT INTO `city_code` VALUES ('2097', '445323', '445300', '云安县', '广东省', '云浮市', '0766', '2');
+INSERT INTO `city_code` VALUES ('2098', '445381', '445300', '罗定市', '广东省', '云浮市', '0766', '2');
+INSERT INTO `city_code` VALUES ('2099', '450000', null, '广西壮族自治区', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('2100', '450100', '450000', '南宁市', '广西壮族自治区', '', '0771', '1');
+INSERT INTO `city_code` VALUES ('2101', '450200', '450000', '柳州市', '广西壮族自治区', '', '0772', '1');
+INSERT INTO `city_code` VALUES ('2102', '450300', '450000', '桂林市', '广西壮族自治区', '', '0773', '1');
+INSERT INTO `city_code` VALUES ('2103', '450400', '450000', '梧州市', '广西壮族自治区', '', '0774', '1');
+INSERT INTO `city_code` VALUES ('2104', '450500', '450000', '北海市', '广西壮族自治区', '', '0779', '1');
+INSERT INTO `city_code` VALUES ('2105', '450600', '450000', '防城港市', '广西壮族自治区', '', '0770', '1');
+INSERT INTO `city_code` VALUES ('2106', '450700', '450000', '钦州市', '广西壮族自治区', '', '0777', '1');
+INSERT INTO `city_code` VALUES ('2107', '450800', '450000', '贵港市', '广西壮族自治区', '', '0775', '1');
+INSERT INTO `city_code` VALUES ('2108', '450900', '450000', '玉林市', '广西壮族自治区', '', '0775', '1');
+INSERT INTO `city_code` VALUES ('2109', '451000', '450000', '百色市', '广西壮族自治区', '', '0776', '1');
+INSERT INTO `city_code` VALUES ('2110', '451100', '450000', '贺州市', '广西壮族自治区', '', '0774', '1');
+INSERT INTO `city_code` VALUES ('2111', '451200', '450000', '河池市', '广西壮族自治区', '', '0778', '1');
+INSERT INTO `city_code` VALUES ('2112', '451300', '450000', '来宾市', '广西壮族自治区', '', '0772', '1');
+INSERT INTO `city_code` VALUES ('2113', '451400', '450000', '崇左市', '广西壮族自治区', '', '0771', '1');
+INSERT INTO `city_code` VALUES ('2114', '450102', '450100', '兴宁区', '广西壮族自治区', '南宁市', '0771', '2');
+INSERT INTO `city_code` VALUES ('2115', '450103', '450100', '青秀区', '广西壮族自治区', '南宁市', '0771', '2');
+INSERT INTO `city_code` VALUES ('2116', '450105', '450100', '江南区', '广西壮族自治区', '南宁市', '0771', '2');
+INSERT INTO `city_code` VALUES ('2117', '450107', '450100', '西乡塘区', '广西壮族自治区', '南宁市', '0771', '2');
+INSERT INTO `city_code` VALUES ('2118', '450108', '450100', '良庆区', '广西壮族自治区', '南宁市', '0771', '2');
+INSERT INTO `city_code` VALUES ('2119', '450109', '450100', '邕宁区', '广西壮族自治区', '南宁市', '0771', '2');
+INSERT INTO `city_code` VALUES ('2120', '450122', '450100', '武鸣县', '广西壮族自治区', '南宁市', '0771', '2');
+INSERT INTO `city_code` VALUES ('2121', '450123', '450100', '隆安县', '广西壮族自治区', '南宁市', '0771', '2');
+INSERT INTO `city_code` VALUES ('2122', '450124', '450100', '马山县', '广西壮族自治区', '南宁市', '0771', '2');
+INSERT INTO `city_code` VALUES ('2123', '450125', '450100', '上林县', '广西壮族自治区', '南宁市', '0771', '2');
+INSERT INTO `city_code` VALUES ('2124', '450126', '450100', '宾阳县', '广西壮族自治区', '南宁市', '0771', '2');
+INSERT INTO `city_code` VALUES ('2125', '450127', '450100', '横县', '广西壮族自治区', '南宁市', '0771', '2');
+INSERT INTO `city_code` VALUES ('2126', '450202', '450200', '城中区', '广西壮族自治区', '柳州市', '0772', '2');
+INSERT INTO `city_code` VALUES ('2127', '450203', '450200', '鱼峰区', '广西壮族自治区', '柳州市', '0772', '2');
+INSERT INTO `city_code` VALUES ('2128', '450204', '450200', '柳南区', '广西壮族自治区', '柳州市', '0772', '2');
+INSERT INTO `city_code` VALUES ('2129', '450205', '450200', '柳北区', '广西壮族自治区', '柳州市', '0772', '2');
+INSERT INTO `city_code` VALUES ('2130', '450221', '450200', '柳江县', '广西壮族自治区', '柳州市', '0772', '2');
+INSERT INTO `city_code` VALUES ('2131', '450222', '450200', '柳城县', '广西壮族自治区', '柳州市', '0772', '2');
+INSERT INTO `city_code` VALUES ('2132', '450223', '450200', '鹿寨县', '广西壮族自治区', '柳州市', '0772', '2');
+INSERT INTO `city_code` VALUES ('2133', '450224', '450200', '融安县', '广西壮族自治区', '柳州市', '0772', '2');
+INSERT INTO `city_code` VALUES ('2134', '450225', '450200', '融水苗族自治县', '广西壮族自治区', '柳州市', '0772', '2');
+INSERT INTO `city_code` VALUES ('2135', '450226', '450200', '三江侗族自治县', '广西壮族自治区', '柳州市', '0772', '2');
+INSERT INTO `city_code` VALUES ('2136', '450302', '450300', '秀峰区', '广西壮族自治区', '桂林市', '0773', '2');
+INSERT INTO `city_code` VALUES ('2137', '450303', '450300', '叠彩区', '广西壮族自治区', '桂林市', '0773', '2');
+INSERT INTO `city_code` VALUES ('2138', '450304', '450300', '象山区', '广西壮族自治区', '桂林市', '0773', '2');
+INSERT INTO `city_code` VALUES ('2139', '450305', '450300', '七星区', '广西壮族自治区', '桂林市', '0773', '2');
+INSERT INTO `city_code` VALUES ('2140', '450311', '450300', '雁山区', '广西壮族自治区', '桂林市', '0773', '2');
+INSERT INTO `city_code` VALUES ('2141', '450321', '450300', '阳朔县', '广西壮族自治区', '桂林市', '0773', '2');
+INSERT INTO `city_code` VALUES ('2142', '450322', '450300', '临桂县', '广西壮族自治区', '桂林市', '0773', '2');
+INSERT INTO `city_code` VALUES ('2143', '450323', '450300', '灵川县', '广西壮族自治区', '桂林市', '0773', '2');
+INSERT INTO `city_code` VALUES ('2144', '450324', '450300', '全州县', '广西壮族自治区', '桂林市', '0773', '2');
+INSERT INTO `city_code` VALUES ('2145', '450325', '450300', '兴安县', '广西壮族自治区', '桂林市', '0773', '2');
+INSERT INTO `city_code` VALUES ('2146', '450326', '450300', '永福县', '广西壮族自治区', '桂林市', '0773', '2');
+INSERT INTO `city_code` VALUES ('2147', '450327', '450300', '灌阳县', '广西壮族自治区', '桂林市', '0773', '2');
+INSERT INTO `city_code` VALUES ('2148', '450328', '450300', '龙胜各族自治县', '广西壮族自治区', '桂林市', '0773', '2');
+INSERT INTO `city_code` VALUES ('2149', '450329', '450300', '资源县', '广西壮族自治区', '桂林市', '0773', '2');
+INSERT INTO `city_code` VALUES ('2150', '450330', '450300', '平乐县', '广西壮族自治区', '桂林市', '0773', '2');
+INSERT INTO `city_code` VALUES ('2151', '450331', '450300', '荔蒲县', '广西壮族自治区', '桂林市', '0773', '2');
+INSERT INTO `city_code` VALUES ('2152', '450332', '450300', '恭城瑶族自治县', '广西壮族自治区', '桂林市', '0773', '2');
+INSERT INTO `city_code` VALUES ('2153', '450403', '450400', '万秀区', '广西壮族自治区', '梧州市', '0774', '2');
+INSERT INTO `city_code` VALUES ('2154', '450404', '450400', '蝶山区', '广西壮族自治区', '梧州市', '0774', '2');
+INSERT INTO `city_code` VALUES ('2155', '450405', '450400', '长洲区', '广西壮族自治区', '梧州市', '0774', '2');
+INSERT INTO `city_code` VALUES ('2156', '450421', '450400', '苍梧县', '广西壮族自治区', '梧州市', '0774', '2');
+INSERT INTO `city_code` VALUES ('2157', '450422', '450400', '藤县', '广西壮族自治区', '梧州市', '0774', '2');
+INSERT INTO `city_code` VALUES ('2158', '450423', '450400', '蒙山县', '广西壮族自治区', '梧州市', '0774', '2');
+INSERT INTO `city_code` VALUES ('2159', '450481', '450400', '岑溪市', '广西壮族自治区', '梧州市', '0774', '2');
+INSERT INTO `city_code` VALUES ('2160', '450502', '450500', '海城区', '广西壮族自治区', '北海市', '0779', '2');
+INSERT INTO `city_code` VALUES ('2161', '450503', '450500', '银海区', '广西壮族自治区', '北海市', '0779', '2');
+INSERT INTO `city_code` VALUES ('2162', '450512', '450500', '铁山港区', '广西壮族自治区', '北海市', '0779', '2');
+INSERT INTO `city_code` VALUES ('2163', '450521', '450500', '合浦县', '广西壮族自治区', '北海市', '0779', '2');
+INSERT INTO `city_code` VALUES ('2164', '450602', '450600', '港口区', '广西壮族自治区', '防城港市', '0770', '2');
+INSERT INTO `city_code` VALUES ('2165', '450603', '450600', '防城区', '广西壮族自治区', '防城港市', '0770', '2');
+INSERT INTO `city_code` VALUES ('2166', '450621', '450600', '上思县', '广西壮族自治区', '防城港市', '0770', '2');
+INSERT INTO `city_code` VALUES ('2167', '450681', '450600', '东兴市', '广西壮族自治区', '防城港市', '0770', '2');
+INSERT INTO `city_code` VALUES ('2168', '450702', '450700', '钦南区', '广西壮族自治区', '钦州市', '0777', '2');
+INSERT INTO `city_code` VALUES ('2169', '450703', '450700', '钦北区', '广西壮族自治区', '钦州市', '0777', '2');
+INSERT INTO `city_code` VALUES ('2170', '450721', '450700', '灵山县', '广西壮族自治区', '钦州市', '0777', '2');
+INSERT INTO `city_code` VALUES ('2171', '450722', '450700', '浦北县', '广西壮族自治区', '钦州市', '0777', '2');
+INSERT INTO `city_code` VALUES ('2172', '450802', '450800', '港北区', '广西壮族自治区', '贵港市', '0775', '2');
+INSERT INTO `city_code` VALUES ('2173', '450803', '450800', '港南区', '广西壮族自治区', '贵港市', '0775', '2');
+INSERT INTO `city_code` VALUES ('2174', '450804', '450800', '覃塘区', '广西壮族自治区', '贵港市', '0775', '2');
+INSERT INTO `city_code` VALUES ('2175', '450821', '450800', '平南县', '广西壮族自治区', '贵港市', '0775', '2');
+INSERT INTO `city_code` VALUES ('2176', '450881', '450800', '桂平市', '广西壮族自治区', '贵港市', '0775', '2');
+INSERT INTO `city_code` VALUES ('2177', '450902', '450900', '玉州区', '广西壮族自治区', '玉林市', '0775', '2');
+INSERT INTO `city_code` VALUES ('2178', '450921', '450900', '容县', '广西壮族自治区', '玉林市', '0775', '2');
+INSERT INTO `city_code` VALUES ('2179', '450922', '450900', '陆川县', '广西壮族自治区', '玉林市', '0775', '2');
+INSERT INTO `city_code` VALUES ('2180', '450923', '450900', '博白县', '广西壮族自治区', '玉林市', '0775', '2');
+INSERT INTO `city_code` VALUES ('2181', '450924', '450900', '兴业县', '广西壮族自治区', '玉林市', '0775', '2');
+INSERT INTO `city_code` VALUES ('2182', '450981', '450900', '北流市', '广西壮族自治区', '玉林市', '0775', '2');
+INSERT INTO `city_code` VALUES ('2183', '451002', '451000', '右江区', '广西壮族自治区', '百色市', '0776', '2');
+INSERT INTO `city_code` VALUES ('2184', '451021', '451000', '田阳县', '广西壮族自治区', '百色市', '0776', '2');
+INSERT INTO `city_code` VALUES ('2185', '451022', '451000', '田东县', '广西壮族自治区', '百色市', '0776', '2');
+INSERT INTO `city_code` VALUES ('2186', '451023', '451000', '平果县', '广西壮族自治区', '百色市', '0776', '2');
+INSERT INTO `city_code` VALUES ('2187', '451024', '451000', '德保县', '广西壮族自治区', '百色市', '0776', '2');
+INSERT INTO `city_code` VALUES ('2188', '451025', '451000', '靖西县', '广西壮族自治区', '百色市', '0776', '2');
+INSERT INTO `city_code` VALUES ('2189', '451026', '451000', '那坡县', '广西壮族自治区', '百色市', '0776', '2');
+INSERT INTO `city_code` VALUES ('2190', '451027', '451000', '凌云县', '广西壮族自治区', '百色市', '0776', '2');
+INSERT INTO `city_code` VALUES ('2191', '451028', '451000', '乐业县', '广西壮族自治区', '百色市', '0776', '2');
+INSERT INTO `city_code` VALUES ('2192', '451029', '451000', '田林县', '广西壮族自治区', '百色市', '0776', '2');
+INSERT INTO `city_code` VALUES ('2193', '451030', '451000', '西林县', '广西壮族自治区', '百色市', '0776', '2');
+INSERT INTO `city_code` VALUES ('2194', '451031', '451000', '隆林各族自治县', '广西壮族自治区', '百色市', '0776', '2');
+INSERT INTO `city_code` VALUES ('2195', '451102', '451100', '八步区', '广西壮族自治区', '贺州市', '0774', '2');
+INSERT INTO `city_code` VALUES ('2196', '451119', '451100', '平桂管理区', '广西壮族自治区', '贺州市', '0774', '2');
+INSERT INTO `city_code` VALUES ('2197', '451121', '451100', '昭平县', '广西壮族自治区', '贺州市', '0774', '2');
+INSERT INTO `city_code` VALUES ('2198', '451122', '451100', '钟山县', '广西壮族自治区', '贺州市', '0774', '2');
+INSERT INTO `city_code` VALUES ('2199', '451123', '451100', '富川瑶族自治县', '广西壮族自治区', '贺州市', '0774', '2');
+INSERT INTO `city_code` VALUES ('2200', '451202', '451200', '金城江区', '广西壮族自治区', '河池市', '0778', '2');
+INSERT INTO `city_code` VALUES ('2201', '451221', '451200', '南丹县', '广西壮族自治区', '河池市', '0778', '2');
+INSERT INTO `city_code` VALUES ('2202', '451222', '451200', '天峨县', '广西壮族自治区', '河池市', '0778', '2');
+INSERT INTO `city_code` VALUES ('2203', '451223', '451200', '凤山县', '广西壮族自治区', '河池市', '0778', '2');
+INSERT INTO `city_code` VALUES ('2204', '451224', '451200', '东兰县', '广西壮族自治区', '河池市', '0778', '2');
+INSERT INTO `city_code` VALUES ('2205', '451225', '451200', '罗城仫佬族自治县', '广西壮族自治区', '河池市', '0778', '2');
+INSERT INTO `city_code` VALUES ('2206', '451226', '451200', '环江毛南族自治县', '广西壮族自治区', '河池市', '0778', '2');
+INSERT INTO `city_code` VALUES ('2207', '451227', '451200', '巴马瑶族自治县', '广西壮族自治区', '河池市', '0778', '2');
+INSERT INTO `city_code` VALUES ('2208', '451228', '451200', '都安瑶族自治县', '广西壮族自治区', '河池市', '0778', '2');
+INSERT INTO `city_code` VALUES ('2209', '451229', '451200', '大化瑶族自治县', '广西壮族自治区', '河池市', '0778', '2');
+INSERT INTO `city_code` VALUES ('2210', '451281', '451200', '宜州市', '广西壮族自治区', '河池市', '0778', '2');
+INSERT INTO `city_code` VALUES ('2211', '451302', '451300', '兴宾区', '广西壮族自治区', '来宾市', '0772', '2');
+INSERT INTO `city_code` VALUES ('2212', '451321', '451300', '忻城县', '广西壮族自治区', '来宾市', '0772', '2');
+INSERT INTO `city_code` VALUES ('2213', '451322', '451300', '象州县', '广西壮族自治区', '来宾市', '0772', '2');
+INSERT INTO `city_code` VALUES ('2214', '451323', '451300', '武宣县', '广西壮族自治区', '来宾市', '0772', '2');
+INSERT INTO `city_code` VALUES ('2215', '451324', '451300', '金秀瑶族自治县', '广西壮族自治区', '来宾市', '0772', '2');
+INSERT INTO `city_code` VALUES ('2216', '451381', '451300', '合山市', '广西壮族自治区', '来宾市', '0772', '2');
+INSERT INTO `city_code` VALUES ('2217', '451402', '451400', '江洲区', '广西壮族自治区', '崇左市', '0771', '2');
+INSERT INTO `city_code` VALUES ('2218', '451421', '451400', '扶绥县', '广西壮族自治区', '崇左市', '0771', '2');
+INSERT INTO `city_code` VALUES ('2219', '451422', '451400', '宁明县', '广西壮族自治区', '崇左市', '0771', '2');
+INSERT INTO `city_code` VALUES ('2220', '451423', '451400', '龙州县', '广西壮族自治区', '崇左市', '0771', '2');
+INSERT INTO `city_code` VALUES ('2221', '451424', '451400', '大新县', '广西壮族自治区', '崇左市', '0771', '2');
+INSERT INTO `city_code` VALUES ('2222', '451425', '451400', '天等县', '广西壮族自治区', '崇左市', '0771', '2');
+INSERT INTO `city_code` VALUES ('2223', '451481', '451400', '凭祥市', '广西壮族自治区', '崇左市', '0771', '2');
+INSERT INTO `city_code` VALUES ('2224', '460000', null, '海南省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('2225', '460100', '460000', '海口市', '海南省', '', '0898', '1');
+INSERT INTO `city_code` VALUES ('2226', '460200', '460000', '三亚市', '海南省', '', '0899', '1');
+INSERT INTO `city_code` VALUES ('2227', '460300', '460000', '三沙市', '海南省', '', '0898', '1');
+INSERT INTO `city_code` VALUES ('2228', '469000', '460000', '省直辖', '海南省', '', '', '1');
+INSERT INTO `city_code` VALUES ('2229', '460105', '460100', '秀英区', '海南省', '海口市', '0898', '2');
+INSERT INTO `city_code` VALUES ('2230', '460106', '460100', '龙华区', '海南省', '海口市', '0898', '2');
+INSERT INTO `city_code` VALUES ('2231', '460107', '460100', '琼山区', '海南省', '海口市', '0898', '2');
+INSERT INTO `city_code` VALUES ('2232', '460108', '460100', '美兰区', '海南省', '海口市', '0898', '2');
+INSERT INTO `city_code` VALUES ('2233', '460201', '460200', '三亚市', '海南省', '三亚市', '0899', '2');
+INSERT INTO `city_code` VALUES ('2234', '460901', '460300', '西沙群岛', '海南省', '三沙市', '0898', '2');
+INSERT INTO `city_code` VALUES ('2235', '460902', '460300', '南沙群岛', '海南省', '三沙市', '0898', '2');
+INSERT INTO `city_code` VALUES ('2236', '460903', '460300', '中沙群岛', '海南省', '三沙市', '0898', '2');
+INSERT INTO `city_code` VALUES ('2237', '469001', '419000', '五指山市', '海南省', '省直辖', '0898', '2');
+INSERT INTO `city_code` VALUES ('2238', '469002', '419000', '琼海市', '海南省', '省直辖', '0898', '2');
+INSERT INTO `city_code` VALUES ('2239', '469003', '419000', '儋州市', '海南省', '省直辖', '0890', '2');
+INSERT INTO `city_code` VALUES ('2240', '469005', '419000', '文昌市', '海南省', '省直辖', '0898', '2');
+INSERT INTO `city_code` VALUES ('2241', '469006', '419000', '万宁市', '海南省', '省直辖', '0898', '2');
+INSERT INTO `city_code` VALUES ('2242', '469007', '419000', '东方市', '海南省', '省直辖', '0898', '2');
+INSERT INTO `city_code` VALUES ('2243', '469021', '419000', '定安县', '海南省', '省直辖', '0898', '2');
+INSERT INTO `city_code` VALUES ('2244', '469022', '419000', '屯昌县', '海南省', '省直辖', '0898', '2');
+INSERT INTO `city_code` VALUES ('2245', '469023', '419000', '澄迈县', '海南省', '省直辖', '0898', '2');
+INSERT INTO `city_code` VALUES ('2246', '469024', '419000', '临高县', '海南省', '省直辖', '0898', '2');
+INSERT INTO `city_code` VALUES ('2247', '469025', '419000', '白沙黎族自治县', '海南省', '省直辖', '0898', '2');
+INSERT INTO `city_code` VALUES ('2248', '469026', '419000', '昌江黎族自治县', '海南省', '省直辖', '0898', '2');
+INSERT INTO `city_code` VALUES ('2249', '469027', '419000', '乐东黎族自治县', '海南省', '省直辖', '0898', '2');
+INSERT INTO `city_code` VALUES ('2250', '469028', '419000', '陵水黎族自治县', '海南省', '省直辖', '0898', '2');
+INSERT INTO `city_code` VALUES ('2251', '469029', '419000', '保亭黎族苗族自治县', '海南省', '省直辖', '0898', '2');
+INSERT INTO `city_code` VALUES ('2252', '469030', '419000', '琼中黎族苗族自治县', '海南省', '省直辖', '0898', '2');
+INSERT INTO `city_code` VALUES ('2253', '500000', null, '重庆', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('2254', '500001', '500000', '重庆市', '重庆', '', '0811', '1');
+INSERT INTO `city_code` VALUES ('2255', '500101', '500001', '万州区', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2256', '500102', '500001', '涪陵区', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2257', '500103', '500001', '渝中区', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2258', '500104', '500001', '大渡口区', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2259', '500105', '500001', '江北区', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2260', '500106', '500001', '沙坪坝区', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2261', '500107', '500001', '九龙坡区', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2262', '500108', '500001', '南岸区', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2263', '500109', '500001', '北碚区', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2264', '500110', '500001', '綦江区', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2265', '500111', '500001', '大足区', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2266', '500112', '500001', '渝北区', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2267', '500113', '500001', '巴南区', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2268', '500114', '500001', '黔江区', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2269', '500115', '500001', '长寿区', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2270', '500116', '500001', '江津区', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2271', '500117', '500001', '合川区', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2272', '500118', '500001', '永川区', '重庆', '重庆市', '0814', '2');
+INSERT INTO `city_code` VALUES ('2273', '500119', '500001', '南川区', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2274', '500223', '500001', '潼南县', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2275', '500224', '500001', '铜梁县', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2276', '500226', '500001', '荣昌县', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2277', '500227', '500001', '璧山县', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2278', '500228', '500001', '梁平县', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2279', '500229', '500001', '城口县', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2280', '500230', '500001', '丰都县', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2281', '500231', '500001', '垫江县', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2282', '500232', '500001', '武隆县', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2283', '500233', '500001', '忠县', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2284', '500234', '500001', '开县', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2285', '500235', '500001', '云阳县', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2286', '500236', '500001', '奉节县', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2287', '500237', '500001', '巫山县', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2288', '500238', '500001', '巫溪县', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2289', '500240', '500001', '石柱土家族自治县', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2290', '500241', '500001', '秀山土家族苗族自治县', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2291', '500242', '500001', '酉阳土家族苗族自治县', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2292', '500243', '500001', '彭水苗族土家族自治县', '重庆', '重庆市', '0811', '2');
+INSERT INTO `city_code` VALUES ('2293', '510000', null, '四川省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('2294', '510100', '510000', '成都市', '四川省', '', '028', '1');
+INSERT INTO `city_code` VALUES ('2295', '510300', '510000', '自贡市', '四川省', '', '0813', '1');
+INSERT INTO `city_code` VALUES ('2296', '510400', '510000', '攀枝花市', '四川省', '', '0812', '1');
+INSERT INTO `city_code` VALUES ('2297', '510500', '510000', '泸州市', '四川省', '', '0840', '1');
+INSERT INTO `city_code` VALUES ('2298', '510600', '510000', '德阳市', '四川省', '', '0838', '1');
+INSERT INTO `city_code` VALUES ('2299', '510700', '510000', '绵阳市', '四川省', '', '0816', '1');
+INSERT INTO `city_code` VALUES ('2300', '510800', '510000', '广元市', '四川省', '', '0839', '1');
+INSERT INTO `city_code` VALUES ('2301', '510900', '510000', '遂宁市', '四川省', '', '0825', '1');
+INSERT INTO `city_code` VALUES ('2302', '511000', '510000', '内江市', '四川省', '', '0832', '1');
+INSERT INTO `city_code` VALUES ('2303', '511100', '510000', '乐山市', '四川省', '', '0833', '1');
+INSERT INTO `city_code` VALUES ('2304', '511300', '510000', '南充市', '四川省', '', '0817', '1');
+INSERT INTO `city_code` VALUES ('2305', '511400', '510000', '眉山市', '四川省', '', '028', '1');
+INSERT INTO `city_code` VALUES ('2306', '511500', '510000', '宜宾市', '四川省', '', '0831', '1');
+INSERT INTO `city_code` VALUES ('2307', '511600', '510000', '广安市', '四川省', '', '0826', '1');
+INSERT INTO `city_code` VALUES ('2308', '511700', '510000', '达州市', '四川省', '', '0818', '1');
+INSERT INTO `city_code` VALUES ('2309', '511800', '510000', '雅安市', '四川省', '', '0835', '1');
+INSERT INTO `city_code` VALUES ('2310', '511900', '510000', '巴中市', '四川省', '', '0827', '1');
+INSERT INTO `city_code` VALUES ('2311', '512000', '510000', '资阳市', '四川省', '', '028', '1');
+INSERT INTO `city_code` VALUES ('2312', '513200', '510000', '阿坝藏族羌族自治州 ', '四川省', '', '0837', '1');
+INSERT INTO `city_code` VALUES ('2313', '513300', '510000', '甘孜藏族自治州 ', '四川省', '', '0836', '1');
+INSERT INTO `city_code` VALUES ('2314', '513400', '510000', '凉山彝族自治州 ', '四川省', '', '0834', '1');
+INSERT INTO `city_code` VALUES ('2315', '510104', '510100', '锦江区', '四川省', '成都市', '028', '2');
+INSERT INTO `city_code` VALUES ('2316', '510105', '510100', '青羊区', '四川省', '成都市', '028', '2');
+INSERT INTO `city_code` VALUES ('2317', '510106', '510100', '金牛区', '四川省', '成都市', '028', '2');
+INSERT INTO `city_code` VALUES ('2318', '510107', '510100', '武侯区', '四川省', '成都市', '028', '2');
+INSERT INTO `city_code` VALUES ('2319', '510108', '510100', '成华区', '四川省', '成都市', '028', '2');
+INSERT INTO `city_code` VALUES ('2320', '510112', '510100', '龙泉驿区', '四川省', '成都市', '028', '2');
+INSERT INTO `city_code` VALUES ('2321', '510113', '510100', '青白江区', '四川省', '成都市', '028', '2');
+INSERT INTO `city_code` VALUES ('2322', '510114', '510100', '新都区', '四川省', '成都市', '028', '2');
+INSERT INTO `city_code` VALUES ('2323', '510115', '510100', '温江区', '四川省', '成都市', '028', '2');
+INSERT INTO `city_code` VALUES ('2324', '510121', '510100', '金堂县', '四川省', '成都市', '028', '2');
+INSERT INTO `city_code` VALUES ('2325', '510122', '510100', '双流县', '四川省', '成都市', '028', '2');
+INSERT INTO `city_code` VALUES ('2326', '510124', '510100', '郫县', '四川省', '成都市', '028', '2');
+INSERT INTO `city_code` VALUES ('2327', '510129', '510100', '大邑县', '四川省', '成都市', '028', '2');
+INSERT INTO `city_code` VALUES ('2328', '510131', '510100', '蒲江县', '四川省', '成都市', '028', '2');
+INSERT INTO `city_code` VALUES ('2329', '510132', '510100', '新津县', '四川省', '成都市', '028', '2');
+INSERT INTO `city_code` VALUES ('2330', '510181', '510100', '都江堰市', '四川省', '成都市', '028', '2');
+INSERT INTO `city_code` VALUES ('2331', '510182', '510100', '彭州市', '四川省', '成都市', '028', '2');
+INSERT INTO `city_code` VALUES ('2332', '510183', '510100', '邛崃市', '四川省', '成都市', '028', '2');
+INSERT INTO `city_code` VALUES ('2333', '510184', '510100', '崇州市', '四川省', '成都市', '028', '2');
+INSERT INTO `city_code` VALUES ('2334', '510302', '510300', '自流井区', '四川省', '自贡市', '0813', '2');
+INSERT INTO `city_code` VALUES ('2335', '510303', '510300', '贡井区', '四川省', '自贡市', '0813', '2');
+INSERT INTO `city_code` VALUES ('2336', '510304', '510300', '大安区', '四川省', '自贡市', '0813', '2');
+INSERT INTO `city_code` VALUES ('2337', '510311', '510300', '沿滩区', '四川省', '自贡市', '0813', '2');
+INSERT INTO `city_code` VALUES ('2338', '510321', '510300', '荣县', '四川省', '自贡市', '0813', '2');
+INSERT INTO `city_code` VALUES ('2339', '510322', '510300', '富顺县', '四川省', '自贡市', '0813', '2');
+INSERT INTO `city_code` VALUES ('2340', '510402', '510400', '东区', '四川省', '攀枝花市', '0812', '2');
+INSERT INTO `city_code` VALUES ('2341', '510403', '510400', '西区', '四川省', '攀枝花市', '0812', '2');
+INSERT INTO `city_code` VALUES ('2342', '510411', '510400', '仁和区', '四川省', '攀枝花市', '0812', '2');
+INSERT INTO `city_code` VALUES ('2343', '510421', '510400', '米易县', '四川省', '攀枝花市', '0812', '2');
+INSERT INTO `city_code` VALUES ('2344', '510422', '510400', '盐边县', '四川省', '攀枝花市', '0812', '2');
+INSERT INTO `city_code` VALUES ('2345', '510502', '510500', '江阳区', '四川省', '泸州市', '0840', '2');
+INSERT INTO `city_code` VALUES ('2346', '510503', '510500', '纳溪区', '四川省', '泸州市', '0840', '2');
+INSERT INTO `city_code` VALUES ('2347', '510504', '510500', '龙马潭区', '四川省', '泸州市', '0840', '2');
+INSERT INTO `city_code` VALUES ('2348', '510521', '510500', '泸县', '四川省', '泸州市', '0840', '2');
+INSERT INTO `city_code` VALUES ('2349', '510522', '510500', '合江县', '四川省', '泸州市', '0840', '2');
+INSERT INTO `city_code` VALUES ('2350', '510524', '510500', '叙永县', '四川省', '泸州市', '0840', '2');
+INSERT INTO `city_code` VALUES ('2351', '510525', '510500', '古蔺县', '四川省', '泸州市', '0840', '2');
+INSERT INTO `city_code` VALUES ('2352', '510603', '510600', '旌阳区', '四川省', '德阳市', '0838', '2');
+INSERT INTO `city_code` VALUES ('2353', '510623', '510600', '中江县', '四川省', '德阳市', '0838', '2');
+INSERT INTO `city_code` VALUES ('2354', '510626', '510600', '罗江县', '四川省', '德阳市', '0838', '2');
+INSERT INTO `city_code` VALUES ('2355', '510681', '510600', '广汉市', '四川省', '德阳市', '0838', '2');
+INSERT INTO `city_code` VALUES ('2356', '510682', '510600', '什邡市', '四川省', '德阳市', '0838', '2');
+INSERT INTO `city_code` VALUES ('2357', '510683', '510600', '绵竹市', '四川省', '德阳市', '0838', '2');
+INSERT INTO `city_code` VALUES ('2358', '510703', '510700', '涪城区', '四川省', '绵阳市', '0816', '2');
+INSERT INTO `city_code` VALUES ('2359', '510704', '510700', '游仙区', '四川省', '绵阳市', '0816', '2');
+INSERT INTO `city_code` VALUES ('2360', '510722', '510700', '三台县', '四川省', '绵阳市', '0816', '2');
+INSERT INTO `city_code` VALUES ('2361', '510723', '510700', '盐亭县', '四川省', '绵阳市', '0816', '2');
+INSERT INTO `city_code` VALUES ('2362', '510724', '510700', '安县', '四川省', '绵阳市', '0816', '2');
+INSERT INTO `city_code` VALUES ('2363', '510725', '510700', '梓潼县', '四川省', '绵阳市', '0816', '2');
+INSERT INTO `city_code` VALUES ('2364', '510726', '510700', '北川羌族自治县', '四川省', '绵阳市', '0816', '2');
+INSERT INTO `city_code` VALUES ('2365', '510727', '510700', '平武县', '四川省', '绵阳市', '0816', '2');
+INSERT INTO `city_code` VALUES ('2366', '510781', '510700', '江油市', '四川省', '绵阳市', '0816', '2');
+INSERT INTO `city_code` VALUES ('2367', '510802', '510800', '利州区', '四川省', '广元市', '0839', '2');
+INSERT INTO `city_code` VALUES ('2368', '510811', '510800', '元坝区', '四川省', '广元市', '0839', '2');
+INSERT INTO `city_code` VALUES ('2369', '510812', '510800', '朝天区', '四川省', '广元市', '0839', '2');
+INSERT INTO `city_code` VALUES ('2370', '510821', '510800', '旺苍县', '四川省', '广元市', '0839', '2');
+INSERT INTO `city_code` VALUES ('2371', '510822', '510800', '青川县', '四川省', '广元市', '0839', '2');
+INSERT INTO `city_code` VALUES ('2372', '510823', '510800', '剑阁县', '四川省', '广元市', '0839', '2');
+INSERT INTO `city_code` VALUES ('2373', '510824', '510800', '苍溪县', '四川省', '广元市', '0839', '2');
+INSERT INTO `city_code` VALUES ('2374', '510903', '510900', '船山区', '四川省', '遂宁市', '0825', '2');
+INSERT INTO `city_code` VALUES ('2375', '510904', '510900', '安居区', '四川省', '遂宁市', '0825', '2');
+INSERT INTO `city_code` VALUES ('2376', '510921', '510900', '蓬溪县', '四川省', '遂宁市', '0825', '2');
+INSERT INTO `city_code` VALUES ('2377', '510922', '510900', '射洪县', '四川省', '遂宁市', '0825', '2');
+INSERT INTO `city_code` VALUES ('2378', '510923', '510900', '大英县', '四川省', '遂宁市', '0825', '2');
+INSERT INTO `city_code` VALUES ('2379', '511002', '511000', '市中区', '四川省', '内江市', '0832', '2');
+INSERT INTO `city_code` VALUES ('2380', '511011', '511000', '东兴区', '四川省', '内江市', '0832', '2');
+INSERT INTO `city_code` VALUES ('2381', '511024', '511000', '威远县', '四川省', '内江市', '0832', '2');
+INSERT INTO `city_code` VALUES ('2382', '511025', '511000', '资中县', '四川省', '内江市', '0832', '2');
+INSERT INTO `city_code` VALUES ('2383', '511028', '511000', '隆昌县', '四川省', '内江市', '0832', '2');
+INSERT INTO `city_code` VALUES ('2384', '511102', '511100', '市中区', '四川省', '乐山市', '0833', '2');
+INSERT INTO `city_code` VALUES ('2385', '511111', '511100', '沙湾区', '四川省', '乐山市', '0833', '2');
+INSERT INTO `city_code` VALUES ('2386', '511112', '511100', '五通桥区', '四川省', '乐山市', '0833', '2');
+INSERT INTO `city_code` VALUES ('2387', '511113', '511100', '金口河区', '四川省', '乐山市', '0833', '2');
+INSERT INTO `city_code` VALUES ('2388', '511123', '511100', '犍为县', '四川省', '乐山市', '0833', '2');
+INSERT INTO `city_code` VALUES ('2389', '511124', '511100', '井研县', '四川省', '乐山市', '0833', '2');
+INSERT INTO `city_code` VALUES ('2390', '511126', '511100', '夹江县', '四川省', '乐山市', '0833', '2');
+INSERT INTO `city_code` VALUES ('2391', '511129', '511100', '沐川县', '四川省', '乐山市', '0833', '2');
+INSERT INTO `city_code` VALUES ('2392', '511132', '511100', '峨边彝族自治县', '四川省', '乐山市', '0833', '2');
+INSERT INTO `city_code` VALUES ('2393', '511133', '511100', '马边彝族自治县', '四川省', '乐山市', '0833', '2');
+INSERT INTO `city_code` VALUES ('2394', '511181', '511100', '峨眉山市', '四川省', '乐山市', '0833', '2');
+INSERT INTO `city_code` VALUES ('2395', '511302', '511300', '顺庆区', '四川省', '南充市', '0817', '2');
+INSERT INTO `city_code` VALUES ('2396', '511303', '511300', '高坪区', '四川省', '南充市', '0817', '2');
+INSERT INTO `city_code` VALUES ('2397', '511304', '511300', '嘉陵区', '四川省', '南充市', '0817', '2');
+INSERT INTO `city_code` VALUES ('2398', '511321', '511300', '南部县', '四川省', '南充市', '0817', '2');
+INSERT INTO `city_code` VALUES ('2399', '511322', '511300', '营山县', '四川省', '南充市', '0817', '2');
+INSERT INTO `city_code` VALUES ('2400', '511323', '511300', '蓬安县', '四川省', '南充市', '0817', '2');
+INSERT INTO `city_code` VALUES ('2401', '511324', '511300', '仪陇县', '四川省', '南充市', '0817', '2');
+INSERT INTO `city_code` VALUES ('2402', '511325', '511300', '西充县', '四川省', '南充市', '0817', '2');
+INSERT INTO `city_code` VALUES ('2403', '511381', '511300', '阆中市', '四川省', '南充市', '0817', '2');
+INSERT INTO `city_code` VALUES ('2404', '511402', '511400', '东坡区', '四川省', '眉山市', '028', '2');
+INSERT INTO `city_code` VALUES ('2405', '511421', '511400', '仁寿县', '四川省', '眉山市', '028', '2');
+INSERT INTO `city_code` VALUES ('2406', '511422', '511400', '彭山县', '四川省', '眉山市', '028', '2');
+INSERT INTO `city_code` VALUES ('2407', '511423', '511400', '洪雅县', '四川省', '眉山市', '028', '2');
+INSERT INTO `city_code` VALUES ('2408', '511424', '511400', '丹棱县', '四川省', '眉山市', '028', '2');
+INSERT INTO `city_code` VALUES ('2409', '511425', '511400', '青神县', '四川省', '眉山市', '028', '2');
+INSERT INTO `city_code` VALUES ('2410', '511502', '511500', '翠屏区', '四川省', '宜宾市', '0831', '2');
+INSERT INTO `city_code` VALUES ('2411', '511522', '511500', '南溪区', '四川省', '宜宾市', '0831', '2');
+INSERT INTO `city_code` VALUES ('2412', '511521', '511500', '宜宾县', '四川省', '宜宾市', '0831', '2');
+INSERT INTO `city_code` VALUES ('2413', '511523', '511500', '江安县', '四川省', '宜宾市', '0831', '2');
+INSERT INTO `city_code` VALUES ('2414', '511524', '511500', '长宁县', '四川省', '宜宾市', '0831', '2');
+INSERT INTO `city_code` VALUES ('2415', '511525', '511500', '高县', '四川省', '宜宾市', '0831', '2');
+INSERT INTO `city_code` VALUES ('2416', '511526', '511500', '珙县', '四川省', '宜宾市', '0831', '2');
+INSERT INTO `city_code` VALUES ('2417', '511527', '511500', '筠连县', '四川省', '宜宾市', '0831', '2');
+INSERT INTO `city_code` VALUES ('2418', '511528', '511500', '兴文县', '四川省', '宜宾市', '0831', '2');
+INSERT INTO `city_code` VALUES ('2419', '511529', '511500', '屏山县', '四川省', '宜宾市', '0831', '2');
+INSERT INTO `city_code` VALUES ('2420', '511602', '511600', '广安区', '四川省', '广安市', '0826', '2');
+INSERT INTO `city_code` VALUES ('2421', '511621', '511600', '岳池县', '四川省', '广安市', '0826', '2');
+INSERT INTO `city_code` VALUES ('2422', '511622', '511600', '武胜县', '四川省', '广安市', '0826', '2');
+INSERT INTO `city_code` VALUES ('2423', '511623', '511600', '邻水县', '四川省', '广安市', '0826', '2');
+INSERT INTO `city_code` VALUES ('2424', '511681', '511600', '华蓥市', '四川省', '广安市', '0826', '2');
+INSERT INTO `city_code` VALUES ('2425', '511702', '511700', '通川区', '四川省', '达州市', '0818', '2');
+INSERT INTO `city_code` VALUES ('2426', '511721', '511700', '达县', '四川省', '达州市', '0818', '2');
+INSERT INTO `city_code` VALUES ('2427', '511722', '511700', '宣汉县', '四川省', '达州市', '0818', '2');
+INSERT INTO `city_code` VALUES ('2428', '511723', '511700', '开江县', '四川省', '达州市', '0818', '2');
+INSERT INTO `city_code` VALUES ('2429', '511724', '511700', '大竹县', '四川省', '达州市', '0818', '2');
+INSERT INTO `city_code` VALUES ('2430', '511725', '511700', '渠县', '四川省', '达州市', '0818', '2');
+INSERT INTO `city_code` VALUES ('2431', '511781', '511700', '万源市', '四川省', '达州市', '0818', '2');
+INSERT INTO `city_code` VALUES ('2432', '511802', '511800', '雨城区', '四川省', '雅安市', '0835', '2');
+INSERT INTO `city_code` VALUES ('2433', '511821', '511800', '名山县', '四川省', '雅安市', '0835', '2');
+INSERT INTO `city_code` VALUES ('2434', '511822', '511800', '荥经县', '四川省', '雅安市', '0835', '2');
+INSERT INTO `city_code` VALUES ('2435', '511823', '511800', '汉源县', '四川省', '雅安市', '0835', '2');
+INSERT INTO `city_code` VALUES ('2436', '511824', '511800', '石棉县', '四川省', '雅安市', '0835', '2');
+INSERT INTO `city_code` VALUES ('2437', '511825', '511800', '天全县', '四川省', '雅安市', '0835', '2');
+INSERT INTO `city_code` VALUES ('2438', '511826', '511800', '芦山县', '四川省', '雅安市', '0835', '2');
+INSERT INTO `city_code` VALUES ('2439', '511827', '511800', '宝兴县', '四川省', '雅安市', '0835', '2');
+INSERT INTO `city_code` VALUES ('2440', '511902', '511900', '巴州区', '四川省', '巴中市', '0827', '2');
+INSERT INTO `city_code` VALUES ('2441', '511921', '511900', '通江县', '四川省', '巴中市', '0827', '2');
+INSERT INTO `city_code` VALUES ('2442', '511922', '511900', '南江县', '四川省', '巴中市', '0827', '2');
+INSERT INTO `city_code` VALUES ('2443', '511923', '511900', '平昌县', '四川省', '巴中市', '0827', '2');
+INSERT INTO `city_code` VALUES ('2444', '512002', '512000', '雁江区', '四川省', '资阳市', '028', '2');
+INSERT INTO `city_code` VALUES ('2445', '512021', '512000', '安岳县', '四川省', '资阳市', '028', '2');
+INSERT INTO `city_code` VALUES ('2446', '512022', '512000', '乐至县', '四川省', '资阳市', '028', '2');
+INSERT INTO `city_code` VALUES ('2447', '512081', '512000', '简阳市', '四川省', '资阳市', '028', '2');
+INSERT INTO `city_code` VALUES ('2448', '513221', '513200', '汶川县', '四川省', '阿坝藏族羌族自治州 ', '0837', '2');
+INSERT INTO `city_code` VALUES ('2449', '513222', '513200', '理县', '四川省', '阿坝藏族羌族自治州 ', '0837', '2');
+INSERT INTO `city_code` VALUES ('2450', '513223', '513200', '茂县', '四川省', '阿坝藏族羌族自治州 ', '0837', '2');
+INSERT INTO `city_code` VALUES ('2451', '513224', '513200', '松潘县', '四川省', '阿坝藏族羌族自治州 ', '0837', '2');
+INSERT INTO `city_code` VALUES ('2452', '513225', '513200', '九寨沟县', '四川省', '阿坝藏族羌族自治州 ', '0837', '2');
+INSERT INTO `city_code` VALUES ('2453', '513226', '513200', '金川县', '四川省', '阿坝藏族羌族自治州 ', '0837', '2');
+INSERT INTO `city_code` VALUES ('2454', '513227', '513200', '小金县', '四川省', '阿坝藏族羌族自治州 ', '0837', '2');
+INSERT INTO `city_code` VALUES ('2455', '513228', '513200', '黑水县', '四川省', '阿坝藏族羌族自治州 ', '0837', '2');
+INSERT INTO `city_code` VALUES ('2456', '513229', '513200', '马尔康县', '四川省', '阿坝藏族羌族自治州 ', '0837', '2');
+INSERT INTO `city_code` VALUES ('2457', '513230', '513200', '壤塘县', '四川省', '阿坝藏族羌族自治州 ', '0837', '2');
+INSERT INTO `city_code` VALUES ('2458', '513231', '513200', '阿坝县', '四川省', '阿坝藏族羌族自治州 ', '0837', '2');
+INSERT INTO `city_code` VALUES ('2459', '513232', '513200', '若尔盖县', '四川省', '阿坝藏族羌族自治州 ', '0837', '2');
+INSERT INTO `city_code` VALUES ('2460', '513233', '513200', '红原县', '四川省', '阿坝藏族羌族自治州 ', '0837', '2');
+INSERT INTO `city_code` VALUES ('2461', '513321', '513300', '康定县', '四川省', '甘孜藏族自治州 ', '0836', '2');
+INSERT INTO `city_code` VALUES ('2462', '513322', '513300', '泸定县', '四川省', '甘孜藏族自治州 ', '0836', '2');
+INSERT INTO `city_code` VALUES ('2463', '513323', '513300', '丹巴县', '四川省', '甘孜藏族自治州 ', '0836', '2');
+INSERT INTO `city_code` VALUES ('2464', '513324', '513300', '九龙县', '四川省', '甘孜藏族自治州 ', '0836', '2');
+INSERT INTO `city_code` VALUES ('2465', '513325', '513300', '雅江县', '四川省', '甘孜藏族自治州 ', '0836', '2');
+INSERT INTO `city_code` VALUES ('2466', '513326', '513300', '道孚县', '四川省', '甘孜藏族自治州 ', '0836', '2');
+INSERT INTO `city_code` VALUES ('2467', '513327', '513300', '炉霍县', '四川省', '甘孜藏族自治州 ', '0836', '2');
+INSERT INTO `city_code` VALUES ('2468', '513328', '513300', '甘孜县', '四川省', '甘孜藏族自治州 ', '0836', '2');
+INSERT INTO `city_code` VALUES ('2469', '513329', '513300', '新龙县', '四川省', '甘孜藏族自治州 ', '0836', '2');
+INSERT INTO `city_code` VALUES ('2470', '513330', '513300', '德格县', '四川省', '甘孜藏族自治州 ', '0836', '2');
+INSERT INTO `city_code` VALUES ('2471', '513331', '513300', '白玉县', '四川省', '甘孜藏族自治州 ', '0836', '2');
+INSERT INTO `city_code` VALUES ('2472', '513332', '513300', '石渠县', '四川省', '甘孜藏族自治州 ', '0836', '2');
+INSERT INTO `city_code` VALUES ('2473', '513333', '513300', '色达县', '四川省', '甘孜藏族自治州 ', '0836', '2');
+INSERT INTO `city_code` VALUES ('2474', '513334', '513300', '理塘县', '四川省', '甘孜藏族自治州 ', '0836', '2');
+INSERT INTO `city_code` VALUES ('2475', '513335', '513300', '巴塘县', '四川省', '甘孜藏族自治州 ', '0836', '2');
+INSERT INTO `city_code` VALUES ('2476', '513336', '513300', '乡城县', '四川省', '甘孜藏族自治州 ', '0836', '2');
+INSERT INTO `city_code` VALUES ('2477', '513337', '513300', '稻城县', '四川省', '甘孜藏族自治州 ', '0836', '2');
+INSERT INTO `city_code` VALUES ('2478', '513338', '513300', '得荣县', '四川省', '甘孜藏族自治州 ', '0836', '2');
+INSERT INTO `city_code` VALUES ('2479', '513401', '513400', '西昌市', '四川省', '凉山彝族自治州 ', '0834', '2');
+INSERT INTO `city_code` VALUES ('2480', '513422', '513400', '木里藏族自治县', '四川省', '凉山彝族自治州 ', '0834', '2');
+INSERT INTO `city_code` VALUES ('2481', '513423', '513400', '盐源县', '四川省', '凉山彝族自治州 ', '0834', '2');
+INSERT INTO `city_code` VALUES ('2482', '513424', '513400', '德昌县', '四川省', '凉山彝族自治州 ', '0834', '2');
+INSERT INTO `city_code` VALUES ('2483', '513425', '513400', '会理县', '四川省', '凉山彝族自治州 ', '0834', '2');
+INSERT INTO `city_code` VALUES ('2484', '513426', '513400', '会东县', '四川省', '凉山彝族自治州 ', '0834', '2');
+INSERT INTO `city_code` VALUES ('2485', '513427', '513400', '宁南县', '四川省', '凉山彝族自治州 ', '0834', '2');
+INSERT INTO `city_code` VALUES ('2486', '513428', '513400', '普格县', '四川省', '凉山彝族自治州 ', '0834', '2');
+INSERT INTO `city_code` VALUES ('2487', '513429', '513400', '布拖县', '四川省', '凉山彝族自治州 ', '0834', '2');
+INSERT INTO `city_code` VALUES ('2488', '513430', '513400', '金阳县', '四川省', '凉山彝族自治州 ', '0834', '2');
+INSERT INTO `city_code` VALUES ('2489', '513431', '513400', '昭觉县', '四川省', '凉山彝族自治州 ', '0834', '2');
+INSERT INTO `city_code` VALUES ('2490', '513432', '513400', '喜德县', '四川省', '凉山彝族自治州 ', '0834', '2');
+INSERT INTO `city_code` VALUES ('2491', '513433', '513400', '冕宁县', '四川省', '凉山彝族自治州 ', '0834', '2');
+INSERT INTO `city_code` VALUES ('2492', '513434', '513400', '越西县', '四川省', '凉山彝族自治州 ', '0834', '2');
+INSERT INTO `city_code` VALUES ('2493', '513435', '513400', '甘洛县', '四川省', '凉山彝族自治州 ', '0834', '2');
+INSERT INTO `city_code` VALUES ('2494', '513436', '513400', '美姑县', '四川省', '凉山彝族自治州 ', '0834', '2');
+INSERT INTO `city_code` VALUES ('2495', '513437', '513400', '雷波县', '四川省', '凉山彝族自治州 ', '0834', '2');
+INSERT INTO `city_code` VALUES ('2496', '520000', null, '贵州省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('2497', '520100', '520000', '贵阳市', '贵州省', '', '0851', '1');
+INSERT INTO `city_code` VALUES ('2498', '520200', '520000', '六盘水市', '贵州省', '', '0858', '1');
+INSERT INTO `city_code` VALUES ('2499', '520300', '520000', '遵义市', '贵州省', '', '0852', '1');
+INSERT INTO `city_code` VALUES ('2500', '520400', '520000', '安顺市', '贵州省', '', '0853', '1');
+INSERT INTO `city_code` VALUES ('2501', '522200', '520000', '铜仁市', '贵州省', '', '0856', '1');
+INSERT INTO `city_code` VALUES ('2502', '522300', '520000', '黔西南布依族苗族自治州 ', '贵州省', '', '0859', '1');
+INSERT INTO `city_code` VALUES ('2503', '522400', '520000', '毕节市', '贵州省', '', '0857', '1');
+INSERT INTO `city_code` VALUES ('2504', '522600', '520000', '黔东南苗族侗族自治州 ', '贵州省', '', '0855', '1');
+INSERT INTO `city_code` VALUES ('2505', '522700', '520000', '黔南布依族苗族自治州 ', '贵州省', '', '0854', '1');
+INSERT INTO `city_code` VALUES ('2506', '520102', '520100', '南明区', '贵州省', '贵阳市', '0851', '2');
+INSERT INTO `city_code` VALUES ('2507', '520103', '520100', '云岩区', '贵州省', '贵阳市', '0851', '2');
+INSERT INTO `city_code` VALUES ('2508', '520111', '520100', '花溪区', '贵州省', '贵阳市', '0851', '2');
+INSERT INTO `city_code` VALUES ('2509', '520112', '520100', '乌当区', '贵州省', '贵阳市', '0851', '2');
+INSERT INTO `city_code` VALUES ('2510', '520113', '520100', '白云区', '贵州省', '贵阳市', '0851', '2');
+INSERT INTO `city_code` VALUES ('2511', '520114', '520100', '小河区', '贵州省', '贵阳市', '0851', '2');
+INSERT INTO `city_code` VALUES ('2512', '520121', '520100', '开阳县', '贵州省', '贵阳市', '0851', '2');
+INSERT INTO `city_code` VALUES ('2513', '520122', '520100', '息烽县', '贵州省', '贵阳市', '0851', '2');
+INSERT INTO `city_code` VALUES ('2514', '520123', '520100', '修文县', '贵州省', '贵阳市', '0851', '2');
+INSERT INTO `city_code` VALUES ('2515', '520181', '520100', '清镇市', '贵州省', '贵阳市', '0851', '2');
+INSERT INTO `city_code` VALUES ('2516', '520201', '520200', '钟山区', '贵州省', '六盘水市', '0858', '2');
+INSERT INTO `city_code` VALUES ('2517', '520203', '520200', '六枝特区', '贵州省', '六盘水市', '0858', '2');
+INSERT INTO `city_code` VALUES ('2518', '520221', '520200', '水城县', '贵州省', '六盘水市', '0858', '2');
+INSERT INTO `city_code` VALUES ('2519', '520222', '520200', '盘县', '贵州省', '六盘水市', '0858', '2');
+INSERT INTO `city_code` VALUES ('2520', '520302', '520300', '红花岗区', '贵州省', '遵义市', '0852', '2');
+INSERT INTO `city_code` VALUES ('2521', '520303', '520300', '汇川区', '贵州省', '遵义市', '0852', '2');
+INSERT INTO `city_code` VALUES ('2522', '520321', '520300', '遵义县', '贵州省', '遵义市', '0852', '2');
+INSERT INTO `city_code` VALUES ('2523', '520322', '520300', '桐梓县', '贵州省', '遵义市', '0852', '2');
+INSERT INTO `city_code` VALUES ('2524', '520323', '520300', '绥阳县', '贵州省', '遵义市', '0852', '2');
+INSERT INTO `city_code` VALUES ('2525', '520324', '520300', '正安县', '贵州省', '遵义市', '0852', '2');
+INSERT INTO `city_code` VALUES ('2526', '520325', '520300', '道真仡佬族苗族自治县', '贵州省', '遵义市', '0852', '2');
+INSERT INTO `city_code` VALUES ('2527', '520326', '520300', '务川仡佬族苗族自治县', '贵州省', '遵义市', '0852', '2');
+INSERT INTO `city_code` VALUES ('2528', '520327', '520300', '凤冈县', '贵州省', '遵义市', '0852', '2');
+INSERT INTO `city_code` VALUES ('2529', '520328', '520300', '湄潭县', '贵州省', '遵义市', '0852', '2');
+INSERT INTO `city_code` VALUES ('2530', '520329', '520300', '余庆县', '贵州省', '遵义市', '0852', '2');
+INSERT INTO `city_code` VALUES ('2531', '520330', '520300', '习水县', '贵州省', '遵义市', '0852', '2');
+INSERT INTO `city_code` VALUES ('2532', '520381', '520300', '赤水市', '贵州省', '遵义市', '0852', '2');
+INSERT INTO `city_code` VALUES ('2533', '520382', '520300', '仁怀市', '贵州省', '遵义市', '0852', '2');
+INSERT INTO `city_code` VALUES ('2534', '520402', '520400', '西秀区', '贵州省', '安顺市', '0853', '2');
+INSERT INTO `city_code` VALUES ('2535', '520421', '520400', '平坝县', '贵州省', '安顺市', '0853', '2');
+INSERT INTO `city_code` VALUES ('2536', '520422', '520400', '普定县', '贵州省', '安顺市', '0853', '2');
+INSERT INTO `city_code` VALUES ('2537', '520423', '520400', '镇宁布依族苗族自治县', '贵州省', '安顺市', '0853', '2');
+INSERT INTO `city_code` VALUES ('2538', '520424', '520400', '关岭布依族苗族自治县', '贵州省', '安顺市', '0853', '2');
+INSERT INTO `city_code` VALUES ('2539', '520425', '520400', '紫云苗族布依族自治县', '贵州省', '安顺市', '0853', '2');
+INSERT INTO `city_code` VALUES ('2540', '520501', '522400', '七星关区', '贵州省', '毕节市', '0857', '2');
+INSERT INTO `city_code` VALUES ('2541', '520522', '522400', '大方县', '贵州省', '毕节市', '0857', '2');
+INSERT INTO `city_code` VALUES ('2542', '520523', '522400', '黔西县', '贵州省', '毕节市', '0857', '2');
+INSERT INTO `city_code` VALUES ('2543', '520524', '522400', '金沙县', '贵州省', '毕节市', '0857', '2');
+INSERT INTO `city_code` VALUES ('2544', '520525', '522400', '织金县', '贵州省', '毕节市', '0857', '2');
+INSERT INTO `city_code` VALUES ('2545', '520526', '522400', '纳雍县', '贵州省', '毕节市', '0857', '2');
+INSERT INTO `city_code` VALUES ('2546', '520527', '522400', '威宁彝族回族苗族自治县', '贵州省', '毕节市', '0857', '2');
+INSERT INTO `city_code` VALUES ('2547', '520528', '522400', '赫章县', '贵州省', '毕节市', '0857', '2');
+INSERT INTO `city_code` VALUES ('2548', '520601', '522200', '碧江区', '贵州省', '铜仁市', '0856', '2');
+INSERT INTO `city_code` VALUES ('2549', '520602', '522200', '万山区', '贵州省', '铜仁市', '0856', '2');
+INSERT INTO `city_code` VALUES ('2550', '520622', '522200', '江口县', '贵州省', '铜仁市', '0856', '2');
+INSERT INTO `city_code` VALUES ('2551', '520623', '522200', '玉屏侗族自治县', '贵州省', '铜仁市', '0856', '2');
+INSERT INTO `city_code` VALUES ('2552', '520624', '522200', '石阡县', '贵州省', '铜仁市', '0856', '2');
+INSERT INTO `city_code` VALUES ('2553', '520625', '522200', '思南县', '贵州省', '铜仁市', '0856', '2');
+INSERT INTO `city_code` VALUES ('2554', '520626', '522200', '印江土家族苗族自治县', '贵州省', '铜仁市', '0856', '2');
+INSERT INTO `city_code` VALUES ('2555', '520627', '522200', '德江县', '贵州省', '铜仁市', '0856', '2');
+INSERT INTO `city_code` VALUES ('2556', '520628', '522200', '沿河土家族自治县', '贵州省', '铜仁市', '0856', '2');
+INSERT INTO `city_code` VALUES ('2557', '520629', '522200', '松桃苗族自治县', '贵州省', '铜仁市', '0856', '2');
+INSERT INTO `city_code` VALUES ('2558', '522301', '522300', '兴义市', '贵州省', '黔西南布依族苗族自治州 ', '0859', '2');
+INSERT INTO `city_code` VALUES ('2559', '522322', '522300', '兴仁县', '贵州省', '黔西南布依族苗族自治州 ', '0859', '2');
+INSERT INTO `city_code` VALUES ('2560', '522323', '522300', '普安县', '贵州省', '黔西南布依族苗族自治州 ', '0859', '2');
+INSERT INTO `city_code` VALUES ('2561', '522324', '522300', '晴隆县', '贵州省', '黔西南布依族苗族自治州 ', '0859', '2');
+INSERT INTO `city_code` VALUES ('2562', '522325', '522300', '贞丰县', '贵州省', '黔西南布依族苗族自治州 ', '0859', '2');
+INSERT INTO `city_code` VALUES ('2563', '522326', '522300', '望谟县', '贵州省', '黔西南布依族苗族自治州 ', '0859', '2');
+INSERT INTO `city_code` VALUES ('2564', '522327', '522300', '册亨县', '贵州省', '黔西南布依族苗族自治州 ', '0859', '2');
+INSERT INTO `city_code` VALUES ('2565', '522328', '522300', '安龙县', '贵州省', '黔西南布依族苗族自治州 ', '0859', '2');
+INSERT INTO `city_code` VALUES ('2566', '522601', '522600', '凯里市', '贵州省', '黔东南苗族侗族自治州 ', '0855', '2');
+INSERT INTO `city_code` VALUES ('2567', '522622', '522600', '黄平县', '贵州省', '黔东南苗族侗族自治州 ', '0855', '2');
+INSERT INTO `city_code` VALUES ('2568', '522623', '522600', '施秉县', '贵州省', '黔东南苗族侗族自治州 ', '0855', '2');
+INSERT INTO `city_code` VALUES ('2569', '522624', '522600', '三穗县', '贵州省', '黔东南苗族侗族自治州 ', '0855', '2');
+INSERT INTO `city_code` VALUES ('2570', '522625', '522600', '镇远县', '贵州省', '黔东南苗族侗族自治州 ', '0855', '2');
+INSERT INTO `city_code` VALUES ('2571', '522626', '522600', '岑巩县', '贵州省', '黔东南苗族侗族自治州 ', '0855', '2');
+INSERT INTO `city_code` VALUES ('2572', '522627', '522600', '天柱县', '贵州省', '黔东南苗族侗族自治州 ', '0855', '2');
+INSERT INTO `city_code` VALUES ('2573', '522628', '522600', '锦屏县', '贵州省', '黔东南苗族侗族自治州 ', '0855', '2');
+INSERT INTO `city_code` VALUES ('2574', '522629', '522600', '剑河县', '贵州省', '黔东南苗族侗族自治州 ', '0855', '2');
+INSERT INTO `city_code` VALUES ('2575', '522630', '522600', '台江县', '贵州省', '黔东南苗族侗族自治州 ', '0855', '2');
+INSERT INTO `city_code` VALUES ('2576', '522631', '522600', '黎平县', '贵州省', '黔东南苗族侗族自治州 ', '0855', '2');
+INSERT INTO `city_code` VALUES ('2577', '522632', '522600', '榕江县', '贵州省', '黔东南苗族侗族自治州 ', '0855', '2');
+INSERT INTO `city_code` VALUES ('2578', '522633', '522600', '从江县', '贵州省', '黔东南苗族侗族自治州 ', '0855', '2');
+INSERT INTO `city_code` VALUES ('2579', '522634', '522600', '雷山县', '贵州省', '黔东南苗族侗族自治州 ', '0855', '2');
+INSERT INTO `city_code` VALUES ('2580', '522635', '522600', '麻江县', '贵州省', '黔东南苗族侗族自治州 ', '0855', '2');
+INSERT INTO `city_code` VALUES ('2581', '522636', '522600', '丹寨县', '贵州省', '黔东南苗族侗族自治州 ', '0855', '2');
+INSERT INTO `city_code` VALUES ('2582', '522701', '522700', '都匀市', '贵州省', '黔南布依族苗族自治州 ', '0854', '2');
+INSERT INTO `city_code` VALUES ('2583', '522702', '522700', '福泉市', '贵州省', '黔南布依族苗族自治州 ', '0854', '2');
+INSERT INTO `city_code` VALUES ('2584', '522722', '522700', '荔波县', '贵州省', '黔南布依族苗族自治州 ', '0854', '2');
+INSERT INTO `city_code` VALUES ('2585', '522723', '522700', '贵定县', '贵州省', '黔南布依族苗族自治州 ', '0854', '2');
+INSERT INTO `city_code` VALUES ('2586', '522725', '522700', '瓮安县', '贵州省', '黔南布依族苗族自治州 ', '0854', '2');
+INSERT INTO `city_code` VALUES ('2587', '522726', '522700', '独山县', '贵州省', '黔南布依族苗族自治州 ', '0854', '2');
+INSERT INTO `city_code` VALUES ('2588', '522727', '522700', '平塘县', '贵州省', '黔南布依族苗族自治州 ', '0854', '2');
+INSERT INTO `city_code` VALUES ('2589', '522728', '522700', '罗甸县', '贵州省', '黔南布依族苗族自治州 ', '0854', '2');
+INSERT INTO `city_code` VALUES ('2590', '522729', '522700', '长顺县', '贵州省', '黔南布依族苗族自治州 ', '0854', '2');
+INSERT INTO `city_code` VALUES ('2591', '522730', '522700', '龙里县', '贵州省', '黔南布依族苗族自治州 ', '0854', '2');
+INSERT INTO `city_code` VALUES ('2592', '522731', '522700', '惠水县', '贵州省', '黔南布依族苗族自治州 ', '0854', '2');
+INSERT INTO `city_code` VALUES ('2593', '522732', '522700', '三都水族自治县', '贵州省', '黔南布依族苗族自治州 ', '0854', '2');
+INSERT INTO `city_code` VALUES ('2594', '530000', null, '云南省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('2595', '530100', '530000', '昆明市', '云南省', '', '0871', '1');
+INSERT INTO `city_code` VALUES ('2596', '530300', '530000', '曲靖市', '云南省', '', '0874', '1');
+INSERT INTO `city_code` VALUES ('2597', '530400', '530000', '玉溪市', '云南省', '', '0877', '1');
+INSERT INTO `city_code` VALUES ('2598', '530500', '530000', '保山市', '云南省', '', '0875', '1');
+INSERT INTO `city_code` VALUES ('2599', '530600', '530000', '昭通市', '云南省', '', '0870', '1');
+INSERT INTO `city_code` VALUES ('2600', '530700', '530000', '丽江市', '云南省', '', '0888', '1');
+INSERT INTO `city_code` VALUES ('2601', '530800', '530000', '普洱市', '云南省', '', '0879', '1');
+INSERT INTO `city_code` VALUES ('2602', '530900', '530000', '临沧市', '云南省', '', '0883', '1');
+INSERT INTO `city_code` VALUES ('2603', '532300', '530000', '楚雄彝族自治州 ', '云南省', '', '0878', '1');
+INSERT INTO `city_code` VALUES ('2604', '532500', '530000', '红河哈尼族彝族自治州 ', '云南省', '', '0873', '1');
+INSERT INTO `city_code` VALUES ('2605', '532600', '530000', '文山壮族苗族自治州 ', '云南省', '', '0876', '1');
+INSERT INTO `city_code` VALUES ('2606', '532800', '530000', '西双版纳傣族自治州 ', '云南省', '', '0691', '1');
+INSERT INTO `city_code` VALUES ('2607', '532900', '530000', '大理白族自治州 ', '云南省', '', '0872', '1');
+INSERT INTO `city_code` VALUES ('2608', '533100', '530000', '德宏傣族景颇族自治州 ', '云南省', '', '0692', '1');
+INSERT INTO `city_code` VALUES ('2609', '533300', '530000', '怒江傈僳族自治州 ', '云南省', '', '0886', '1');
+INSERT INTO `city_code` VALUES ('2610', '533400', '530000', '迪庆藏族自治州 ', '云南省', '', '0887', '1');
+INSERT INTO `city_code` VALUES ('2611', '530102', '530100', '五华区', '云南省', '昆明市', '0871', '2');
+INSERT INTO `city_code` VALUES ('2612', '530103', '530100', '盘龙区', '云南省', '昆明市', '0871', '2');
+INSERT INTO `city_code` VALUES ('2613', '530111', '530100', '官渡区', '云南省', '昆明市', '0871', '2');
+INSERT INTO `city_code` VALUES ('2614', '530112', '530100', '西山区', '云南省', '昆明市', '0871', '2');
+INSERT INTO `city_code` VALUES ('2615', '530113', '530100', '东川区', '云南省', '昆明市', '0881', '2');
+INSERT INTO `city_code` VALUES ('2616', '530121', '530100', '呈贡区', '云南省', '昆明市', '0871', '2');
+INSERT INTO `city_code` VALUES ('2617', '530122', '530100', '晋宁县', '云南省', '昆明市', '0871', '2');
+INSERT INTO `city_code` VALUES ('2618', '530124', '530100', '富民县', '云南省', '昆明市', '0871', '2');
+INSERT INTO `city_code` VALUES ('2619', '530125', '530100', '宜良县', '云南省', '昆明市', '0871', '2');
+INSERT INTO `city_code` VALUES ('2620', '530126', '530100', '石林彝族自治县', '云南省', '昆明市', '0871', '2');
+INSERT INTO `city_code` VALUES ('2621', '530127', '530100', '嵩明县', '云南省', '昆明市', '0871', '2');
+INSERT INTO `city_code` VALUES ('2622', '530128', '530100', '禄劝彝族苗族自治县', '云南省', '昆明市', '0871', '2');
+INSERT INTO `city_code` VALUES ('2623', '530129', '530100', '寻甸回族彝族自治县', '云南省', '昆明市', '0871', '2');
+INSERT INTO `city_code` VALUES ('2624', '530181', '530100', '安宁市', '云南省', '昆明市', '0871', '2');
+INSERT INTO `city_code` VALUES ('2625', '530302', '530300', '麒麟区', '云南省', '曲靖市', '0874', '2');
+INSERT INTO `city_code` VALUES ('2626', '530321', '530300', '马龙县', '云南省', '曲靖市', '0874', '2');
+INSERT INTO `city_code` VALUES ('2627', '530322', '530300', '陆良县', '云南省', '曲靖市', '0874', '2');
+INSERT INTO `city_code` VALUES ('2628', '530323', '530300', '师宗县', '云南省', '曲靖市', '0874', '2');
+INSERT INTO `city_code` VALUES ('2629', '530324', '530300', '罗平县', '云南省', '曲靖市', '0874', '2');
+INSERT INTO `city_code` VALUES ('2630', '530325', '530300', '富源县', '云南省', '曲靖市', '0874', '2');
+INSERT INTO `city_code` VALUES ('2631', '530326', '530300', '会泽县', '云南省', '曲靖市', '0874', '2');
+INSERT INTO `city_code` VALUES ('2632', '530328', '530300', '沾益县', '云南省', '曲靖市', '0874', '2');
+INSERT INTO `city_code` VALUES ('2633', '530381', '530300', '宣威市', '云南省', '曲靖市', '0874', '2');
+INSERT INTO `city_code` VALUES ('2634', '530402', '530400', '红塔区', '云南省', '玉溪市', '0877', '2');
+INSERT INTO `city_code` VALUES ('2635', '530421', '530400', '江川县', '云南省', '玉溪市', '0877', '2');
+INSERT INTO `city_code` VALUES ('2636', '530422', '530400', '澄江县', '云南省', '玉溪市', '0877', '2');
+INSERT INTO `city_code` VALUES ('2637', '530423', '530400', '通海县', '云南省', '玉溪市', '0877', '2');
+INSERT INTO `city_code` VALUES ('2638', '530424', '530400', '华宁县', '云南省', '玉溪市', '0877', '2');
+INSERT INTO `city_code` VALUES ('2639', '530425', '530400', '易门县', '云南省', '玉溪市', '0877', '2');
+INSERT INTO `city_code` VALUES ('2640', '530426', '530400', '峨山彝族自治县', '云南省', '玉溪市', '0877', '2');
+INSERT INTO `city_code` VALUES ('2641', '530427', '530400', '新平彝族傣族自治县', '云南省', '玉溪市', '0877', '2');
+INSERT INTO `city_code` VALUES ('2642', '530428', '530400', '元江哈尼族彝族傣族自治县', '云南省', '玉溪市', '0877', '2');
+INSERT INTO `city_code` VALUES ('2643', '530502', '530500', '隆阳区', '云南省', '保山市', '0875', '2');
+INSERT INTO `city_code` VALUES ('2644', '530521', '530500', '施甸县', '云南省', '保山市', '0875', '2');
+INSERT INTO `city_code` VALUES ('2645', '530522', '530500', '腾冲县', '云南省', '保山市', '0875', '2');
+INSERT INTO `city_code` VALUES ('2646', '530523', '530500', '龙陵县', '云南省', '保山市', '0875', '2');
+INSERT INTO `city_code` VALUES ('2647', '530524', '530500', '昌宁县', '云南省', '保山市', '0875', '2');
+INSERT INTO `city_code` VALUES ('2648', '530602', '530600', '昭阳区', '云南省', '昭通市', '0870', '2');
+INSERT INTO `city_code` VALUES ('2649', '530621', '530600', '鲁甸县', '云南省', '昭通市', '0870', '2');
+INSERT INTO `city_code` VALUES ('2650', '530622', '530600', '巧家县', '云南省', '昭通市', '0870', '2');
+INSERT INTO `city_code` VALUES ('2651', '530623', '530600', '盐津县', '云南省', '昭通市', '0870', '2');
+INSERT INTO `city_code` VALUES ('2652', '530624', '530600', '大关县', '云南省', '昭通市', '0870', '2');
+INSERT INTO `city_code` VALUES ('2653', '530625', '530600', '永善县', '云南省', '昭通市', '0870', '2');
+INSERT INTO `city_code` VALUES ('2654', '530626', '530600', '绥江县', '云南省', '昭通市', '0870', '2');
+INSERT INTO `city_code` VALUES ('2655', '530627', '530600', '镇雄县', '云南省', '昭通市', '0870', '2');
+INSERT INTO `city_code` VALUES ('2656', '530628', '530600', '彝良县', '云南省', '昭通市', '0870', '2');
+INSERT INTO `city_code` VALUES ('2657', '530629', '530600', '威信县', '云南省', '昭通市', '0870', '2');
+INSERT INTO `city_code` VALUES ('2658', '530630', '530600', '水富县', '云南省', '昭通市', '0870', '2');
+INSERT INTO `city_code` VALUES ('2659', '530702', '530700', '古城区', '云南省', '丽江市', '0888', '2');
+INSERT INTO `city_code` VALUES ('2660', '530721', '530700', '玉龙纳西族自治县', '云南省', '丽江市', '0888', '2');
+INSERT INTO `city_code` VALUES ('2661', '530722', '530700', '永胜县', '云南省', '丽江市', '0888', '2');
+INSERT INTO `city_code` VALUES ('2662', '530723', '530700', '华坪县', '云南省', '丽江市', '0888', '2');
+INSERT INTO `city_code` VALUES ('2663', '530724', '530700', '宁蒗彝族自治县', '云南省', '丽江市', '0888', '2');
+INSERT INTO `city_code` VALUES ('2664', '530802', '530800', '思茅区', '云南省', '普洱市', '0879', '2');
+INSERT INTO `city_code` VALUES ('2665', '530821', '530800', '宁洱哈尼族彝族自治县', '云南省', '普洱市', '0879', '2');
+INSERT INTO `city_code` VALUES ('2666', '530822', '530800', '墨江哈尼族自治县', '云南省', '普洱市', '0879', '2');
+INSERT INTO `city_code` VALUES ('2667', '530823', '530800', '景东彝族自治县', '云南省', '普洱市', '0879', '2');
+INSERT INTO `city_code` VALUES ('2668', '530824', '530800', '景谷傣族彝族自治县', '云南省', '普洱市', '0879', '2');
+INSERT INTO `city_code` VALUES ('2669', '530825', '530800', '镇沅彝族哈尼族拉祜族自治县', '云南省', '普洱市', '0879', '2');
+INSERT INTO `city_code` VALUES ('2670', '530826', '530800', '江城哈尼族彝族自治县', '云南省', '普洱市', '0879', '2');
+INSERT INTO `city_code` VALUES ('2671', '530827', '530800', '孟连傣族拉祜族佤族自治县', '云南省', '普洱市', '0879', '2');
+INSERT INTO `city_code` VALUES ('2672', '530828', '530800', '澜沧拉祜族自治县', '云南省', '普洱市', '0879', '2');
+INSERT INTO `city_code` VALUES ('2673', '530829', '530800', '西盟佤族自治县', '云南省', '普洱市', '0879', '2');
+INSERT INTO `city_code` VALUES ('2674', '530902', '530900', '临翔区', '云南省', '临沧市', '0883', '2');
+INSERT INTO `city_code` VALUES ('2675', '530921', '530900', '凤庆县', '云南省', '临沧市', '0883', '2');
+INSERT INTO `city_code` VALUES ('2676', '530922', '530900', '云县', '云南省', '临沧市', '0883', '2');
+INSERT INTO `city_code` VALUES ('2677', '530923', '530900', '永德县', '云南省', '临沧市', '0883', '2');
+INSERT INTO `city_code` VALUES ('2678', '530924', '530900', '镇康县', '云南省', '临沧市', '0883', '2');
+INSERT INTO `city_code` VALUES ('2679', '530925', '530900', '双江拉祜族佤族布朗族傣族自治县', '云南省', '临沧市', '0883', '2');
+INSERT INTO `city_code` VALUES ('2680', '530926', '530900', '耿马傣族佤族自治县', '云南省', '临沧市', '0883', '2');
+INSERT INTO `city_code` VALUES ('2681', '530927', '530900', '沧源佤族自治县', '云南省', '临沧市', '0883', '2');
+INSERT INTO `city_code` VALUES ('2682', '532301', '532300', '楚雄市', '云南省', '楚雄彝族自治州 ', '0878', '2');
+INSERT INTO `city_code` VALUES ('2683', '532322', '532300', '双柏县', '云南省', '楚雄彝族自治州 ', '0878', '2');
+INSERT INTO `city_code` VALUES ('2684', '532323', '532300', '牟定县', '云南省', '楚雄彝族自治州 ', '0878', '2');
+INSERT INTO `city_code` VALUES ('2685', '532324', '532300', '南华县', '云南省', '楚雄彝族自治州 ', '0878', '2');
+INSERT INTO `city_code` VALUES ('2686', '532325', '532300', '姚安县', '云南省', '楚雄彝族自治州 ', '0878', '2');
+INSERT INTO `city_code` VALUES ('2687', '532326', '532300', '大姚县', '云南省', '楚雄彝族自治州 ', '0878', '2');
+INSERT INTO `city_code` VALUES ('2688', '532327', '532300', '永仁县', '云南省', '楚雄彝族自治州 ', '0878', '2');
+INSERT INTO `city_code` VALUES ('2689', '532328', '532300', '元谋县', '云南省', '楚雄彝族自治州 ', '0878', '2');
+INSERT INTO `city_code` VALUES ('2690', '532329', '532300', '武定县', '云南省', '楚雄彝族自治州 ', '0878', '2');
+INSERT INTO `city_code` VALUES ('2691', '532331', '532300', '禄丰县', '云南省', '楚雄彝族自治州 ', '0878', '2');
+INSERT INTO `city_code` VALUES ('2692', '532501', '532500', '个旧市', '云南省', '红河哈尼族彝族自治州 ', '0873', '2');
+INSERT INTO `city_code` VALUES ('2693', '532502', '532500', '开远市', '云南省', '红河哈尼族彝族自治州 ', '0873', '2');
+INSERT INTO `city_code` VALUES ('2694', '532503', '532500', '蒙自市', '云南省', '红河哈尼族彝族自治州 ', '0873', '2');
+INSERT INTO `city_code` VALUES ('2695', '532523', '532500', '屏边苗族自治县', '云南省', '红河哈尼族彝族自治州 ', '0873', '2');
+INSERT INTO `city_code` VALUES ('2696', '532524', '532500', '建水县', '云南省', '红河哈尼族彝族自治州 ', '0873', '2');
+INSERT INTO `city_code` VALUES ('2697', '532525', '532500', '石屏县', '云南省', '红河哈尼族彝族自治州 ', '0873', '2');
+INSERT INTO `city_code` VALUES ('2698', '532526', '532500', '弥勒县', '云南省', '红河哈尼族彝族自治州 ', '0873', '2');
+INSERT INTO `city_code` VALUES ('2699', '532527', '532500', '泸西县', '云南省', '红河哈尼族彝族自治州 ', '0873', '2');
+INSERT INTO `city_code` VALUES ('2700', '532528', '532500', '元阳县', '云南省', '红河哈尼族彝族自治州 ', '0873', '2');
+INSERT INTO `city_code` VALUES ('2701', '532529', '532500', '红河县', '云南省', '红河哈尼族彝族自治州 ', '0873', '2');
+INSERT INTO `city_code` VALUES ('2702', '532530', '532500', '金平苗族瑶族傣族自治县', '云南省', '红河哈尼族彝族自治州 ', '0873', '2');
+INSERT INTO `city_code` VALUES ('2703', '532531', '532500', '绿春县', '云南省', '红河哈尼族彝族自治州 ', '0873', '2');
+INSERT INTO `city_code` VALUES ('2704', '532532', '532500', '河口瑶族自治县', '云南省', '红河哈尼族彝族自治州 ', '0873', '2');
+INSERT INTO `city_code` VALUES ('2705', '532621', '532600', '文山市', '云南省', '文山壮族苗族自治州 ', '0876', '2');
+INSERT INTO `city_code` VALUES ('2706', '532622', '532600', '砚山县', '云南省', '文山壮族苗族自治州 ', '0876', '2');
+INSERT INTO `city_code` VALUES ('2707', '532623', '532600', '西畴县', '云南省', '文山壮族苗族自治州 ', '0876', '2');
+INSERT INTO `city_code` VALUES ('2708', '532624', '532600', '麻栗坡县', '云南省', '文山壮族苗族自治州 ', '0876', '2');
+INSERT INTO `city_code` VALUES ('2709', '532625', '532600', '马关县', '云南省', '文山壮族苗族自治州 ', '0876', '2');
+INSERT INTO `city_code` VALUES ('2710', '532626', '532600', '丘北县', '云南省', '文山壮族苗族自治州 ', '0876', '2');
+INSERT INTO `city_code` VALUES ('2711', '532627', '532600', '广南县', '云南省', '文山壮族苗族自治州 ', '0876', '2');
+INSERT INTO `city_code` VALUES ('2712', '532628', '532600', '富宁县', '云南省', '文山壮族苗族自治州 ', '0876', '2');
+INSERT INTO `city_code` VALUES ('2713', '532801', '532800', '景洪市', '云南省', '西双版纳傣族自治州 ', '0691', '2');
+INSERT INTO `city_code` VALUES ('2714', '532822', '532800', '勐海县', '云南省', '西双版纳傣族自治州 ', '0691', '2');
+INSERT INTO `city_code` VALUES ('2715', '532823', '532800', '勐腊县', '云南省', '西双版纳傣族自治州 ', '0691', '2');
+INSERT INTO `city_code` VALUES ('2716', '532901', '532900', '大理市', '云南省', '大理白族自治州 ', '0872', '2');
+INSERT INTO `city_code` VALUES ('2717', '532922', '532900', '漾濞彝族自治县', '云南省', '大理白族自治州 ', '0872', '2');
+INSERT INTO `city_code` VALUES ('2718', '532923', '532900', '祥云县', '云南省', '大理白族自治州 ', '0872', '2');
+INSERT INTO `city_code` VALUES ('2719', '532924', '532900', '宾川县', '云南省', '大理白族自治州 ', '0872', '2');
+INSERT INTO `city_code` VALUES ('2720', '532925', '532900', '弥渡县', '云南省', '大理白族自治州 ', '0872', '2');
+INSERT INTO `city_code` VALUES ('2721', '532926', '532900', '南涧彝族自治县', '云南省', '大理白族自治州 ', '0872', '2');
+INSERT INTO `city_code` VALUES ('2722', '532927', '532900', '巍山彝族回族自治县', '云南省', '大理白族自治州 ', '0872', '2');
+INSERT INTO `city_code` VALUES ('2723', '532928', '532900', '永平县', '云南省', '大理白族自治州 ', '0872', '2');
+INSERT INTO `city_code` VALUES ('2724', '532929', '532900', '云龙县', '云南省', '大理白族自治州 ', '0872', '2');
+INSERT INTO `city_code` VALUES ('2725', '532930', '532900', '洱源县', '云南省', '大理白族自治州 ', '0872', '2');
+INSERT INTO `city_code` VALUES ('2726', '532931', '532900', '剑川县', '云南省', '大理白族自治州 ', '0872', '2');
+INSERT INTO `city_code` VALUES ('2727', '532932', '532900', '鹤庆县', '云南省', '大理白族自治州 ', '0872', '2');
+INSERT INTO `city_code` VALUES ('2728', '533102', '533100', '瑞丽市', '云南省', '德宏傣族景颇族自治州 ', '0692', '2');
+INSERT INTO `city_code` VALUES ('2729', '533103', '533100', '芒市', '云南省', '德宏傣族景颇族自治州 ', '0692', '2');
+INSERT INTO `city_code` VALUES ('2730', '533122', '533100', '梁河县', '云南省', '德宏傣族景颇族自治州 ', '0692', '2');
+INSERT INTO `city_code` VALUES ('2731', '533123', '533100', '盈江县', '云南省', '德宏傣族景颇族自治州 ', '0692', '2');
+INSERT INTO `city_code` VALUES ('2732', '533124', '533100', '陇川县', '云南省', '德宏傣族景颇族自治州 ', '0692', '2');
+INSERT INTO `city_code` VALUES ('2733', '533321', '533300', '泸水县', '云南省', '怒江傈僳族自治州 ', '0886', '2');
+INSERT INTO `city_code` VALUES ('2734', '533323', '533300', '福贡县', '云南省', '怒江傈僳族自治州 ', '0886', '2');
+INSERT INTO `city_code` VALUES ('2735', '533324', '533300', '贡山独龙族怒族自治县', '云南省', '怒江傈僳族自治州 ', '0886', '2');
+INSERT INTO `city_code` VALUES ('2736', '533325', '533300', '兰坪白族普米族自治县', '云南省', '怒江傈僳族自治州 ', '0886', '2');
+INSERT INTO `city_code` VALUES ('2737', '533421', '533400', '香格里拉县', '云南省', '迪庆藏族自治州 ', '0887', '2');
+INSERT INTO `city_code` VALUES ('2738', '533422', '533400', '德钦县', '云南省', '迪庆藏族自治州 ', '0887', '2');
+INSERT INTO `city_code` VALUES ('2739', '533423', '533400', '维西傈僳族自治县', '云南省', '迪庆藏族自治州 ', '0887', '2');
+INSERT INTO `city_code` VALUES ('2740', '540000', null, '西藏自治区', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('2741', '540100', '540000', '拉萨市', '西藏自治区', '', '0891', '1');
+INSERT INTO `city_code` VALUES ('2742', '542100', '540000', '昌都地区', '西藏自治区', '', '0895', '1');
+INSERT INTO `city_code` VALUES ('2743', '542200', '540000', '山南地区', '西藏自治区', '', '0893', '1');
+INSERT INTO `city_code` VALUES ('2744', '542300', '540000', '日喀则地区', '西藏自治区', '', '0892', '1');
+INSERT INTO `city_code` VALUES ('2745', '542400', '540000', '那曲地区', '西藏自治区', '', '0896', '1');
+INSERT INTO `city_code` VALUES ('2746', '542500', '540000', '阿里地区', '西藏自治区', '', '0897', '1');
+INSERT INTO `city_code` VALUES ('2747', '542600', '540000', '林芝地区', '西藏自治区', '', '0894', '1');
+INSERT INTO `city_code` VALUES ('2748', '540102', '540100', '城关区', '西藏自治区', '拉萨市', '0891', '2');
+INSERT INTO `city_code` VALUES ('2749', '540121', '540100', '林周县', '西藏自治区', '拉萨市', '0891', '2');
+INSERT INTO `city_code` VALUES ('2750', '540122', '540100', '当雄县', '西藏自治区', '拉萨市', '0891', '2');
+INSERT INTO `city_code` VALUES ('2751', '540123', '540100', '尼木县', '西藏自治区', '拉萨市', '0891', '2');
+INSERT INTO `city_code` VALUES ('2752', '540124', '540100', '曲水县', '西藏自治区', '拉萨市', '0891', '2');
+INSERT INTO `city_code` VALUES ('2753', '540125', '540100', '堆龙德庆县', '西藏自治区', '拉萨市', '0891', '2');
+INSERT INTO `city_code` VALUES ('2754', '540126', '540100', '达孜县', '西藏自治区', '拉萨市', '0891', '2');
+INSERT INTO `city_code` VALUES ('2755', '540127', '540100', '墨竹工卡县', '西藏自治区', '拉萨市', '0891', '2');
+INSERT INTO `city_code` VALUES ('2756', '542121', '542100', '昌都县', '西藏自治区', '昌都地区', '0895', '2');
+INSERT INTO `city_code` VALUES ('2757', '542122', '542100', '江达县', '西藏自治区', '昌都地区', '0895', '2');
+INSERT INTO `city_code` VALUES ('2758', '542123', '542100', '贡觉县', '西藏自治区', '昌都地区', '0895', '2');
+INSERT INTO `city_code` VALUES ('2759', '542124', '542100', '类乌齐县', '西藏自治区', '昌都地区', '0895', '2');
+INSERT INTO `city_code` VALUES ('2760', '542125', '542100', '丁青县', '西藏自治区', '昌都地区', '0895', '2');
+INSERT INTO `city_code` VALUES ('2761', '542126', '542100', '察雅县', '西藏自治区', '昌都地区', '0895', '2');
+INSERT INTO `city_code` VALUES ('2762', '542127', '542100', '八宿县', '西藏自治区', '昌都地区', '0895', '2');
+INSERT INTO `city_code` VALUES ('2763', '542128', '542100', '左贡县', '西藏自治区', '昌都地区', '0895', '2');
+INSERT INTO `city_code` VALUES ('2764', '542129', '542100', '芒康县', '西藏自治区', '昌都地区', '0895', '2');
+INSERT INTO `city_code` VALUES ('2765', '542132', '542100', '洛隆县', '西藏自治区', '昌都地区', '0895', '2');
+INSERT INTO `city_code` VALUES ('2766', '542133', '542100', '边坝县', '西藏自治区', '昌都地区', '0895', '2');
+INSERT INTO `city_code` VALUES ('2767', '542221', '542200', '乃东县', '西藏自治区', '山南地区', '0893', '2');
+INSERT INTO `city_code` VALUES ('2768', '542222', '542200', '扎囊县', '西藏自治区', '山南地区', '0893', '2');
+INSERT INTO `city_code` VALUES ('2769', '542223', '542200', '贡嘎县', '西藏自治区', '山南地区', '0893', '2');
+INSERT INTO `city_code` VALUES ('2770', '542224', '542200', '桑日县', '西藏自治区', '山南地区', '0893', '2');
+INSERT INTO `city_code` VALUES ('2771', '542225', '542200', '琼结县', '西藏自治区', '山南地区', '0893', '2');
+INSERT INTO `city_code` VALUES ('2772', '542226', '542200', '曲松县', '西藏自治区', '山南地区', '0893', '2');
+INSERT INTO `city_code` VALUES ('2773', '542227', '542200', '措美县', '西藏自治区', '山南地区', '0893', '2');
+INSERT INTO `city_code` VALUES ('2774', '542228', '542200', '洛扎县', '西藏自治区', '山南地区', '0893', '2');
+INSERT INTO `city_code` VALUES ('2775', '542229', '542200', '加查县', '西藏自治区', '山南地区', '0893', '2');
+INSERT INTO `city_code` VALUES ('2776', '542231', '542200', '隆子县', '西藏自治区', '山南地区', '0893', '2');
+INSERT INTO `city_code` VALUES ('2777', '542232', '542200', '错那县', '西藏自治区', '山南地区', '0893', '2');
+INSERT INTO `city_code` VALUES ('2778', '542233', '542200', '浪卡子县', '西藏自治区', '山南地区', '0893', '2');
+INSERT INTO `city_code` VALUES ('2779', '542301', '542300', '日喀则市', '西藏自治区', '日喀则地区', '0892', '2');
+INSERT INTO `city_code` VALUES ('2780', '542322', '542300', '南木林县', '西藏自治区', '日喀则地区', '0892', '2');
+INSERT INTO `city_code` VALUES ('2781', '542323', '542300', '江孜县', '西藏自治区', '日喀则地区', '0892', '2');
+INSERT INTO `city_code` VALUES ('2782', '542324', '542300', '定日县', '西藏自治区', '日喀则地区', '0892', '2');
+INSERT INTO `city_code` VALUES ('2783', '542325', '542300', '萨迦县', '西藏自治区', '日喀则地区', '0892', '2');
+INSERT INTO `city_code` VALUES ('2784', '542326', '542300', '拉孜县', '西藏自治区', '日喀则地区', '0892', '2');
+INSERT INTO `city_code` VALUES ('2785', '542327', '542300', '昂仁县', '西藏自治区', '日喀则地区', '0892', '2');
+INSERT INTO `city_code` VALUES ('2786', '542328', '542300', '谢通门县', '西藏自治区', '日喀则地区', '0892', '2');
+INSERT INTO `city_code` VALUES ('2787', '542329', '542300', '白朗县', '西藏自治区', '日喀则地区', '0892', '2');
+INSERT INTO `city_code` VALUES ('2788', '542330', '542300', '仁布县', '西藏自治区', '日喀则地区', '0892', '2');
+INSERT INTO `city_code` VALUES ('2789', '542331', '542300', '康马县', '西藏自治区', '日喀则地区', '0892', '2');
+INSERT INTO `city_code` VALUES ('2790', '542332', '542300', '定结县', '西藏自治区', '日喀则地区', '0892', '2');
+INSERT INTO `city_code` VALUES ('2791', '542333', '542300', '仲巴县', '西藏自治区', '日喀则地区', '0892', '2');
+INSERT INTO `city_code` VALUES ('2792', '542334', '542300', '亚东县', '西藏自治区', '日喀则地区', '0892', '2');
+INSERT INTO `city_code` VALUES ('2793', '542335', '542300', '吉隆县', '西藏自治区', '日喀则地区', '0892', '2');
+INSERT INTO `city_code` VALUES ('2794', '542336', '542300', '聂拉木县', '西藏自治区', '日喀则地区', '0892', '2');
+INSERT INTO `city_code` VALUES ('2795', '542337', '542300', '萨嘎县', '西藏自治区', '日喀则地区', '0892', '2');
+INSERT INTO `city_code` VALUES ('2796', '542338', '542300', '岗巴县', '西藏自治区', '日喀则地区', '0892', '2');
+INSERT INTO `city_code` VALUES ('2797', '542421', '542400', '那曲县', '西藏自治区', '那曲地区', '0896', '2');
+INSERT INTO `city_code` VALUES ('2798', '542422', '542400', '嘉黎县', '西藏自治区', '那曲地区', '0896', '2');
+INSERT INTO `city_code` VALUES ('2799', '542423', '542400', '比如县', '西藏自治区', '那曲地区', '0896', '2');
+INSERT INTO `city_code` VALUES ('2800', '542424', '542400', '聂荣县', '西藏自治区', '那曲地区', '0896', '2');
+INSERT INTO `city_code` VALUES ('2801', '542425', '542400', '安多县', '西藏自治区', '那曲地区', '0896', '2');
+INSERT INTO `city_code` VALUES ('2802', '542426', '542400', '申扎县', '西藏自治区', '那曲地区', '0896', '2');
+INSERT INTO `city_code` VALUES ('2803', '542427', '542400', '索县', '西藏自治区', '那曲地区', '0896', '2');
+INSERT INTO `city_code` VALUES ('2804', '542428', '542400', '班戈县', '西藏自治区', '那曲地区', '0896', '2');
+INSERT INTO `city_code` VALUES ('2805', '542429', '542400', '巴青县', '西藏自治区', '那曲地区', '0896', '2');
+INSERT INTO `city_code` VALUES ('2806', '542430', '542400', '尼玛县', '西藏自治区', '那曲地区', '0896', '2');
+INSERT INTO `city_code` VALUES ('2807', '542521', '542500', '普兰县', '西藏自治区', '阿里地区', '0897', '2');
+INSERT INTO `city_code` VALUES ('2808', '542522', '542500', '札达县', '西藏自治区', '阿里地区', '0897', '2');
+INSERT INTO `city_code` VALUES ('2809', '542523', '542500', '噶尔县', '西藏自治区', '阿里地区', '0897', '2');
+INSERT INTO `city_code` VALUES ('2810', '542524', '542500', '日土县', '西藏自治区', '阿里地区', '0897', '2');
+INSERT INTO `city_code` VALUES ('2811', '542525', '542500', '革吉县', '西藏自治区', '阿里地区', '0897', '2');
+INSERT INTO `city_code` VALUES ('2812', '542526', '542500', '改则县', '西藏自治区', '阿里地区', '0897', '2');
+INSERT INTO `city_code` VALUES ('2813', '542527', '542500', '措勤县', '西藏自治区', '阿里地区', '0897', '2');
+INSERT INTO `city_code` VALUES ('2814', '542621', '542600', '林芝县', '西藏自治区', '林芝地区', '0894', '2');
+INSERT INTO `city_code` VALUES ('2815', '542622', '542600', '工布江达县', '西藏自治区', '林芝地区', '0894', '2');
+INSERT INTO `city_code` VALUES ('2816', '542623', '542600', '米林县', '西藏自治区', '林芝地区', '0894', '2');
+INSERT INTO `city_code` VALUES ('2817', '542624', '542600', '墨脱县', '西藏自治区', '林芝地区', '0894', '2');
+INSERT INTO `city_code` VALUES ('2818', '542625', '542600', '波密县', '西藏自治区', '林芝地区', '0894', '2');
+INSERT INTO `city_code` VALUES ('2819', '542626', '542600', '察隅县', '西藏自治区', '林芝地区', '0894', '2');
+INSERT INTO `city_code` VALUES ('2820', '542627', '542600', '朗县', '西藏自治区', '林芝地区', '0894', '2');
+INSERT INTO `city_code` VALUES ('2821', '610000', null, '陕西省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('2822', '610100', '610000', '西安市', '陕西省', '', '029', '1');
+INSERT INTO `city_code` VALUES ('2823', '610200', '610000', '铜川市', '陕西省', '', '0919', '1');
+INSERT INTO `city_code` VALUES ('2824', '610300', '610000', '宝鸡市', '陕西省', '', '0917', '1');
+INSERT INTO `city_code` VALUES ('2825', '610400', '610000', '咸阳市', '陕西省', '', '0910', '1');
+INSERT INTO `city_code` VALUES ('2826', '610500', '610000', '渭南市', '陕西省', '', '0913', '1');
+INSERT INTO `city_code` VALUES ('2827', '610600', '610000', '延安市', '陕西省', '', '0911', '1');
+INSERT INTO `city_code` VALUES ('2828', '610700', '610000', '汉中市', '陕西省', '', '0916', '1');
+INSERT INTO `city_code` VALUES ('2829', '610800', '610000', '榆林市', '陕西省', '', '0912', '1');
+INSERT INTO `city_code` VALUES ('2830', '610900', '610000', '安康市', '陕西省', '', '0915', '1');
+INSERT INTO `city_code` VALUES ('2831', '611000', '610000', '商洛市', '陕西省', '', '0914', '1');
+INSERT INTO `city_code` VALUES ('2832', '610102', '610100', '新城区', '陕西省', '西安市', '029', '2');
+INSERT INTO `city_code` VALUES ('2833', '610103', '610100', '碑林区', '陕西省', '西安市', '029', '2');
+INSERT INTO `city_code` VALUES ('2834', '610104', '610100', '莲湖区', '陕西省', '西安市', '029', '2');
+INSERT INTO `city_code` VALUES ('2835', '610111', '610100', '灞桥区', '陕西省', '西安市', '029', '2');
+INSERT INTO `city_code` VALUES ('2836', '610112', '610100', '未央区', '陕西省', '西安市', '029', '2');
+INSERT INTO `city_code` VALUES ('2837', '610113', '610100', '雁塔区', '陕西省', '西安市', '029', '2');
+INSERT INTO `city_code` VALUES ('2838', '610114', '610100', '阎良区', '陕西省', '西安市', '029', '2');
+INSERT INTO `city_code` VALUES ('2839', '610115', '610100', '临潼区', '陕西省', '西安市', '029', '2');
+INSERT INTO `city_code` VALUES ('2840', '610116', '610100', '长安区', '陕西省', '西安市', '029', '2');
+INSERT INTO `city_code` VALUES ('2841', '610122', '610100', '蓝田县', '陕西省', '西安市', '029', '2');
+INSERT INTO `city_code` VALUES ('2842', '610124', '610100', '周至县', '陕西省', '西安市', '029', '2');
+INSERT INTO `city_code` VALUES ('2843', '610125', '610100', '户县', '陕西省', '西安市', '029', '2');
+INSERT INTO `city_code` VALUES ('2844', '610126', '610100', '高陵县', '陕西省', '西安市', '029', '2');
+INSERT INTO `city_code` VALUES ('2845', '610202', '610200', '王益区', '陕西省', '铜川市', '0919', '2');
+INSERT INTO `city_code` VALUES ('2846', '610203', '610200', '印台区', '陕西省', '铜川市', '0919', '2');
+INSERT INTO `city_code` VALUES ('2847', '610204', '610200', '耀州区', '陕西省', '铜川市', '0919', '2');
+INSERT INTO `city_code` VALUES ('2848', '610222', '610200', '宜君县', '陕西省', '铜川市', '0919', '2');
+INSERT INTO `city_code` VALUES ('2849', '610302', '610300', '渭滨区', '陕西省', '宝鸡市', '0917', '2');
+INSERT INTO `city_code` VALUES ('2850', '610303', '610300', '金台区', '陕西省', '宝鸡市', '0917', '2');
+INSERT INTO `city_code` VALUES ('2851', '610304', '610300', '陈仓区', '陕西省', '宝鸡市', '0917', '2');
+INSERT INTO `city_code` VALUES ('2852', '610322', '610300', '凤翔县', '陕西省', '宝鸡市', '0917', '2');
+INSERT INTO `city_code` VALUES ('2853', '610323', '610300', '岐山县', '陕西省', '宝鸡市', '0917', '2');
+INSERT INTO `city_code` VALUES ('2854', '610324', '610300', '扶风县', '陕西省', '宝鸡市', '0917', '2');
+INSERT INTO `city_code` VALUES ('2855', '610326', '610300', '眉县', '陕西省', '宝鸡市', '0917', '2');
+INSERT INTO `city_code` VALUES ('2856', '610327', '610300', '陇县', '陕西省', '宝鸡市', '0917', '2');
+INSERT INTO `city_code` VALUES ('2857', '610328', '610300', '千阳县', '陕西省', '宝鸡市', '0917', '2');
+INSERT INTO `city_code` VALUES ('2858', '610329', '610300', '麟游县', '陕西省', '宝鸡市', '0917', '2');
+INSERT INTO `city_code` VALUES ('2859', '610330', '610300', '凤县', '陕西省', '宝鸡市', '0917', '2');
+INSERT INTO `city_code` VALUES ('2860', '610331', '610300', '太白县', '陕西省', '宝鸡市', '0917', '2');
+INSERT INTO `city_code` VALUES ('2861', '610402', '610400', '秦都区', '陕西省', '咸阳市', '0910', '2');
+INSERT INTO `city_code` VALUES ('2862', '610403', '610400', '杨陵区', '陕西省', '咸阳市', '0910', '2');
+INSERT INTO `city_code` VALUES ('2863', '610404', '610400', '渭城区', '陕西省', '咸阳市', '0910', '2');
+INSERT INTO `city_code` VALUES ('2864', '610422', '610400', '三原县', '陕西省', '咸阳市', '0910', '2');
+INSERT INTO `city_code` VALUES ('2865', '610423', '610400', '泾阳县', '陕西省', '咸阳市', '0910', '2');
+INSERT INTO `city_code` VALUES ('2866', '610424', '610400', '乾县', '陕西省', '咸阳市', '0910', '2');
+INSERT INTO `city_code` VALUES ('2867', '610425', '610400', '礼泉县', '陕西省', '咸阳市', '0910', '2');
+INSERT INTO `city_code` VALUES ('2868', '610426', '610400', '永寿县', '陕西省', '咸阳市', '0910', '2');
+INSERT INTO `city_code` VALUES ('2869', '610427', '610400', '彬县', '陕西省', '咸阳市', '0910', '2');
+INSERT INTO `city_code` VALUES ('2870', '610428', '610400', '长武县', '陕西省', '咸阳市', '0910', '2');
+INSERT INTO `city_code` VALUES ('2871', '610429', '610400', '旬邑县', '陕西省', '咸阳市', '0910', '2');
+INSERT INTO `city_code` VALUES ('2872', '610430', '610400', '淳化县', '陕西省', '咸阳市', '0910', '2');
+INSERT INTO `city_code` VALUES ('2873', '610431', '610400', '武功县', '陕西省', '咸阳市', '0910', '2');
+INSERT INTO `city_code` VALUES ('2874', '610481', '610400', '兴平市', '陕西省', '咸阳市', '0910', '2');
+INSERT INTO `city_code` VALUES ('2875', '610502', '610500', '临渭区', '陕西省', '渭南市', '0913', '2');
+INSERT INTO `city_code` VALUES ('2876', '610521', '610500', '华县', '陕西省', '渭南市', '0913', '2');
+INSERT INTO `city_code` VALUES ('2877', '610522', '610500', '潼关县', '陕西省', '渭南市', '0913', '2');
+INSERT INTO `city_code` VALUES ('2878', '610523', '610500', '大荔县', '陕西省', '渭南市', '0913', '2');
+INSERT INTO `city_code` VALUES ('2879', '610524', '610500', '合阳县', '陕西省', '渭南市', '0913', '2');
+INSERT INTO `city_code` VALUES ('2880', '610525', '610500', '澄城县', '陕西省', '渭南市', '0913', '2');
+INSERT INTO `city_code` VALUES ('2881', '610526', '610500', '蒲城县', '陕西省', '渭南市', '0913', '2');
+INSERT INTO `city_code` VALUES ('2882', '610527', '610500', '白水县', '陕西省', '渭南市', '0913', '2');
+INSERT INTO `city_code` VALUES ('2883', '610528', '610500', '富平县', '陕西省', '渭南市', '0913', '2');
+INSERT INTO `city_code` VALUES ('2884', '610581', '610500', '韩城市', '陕西省', '渭南市', '0913', '2');
+INSERT INTO `city_code` VALUES ('2885', '610582', '610500', '华阴市', '陕西省', '渭南市', '0913', '2');
+INSERT INTO `city_code` VALUES ('2886', '610602', '610600', '宝塔区', '陕西省', '延安市', '0911', '2');
+INSERT INTO `city_code` VALUES ('2887', '610621', '610600', '延长县', '陕西省', '延安市', '0911', '2');
+INSERT INTO `city_code` VALUES ('2888', '610622', '610600', '延川县', '陕西省', '延安市', '0911', '2');
+INSERT INTO `city_code` VALUES ('2889', '610623', '610600', '子长县', '陕西省', '延安市', '0911', '2');
+INSERT INTO `city_code` VALUES ('2890', '610624', '610600', '安塞县', '陕西省', '延安市', '0911', '2');
+INSERT INTO `city_code` VALUES ('2891', '610625', '610600', '志丹县', '陕西省', '延安市', '0911', '2');
+INSERT INTO `city_code` VALUES ('2892', '610626', '610600', '吴起县', '陕西省', '延安市', '0911', '2');
+INSERT INTO `city_code` VALUES ('2893', '610627', '610600', '甘泉县', '陕西省', '延安市', '0911', '2');
+INSERT INTO `city_code` VALUES ('2894', '610628', '610600', '富县', '陕西省', '延安市', '0911', '2');
+INSERT INTO `city_code` VALUES ('2895', '610629', '610600', '洛川县', '陕西省', '延安市', '0911', '2');
+INSERT INTO `city_code` VALUES ('2896', '610630', '610600', '宜川县', '陕西省', '延安市', '0911', '2');
+INSERT INTO `city_code` VALUES ('2897', '610631', '610600', '黄龙县', '陕西省', '延安市', '0911', '2');
+INSERT INTO `city_code` VALUES ('2898', '610632', '610600', '黄陵县', '陕西省', '延安市', '0911', '2');
+INSERT INTO `city_code` VALUES ('2899', '610702', '610700', '汉台区', '陕西省', '汉中市', '0916', '2');
+INSERT INTO `city_code` VALUES ('2900', '610721', '610700', '南郑县', '陕西省', '汉中市', '0916', '2');
+INSERT INTO `city_code` VALUES ('2901', '610722', '610700', '城固县', '陕西省', '汉中市', '0916', '2');
+INSERT INTO `city_code` VALUES ('2902', '610723', '610700', '洋县', '陕西省', '汉中市', '0916', '2');
+INSERT INTO `city_code` VALUES ('2903', '610724', '610700', '西乡县', '陕西省', '汉中市', '0916', '2');
+INSERT INTO `city_code` VALUES ('2904', '610725', '610700', '勉县', '陕西省', '汉中市', '0916', '2');
+INSERT INTO `city_code` VALUES ('2905', '610726', '610700', '宁强县', '陕西省', '汉中市', '0916', '2');
+INSERT INTO `city_code` VALUES ('2906', '610727', '610700', '略阳县', '陕西省', '汉中市', '0916', '2');
+INSERT INTO `city_code` VALUES ('2907', '610728', '610700', '镇巴县', '陕西省', '汉中市', '0916', '2');
+INSERT INTO `city_code` VALUES ('2908', '610729', '610700', '留坝县', '陕西省', '汉中市', '0916', '2');
+INSERT INTO `city_code` VALUES ('2909', '610730', '610700', '佛坪县', '陕西省', '汉中市', '0916', '2');
+INSERT INTO `city_code` VALUES ('2910', '610802', '610800', '榆阳区', '陕西省', '榆林市', '0912', '2');
+INSERT INTO `city_code` VALUES ('2911', '610821', '610800', '神木县', '陕西省', '榆林市', '0912', '2');
+INSERT INTO `city_code` VALUES ('2912', '610822', '610800', '府谷县', '陕西省', '榆林市', '0912', '2');
+INSERT INTO `city_code` VALUES ('2913', '610823', '610800', '横山县', '陕西省', '榆林市', '0912', '2');
+INSERT INTO `city_code` VALUES ('2914', '610824', '610800', '靖边县', '陕西省', '榆林市', '0912', '2');
+INSERT INTO `city_code` VALUES ('2915', '610825', '610800', '定边县', '陕西省', '榆林市', '0912', '2');
+INSERT INTO `city_code` VALUES ('2916', '610826', '610800', '绥德县', '陕西省', '榆林市', '0912', '2');
+INSERT INTO `city_code` VALUES ('2917', '610827', '610800', '米脂县', '陕西省', '榆林市', '0912', '2');
+INSERT INTO `city_code` VALUES ('2918', '610828', '610800', '佳县', '陕西省', '榆林市', '0912', '2');
+INSERT INTO `city_code` VALUES ('2919', '610829', '610800', '吴堡县', '陕西省', '榆林市', '0912', '2');
+INSERT INTO `city_code` VALUES ('2920', '610830', '610800', '清涧县', '陕西省', '榆林市', '0912', '2');
+INSERT INTO `city_code` VALUES ('2921', '610831', '610800', '子洲县', '陕西省', '榆林市', '0912', '2');
+INSERT INTO `city_code` VALUES ('2922', '610902', '610900', '汉滨区', '陕西省', '安康市', '0915', '2');
+INSERT INTO `city_code` VALUES ('2923', '610921', '610900', '汉阴县', '陕西省', '安康市', '0915', '2');
+INSERT INTO `city_code` VALUES ('2924', '610922', '610900', '石泉县', '陕西省', '安康市', '0915', '2');
+INSERT INTO `city_code` VALUES ('2925', '610923', '610900', '宁陕县', '陕西省', '安康市', '0915', '2');
+INSERT INTO `city_code` VALUES ('2926', '610924', '610900', '紫阳县', '陕西省', '安康市', '0915', '2');
+INSERT INTO `city_code` VALUES ('2927', '610925', '610900', '岚皋县', '陕西省', '安康市', '0915', '2');
+INSERT INTO `city_code` VALUES ('2928', '610926', '610900', '平利县', '陕西省', '安康市', '0915', '2');
+INSERT INTO `city_code` VALUES ('2929', '610927', '610900', '镇坪县', '陕西省', '安康市', '0915', '2');
+INSERT INTO `city_code` VALUES ('2930', '610928', '610900', '旬阳县', '陕西省', '安康市', '0915', '2');
+INSERT INTO `city_code` VALUES ('2931', '610929', '610900', '白河县', '陕西省', '安康市', '0915', '2');
+INSERT INTO `city_code` VALUES ('2932', '611002', '611000', '商州区', '陕西省', '商洛市', '0914', '2');
+INSERT INTO `city_code` VALUES ('2933', '611021', '611000', '洛南县', '陕西省', '商洛市', '0914', '2');
+INSERT INTO `city_code` VALUES ('2934', '611022', '611000', '丹凤县', '陕西省', '商洛市', '0914', '2');
+INSERT INTO `city_code` VALUES ('2935', '611023', '611000', '商南县', '陕西省', '商洛市', '0914', '2');
+INSERT INTO `city_code` VALUES ('2936', '611024', '611000', '山阳县', '陕西省', '商洛市', '0914', '2');
+INSERT INTO `city_code` VALUES ('2937', '611025', '611000', '镇安县', '陕西省', '商洛市', '0914', '2');
+INSERT INTO `city_code` VALUES ('2938', '611026', '611000', '柞水县', '陕西省', '商洛市', '0914', '2');
+INSERT INTO `city_code` VALUES ('2939', '620000', null, '甘肃省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('2940', '620100', '620000', '兰州市', '甘肃省', '', '0931', '1');
+INSERT INTO `city_code` VALUES ('2941', '620200', '620000', '嘉峪关市', '甘肃省', '', '0937', '1');
+INSERT INTO `city_code` VALUES ('2942', '620300', '620000', '金昌市', '甘肃省', '', '0935', '1');
+INSERT INTO `city_code` VALUES ('2943', '620400', '620000', '白银市', '甘肃省', '', '0943', '1');
+INSERT INTO `city_code` VALUES ('2944', '620500', '620000', '天水市', '甘肃省', '', '0938', '1');
+INSERT INTO `city_code` VALUES ('2945', '620600', '620000', '武威市', '甘肃省', '', '0935', '1');
+INSERT INTO `city_code` VALUES ('2946', '620700', '620000', '张掖市', '甘肃省', '', '0936', '1');
+INSERT INTO `city_code` VALUES ('2947', '620800', '620000', '平凉市', '甘肃省', '', '0933', '1');
+INSERT INTO `city_code` VALUES ('2948', '620900', '620000', '酒泉市', '甘肃省', '', '0937', '1');
+INSERT INTO `city_code` VALUES ('2949', '621000', '620000', '庆阳市', '甘肃省', '', '0934', '1');
+INSERT INTO `city_code` VALUES ('2950', '621100', '620000', '定西市', '甘肃省', '', '0932', '1');
+INSERT INTO `city_code` VALUES ('2951', '621200', '620000', '陇南市', '甘肃省', '', '0939', '1');
+INSERT INTO `city_code` VALUES ('2952', '622900', '620000', '临夏回族自治州 ', '甘肃省', '', '0930', '1');
+INSERT INTO `city_code` VALUES ('2953', '623000', '620000', '甘南藏族自治州 ', '甘肃省', '', '0941', '1');
+INSERT INTO `city_code` VALUES ('2954', '620102', '620100', '城关区', '甘肃省', '兰州市', '0931', '2');
+INSERT INTO `city_code` VALUES ('2955', '620103', '620100', '七里河区', '甘肃省', '兰州市', '0931', '2');
+INSERT INTO `city_code` VALUES ('2956', '620104', '620100', '西固区', '甘肃省', '兰州市', '0931', '2');
+INSERT INTO `city_code` VALUES ('2957', '620105', '620100', '安宁区', '甘肃省', '兰州市', '0931', '2');
+INSERT INTO `city_code` VALUES ('2958', '620111', '620100', '红古区', '甘肃省', '兰州市', '0931', '2');
+INSERT INTO `city_code` VALUES ('2959', '620121', '620100', '永登县', '甘肃省', '兰州市', '0931', '2');
+INSERT INTO `city_code` VALUES ('2960', '620122', '620100', '皋兰县', '甘肃省', '兰州市', '0931', '2');
+INSERT INTO `city_code` VALUES ('2961', '620123', '620100', '榆中县', '甘肃省', '兰州市', '0931', '2');
+INSERT INTO `city_code` VALUES ('2962', '620201', '620200', '嘉峪关市', '甘肃省', '嘉峪关市', '0937', '2');
+INSERT INTO `city_code` VALUES ('2963', '620302', '620300', '金川区', '甘肃省', '金昌市', '0935', '2');
+INSERT INTO `city_code` VALUES ('2964', '620321', '620300', '永昌县', '甘肃省', '金昌市', '0935', '2');
+INSERT INTO `city_code` VALUES ('2965', '620402', '620400', '白银区', '甘肃省', '白银市', '0943', '2');
+INSERT INTO `city_code` VALUES ('2966', '620403', '620400', '平川区', '甘肃省', '白银市', '0943', '2');
+INSERT INTO `city_code` VALUES ('2967', '620421', '620400', '靖远县', '甘肃省', '白银市', '0943', '2');
+INSERT INTO `city_code` VALUES ('2968', '620422', '620400', '会宁县', '甘肃省', '白银市', '0943', '2');
+INSERT INTO `city_code` VALUES ('2969', '620423', '620400', '景泰县', '甘肃省', '白银市', '0943', '2');
+INSERT INTO `city_code` VALUES ('2970', '620502', '620500', '秦州区', '甘肃省', '天水市', '0938', '2');
+INSERT INTO `city_code` VALUES ('2971', '620503', '620500', '麦积区', '甘肃省', '天水市', '0938', '2');
+INSERT INTO `city_code` VALUES ('2972', '620521', '620500', '清水县', '甘肃省', '天水市', '0938', '2');
+INSERT INTO `city_code` VALUES ('2973', '620522', '620500', '秦安县', '甘肃省', '天水市', '0938', '2');
+INSERT INTO `city_code` VALUES ('2974', '620523', '620500', '甘谷县', '甘肃省', '天水市', '0938', '2');
+INSERT INTO `city_code` VALUES ('2975', '620524', '620500', '武山县', '甘肃省', '天水市', '0938', '2');
+INSERT INTO `city_code` VALUES ('2976', '620525', '620500', '张家川回族自治县', '甘肃省', '天水市', '0938', '2');
+INSERT INTO `city_code` VALUES ('2977', '620602', '620600', '凉州区', '甘肃省', '武威市', '0935', '2');
+INSERT INTO `city_code` VALUES ('2978', '620621', '620600', '民勤县', '甘肃省', '武威市', '0935', '2');
+INSERT INTO `city_code` VALUES ('2979', '620622', '620600', '古浪县', '甘肃省', '武威市', '0935', '2');
+INSERT INTO `city_code` VALUES ('2980', '620623', '620600', '天祝藏族自治县', '甘肃省', '武威市', '0935', '2');
+INSERT INTO `city_code` VALUES ('2981', '620702', '620700', '甘州区', '甘肃省', '张掖市', '0936', '2');
+INSERT INTO `city_code` VALUES ('2982', '620721', '620700', '肃南裕固族自治县', '甘肃省', '张掖市', '0936', '2');
+INSERT INTO `city_code` VALUES ('2983', '620722', '620700', '民乐县', '甘肃省', '张掖市', '0936', '2');
+INSERT INTO `city_code` VALUES ('2984', '620723', '620700', '临泽县', '甘肃省', '张掖市', '0936', '2');
+INSERT INTO `city_code` VALUES ('2985', '620724', '620700', '高台县', '甘肃省', '张掖市', '0936', '2');
+INSERT INTO `city_code` VALUES ('2986', '620725', '620700', '山丹县', '甘肃省', '张掖市', '0936', '2');
+INSERT INTO `city_code` VALUES ('2987', '620802', '620800', '崆峒区', '甘肃省', '平凉市', '0933', '2');
+INSERT INTO `city_code` VALUES ('2988', '620821', '620800', '泾川县', '甘肃省', '平凉市', '0933', '2');
+INSERT INTO `city_code` VALUES ('2989', '620822', '620800', '灵台县', '甘肃省', '平凉市', '0933', '2');
+INSERT INTO `city_code` VALUES ('2990', '620823', '620800', '崇信县', '甘肃省', '平凉市', '0933', '2');
+INSERT INTO `city_code` VALUES ('2991', '620824', '620800', '华亭县', '甘肃省', '平凉市', '0933', '2');
+INSERT INTO `city_code` VALUES ('2992', '620825', '620800', '庄浪县', '甘肃省', '平凉市', '0933', '2');
+INSERT INTO `city_code` VALUES ('2993', '620826', '620800', '静宁县', '甘肃省', '平凉市', '0933', '2');
+INSERT INTO `city_code` VALUES ('2994', '620902', '620900', '肃州区', '甘肃省', '酒泉市', '0937', '2');
+INSERT INTO `city_code` VALUES ('2995', '620921', '620900', '金塔县', '甘肃省', '酒泉市', '0937', '2');
+INSERT INTO `city_code` VALUES ('2996', '620922', '620900', '瓜州县', '甘肃省', '酒泉市', '0937', '2');
+INSERT INTO `city_code` VALUES ('2997', '620923', '620900', '肃北蒙古族自治县', '甘肃省', '酒泉市', '0937', '2');
+INSERT INTO `city_code` VALUES ('2998', '620924', '620900', '阿克塞哈萨克族自治县', '甘肃省', '酒泉市', '0937', '2');
+INSERT INTO `city_code` VALUES ('2999', '620981', '620900', '玉门市', '甘肃省', '酒泉市', '0937', '2');
+INSERT INTO `city_code` VALUES ('3000', '620982', '620900', '敦煌市', '甘肃省', '酒泉市', '0937', '2');
+INSERT INTO `city_code` VALUES ('3001', '621002', '621000', '西峰区', '甘肃省', '庆阳市', '0934', '2');
+INSERT INTO `city_code` VALUES ('3002', '621021', '621000', '庆城县', '甘肃省', '庆阳市', '0934', '2');
+INSERT INTO `city_code` VALUES ('3003', '621022', '621000', '环县', '甘肃省', '庆阳市', '0934', '2');
+INSERT INTO `city_code` VALUES ('3004', '621023', '621000', '华池县', '甘肃省', '庆阳市', '0934', '2');
+INSERT INTO `city_code` VALUES ('3005', '621024', '621000', '合水县', '甘肃省', '庆阳市', '0934', '2');
+INSERT INTO `city_code` VALUES ('3006', '621025', '621000', '正宁县', '甘肃省', '庆阳市', '0934', '2');
+INSERT INTO `city_code` VALUES ('3007', '621026', '621000', '宁县', '甘肃省', '庆阳市', '0934', '2');
+INSERT INTO `city_code` VALUES ('3008', '621027', '621000', '镇原县', '甘肃省', '庆阳市', '0934', '2');
+INSERT INTO `city_code` VALUES ('3009', '621102', '621100', '安定区', '甘肃省', '定西市', '0932', '2');
+INSERT INTO `city_code` VALUES ('3010', '621121', '621100', '通渭县', '甘肃省', '定西市', '0932', '2');
+INSERT INTO `city_code` VALUES ('3011', '621122', '621100', '陇西县', '甘肃省', '定西市', '0932', '2');
+INSERT INTO `city_code` VALUES ('3012', '621123', '621100', '渭源县', '甘肃省', '定西市', '0932', '2');
+INSERT INTO `city_code` VALUES ('3013', '621124', '621100', '临洮县', '甘肃省', '定西市', '0932', '2');
+INSERT INTO `city_code` VALUES ('3014', '621125', '621100', '漳县', '甘肃省', '定西市', '0932', '2');
+INSERT INTO `city_code` VALUES ('3015', '621126', '621100', '岷县', '甘肃省', '定西市', '0932', '2');
+INSERT INTO `city_code` VALUES ('3016', '621202', '621200', '武都区', '甘肃省', '陇南市', '0939', '2');
+INSERT INTO `city_code` VALUES ('3017', '621221', '621200', '成县', '甘肃省', '陇南市', '0939', '2');
+INSERT INTO `city_code` VALUES ('3018', '621222', '621200', '文县', '甘肃省', '陇南市', '0939', '2');
+INSERT INTO `city_code` VALUES ('3019', '621223', '621200', '宕昌县', '甘肃省', '陇南市', '0939', '2');
+INSERT INTO `city_code` VALUES ('3020', '621224', '621200', '康县', '甘肃省', '陇南市', '0939', '2');
+INSERT INTO `city_code` VALUES ('3021', '621225', '621200', '西和县', '甘肃省', '陇南市', '0939', '2');
+INSERT INTO `city_code` VALUES ('3022', '621226', '621200', '礼县', '甘肃省', '陇南市', '0939', '2');
+INSERT INTO `city_code` VALUES ('3023', '621227', '621200', '徽县', '甘肃省', '陇南市', '0939', '2');
+INSERT INTO `city_code` VALUES ('3024', '621228', '621200', '两当县', '甘肃省', '陇南市', '0939', '2');
+INSERT INTO `city_code` VALUES ('3025', '622901', '622900', '临夏市', '甘肃省', '临夏回族自治州 ', '0930', '2');
+INSERT INTO `city_code` VALUES ('3026', '622921', '622900', '临夏县', '甘肃省', '临夏回族自治州 ', '0930', '2');
+INSERT INTO `city_code` VALUES ('3027', '622922', '622900', '康乐县', '甘肃省', '临夏回族自治州 ', '0930', '2');
+INSERT INTO `city_code` VALUES ('3028', '622923', '622900', '永靖县', '甘肃省', '临夏回族自治州 ', '0930', '2');
+INSERT INTO `city_code` VALUES ('3029', '622924', '622900', '广河县', '甘肃省', '临夏回族自治州 ', '0930', '2');
+INSERT INTO `city_code` VALUES ('3030', '622925', '622900', '和政县', '甘肃省', '临夏回族自治州 ', '0930', '2');
+INSERT INTO `city_code` VALUES ('3031', '622926', '622900', '东乡族自治县', '甘肃省', '临夏回族自治州 ', '0930', '2');
+INSERT INTO `city_code` VALUES ('3032', '622927', '622900', '积石山保安族东乡族撒拉族自治县', '甘肃省', '临夏回族自治州 ', '0930', '2');
+INSERT INTO `city_code` VALUES ('3033', '623001', '623000', '合作市', '甘肃省', '甘南藏族自治州 ', '0941', '2');
+INSERT INTO `city_code` VALUES ('3034', '623021', '623000', '临潭县', '甘肃省', '甘南藏族自治州 ', '0941', '2');
+INSERT INTO `city_code` VALUES ('3035', '623022', '623000', '卓尼县', '甘肃省', '甘南藏族自治州 ', '0941', '2');
+INSERT INTO `city_code` VALUES ('3036', '623023', '623000', '舟曲县', '甘肃省', '甘南藏族自治州 ', '0941', '2');
+INSERT INTO `city_code` VALUES ('3037', '623024', '623000', '迭部县', '甘肃省', '甘南藏族自治州 ', '0941', '2');
+INSERT INTO `city_code` VALUES ('3038', '623025', '623000', '玛曲县', '甘肃省', '甘南藏族自治州 ', '0941', '2');
+INSERT INTO `city_code` VALUES ('3039', '623026', '623000', '碌曲县', '甘肃省', '甘南藏族自治州 ', '0941', '2');
+INSERT INTO `city_code` VALUES ('3040', '623027', '623000', '夏河县', '甘肃省', '甘南藏族自治州 ', '0941', '2');
+INSERT INTO `city_code` VALUES ('3041', '630000', null, '青海省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('3042', '630100', '630000', '西宁市', '青海省', '', '0971', '1');
+INSERT INTO `city_code` VALUES ('3043', '632100', '630000', '海东地区', '青海省', '', '0972', '1');
+INSERT INTO `city_code` VALUES ('3044', '632200', '630000', '海北藏族自治州 ', '青海省', '', '0970', '1');
+INSERT INTO `city_code` VALUES ('3045', '632300', '630000', '黄南藏族自治州 ', '青海省', '', '0973', '1');
+INSERT INTO `city_code` VALUES ('3046', '632500', '630000', '海南藏族自治州 ', '青海省', '', '0974', '1');
+INSERT INTO `city_code` VALUES ('3047', '632600', '630000', '果洛藏族自治州 ', '青海省', '', '0975', '1');
+INSERT INTO `city_code` VALUES ('3048', '632700', '630000', '玉树藏族自治州 ', '青海省', '', '0976', '1');
+INSERT INTO `city_code` VALUES ('3049', '632800', '630000', '海西蒙古族藏族自治州 ', '青海省', '', '0977', '1');
+INSERT INTO `city_code` VALUES ('3050', '630102', '630100', '城东区', '青海省', '西宁市', '0971', '2');
+INSERT INTO `city_code` VALUES ('3051', '630103', '630100', '城中区', '青海省', '西宁市', '0971', '2');
+INSERT INTO `city_code` VALUES ('3052', '630104', '630100', '城西区', '青海省', '西宁市', '0971', '2');
+INSERT INTO `city_code` VALUES ('3053', '630105', '630100', '城北区', '青海省', '西宁市', '0971', '2');
+INSERT INTO `city_code` VALUES ('3054', '630121', '630100', '大通回族土族自治县', '青海省', '西宁市', '0971', '2');
+INSERT INTO `city_code` VALUES ('3055', '630122', '630100', '湟中县', '青海省', '西宁市', '0971', '2');
+INSERT INTO `city_code` VALUES ('3056', '630123', '630100', '湟源县', '青海省', '西宁市', '0971', '2');
+INSERT INTO `city_code` VALUES ('3057', '632121', '632100', '平安县', '青海省', '海东地区', '0972', '2');
+INSERT INTO `city_code` VALUES ('3058', '632122', '632100', '民和回族土族自治县', '青海省', '海东地区', '0972', '2');
+INSERT INTO `city_code` VALUES ('3059', '632123', '632100', '乐都县', '青海省', '海东地区', '0972', '2');
+INSERT INTO `city_code` VALUES ('3060', '632126', '632100', '互助土族自治县', '青海省', '海东地区', '0972', '2');
+INSERT INTO `city_code` VALUES ('3061', '632127', '632100', '化隆回族自治县', '青海省', '海东地区', '0972', '2');
+INSERT INTO `city_code` VALUES ('3062', '632128', '632100', '循化撒拉族自治县', '青海省', '海东地区', '0972', '2');
+INSERT INTO `city_code` VALUES ('3063', '632221', '632200', '门源回族自治县', '青海省', '海北藏族自治州 ', '0970', '2');
+INSERT INTO `city_code` VALUES ('3064', '632222', '632200', '祁连县', '青海省', '海北藏族自治州 ', '0970', '2');
+INSERT INTO `city_code` VALUES ('3065', '632223', '632200', '海晏县', '青海省', '海北藏族自治州 ', '0970', '2');
+INSERT INTO `city_code` VALUES ('3066', '632224', '632200', '刚察县', '青海省', '海北藏族自治州 ', '0970', '2');
+INSERT INTO `city_code` VALUES ('3067', '632321', '632300', '同仁县', '青海省', '黄南藏族自治州 ', '0973', '2');
+INSERT INTO `city_code` VALUES ('3068', '632322', '632300', '尖扎县', '青海省', '黄南藏族自治州 ', '0973', '2');
+INSERT INTO `city_code` VALUES ('3069', '632323', '632300', '泽库县', '青海省', '黄南藏族自治州 ', '0973', '2');
+INSERT INTO `city_code` VALUES ('3070', '632324', '632300', '河南蒙古族自治县', '青海省', '黄南藏族自治州 ', '0973', '2');
+INSERT INTO `city_code` VALUES ('3071', '632521', '632500', '共和县', '青海省', '海南藏族自治州 ', '0974', '2');
+INSERT INTO `city_code` VALUES ('3072', '632522', '632500', '同德县', '青海省', '海南藏族自治州 ', '0974', '2');
+INSERT INTO `city_code` VALUES ('3073', '632523', '632500', '贵德县', '青海省', '海南藏族自治州 ', '0974', '2');
+INSERT INTO `city_code` VALUES ('3074', '632524', '632500', '兴海县', '青海省', '海南藏族自治州 ', '0974', '2');
+INSERT INTO `city_code` VALUES ('3075', '632525', '632500', '贵南县', '青海省', '海南藏族自治州 ', '0974', '2');
+INSERT INTO `city_code` VALUES ('3076', '632621', '632600', '玛沁县', '青海省', '果洛藏族自治州 ', '0975', '2');
+INSERT INTO `city_code` VALUES ('3077', '632622', '632600', '班玛县', '青海省', '果洛藏族自治州 ', '0975', '2');
+INSERT INTO `city_code` VALUES ('3078', '632623', '632600', '甘德县', '青海省', '果洛藏族自治州 ', '0975', '2');
+INSERT INTO `city_code` VALUES ('3079', '632624', '632600', '达日县', '青海省', '果洛藏族自治州 ', '0975', '2');
+INSERT INTO `city_code` VALUES ('3080', '632625', '632600', '久治县', '青海省', '果洛藏族自治州 ', '0975', '2');
+INSERT INTO `city_code` VALUES ('3081', '632626', '632600', '玛多县', '青海省', '果洛藏族自治州 ', '0975', '2');
+INSERT INTO `city_code` VALUES ('3082', '632721', '632700', '玉树县', '青海省', '玉树藏族自治州 ', '0976', '2');
+INSERT INTO `city_code` VALUES ('3083', '632722', '632700', '杂多县', '青海省', '玉树藏族自治州 ', '0976', '2');
+INSERT INTO `city_code` VALUES ('3084', '632723', '632700', '称多县', '青海省', '玉树藏族自治州 ', '0976', '2');
+INSERT INTO `city_code` VALUES ('3085', '632724', '632700', '治多县', '青海省', '玉树藏族自治州 ', '0976', '2');
+INSERT INTO `city_code` VALUES ('3086', '632725', '632700', '囊谦县', '青海省', '玉树藏族自治州 ', '0976', '2');
+INSERT INTO `city_code` VALUES ('3087', '632726', '632700', '曲麻莱县', '青海省', '玉树藏族自治州 ', '0976', '2');
+INSERT INTO `city_code` VALUES ('3088', '632801', '632800', '格尔木市', '青海省', '海西蒙古族藏族自治州 ', '0977', '2');
+INSERT INTO `city_code` VALUES ('3089', '632802', '632800', '德令哈市', '青海省', '海西蒙古族藏族自治州 ', '0977', '2');
+INSERT INTO `city_code` VALUES ('3090', '632821', '632800', '乌兰县', '青海省', '海西蒙古族藏族自治州 ', '0977', '2');
+INSERT INTO `city_code` VALUES ('3091', '632822', '632800', '都兰县', '青海省', '海西蒙古族藏族自治州 ', '0977', '2');
+INSERT INTO `city_code` VALUES ('3092', '632823', '632800', '天峻县', '青海省', '海西蒙古族藏族自治州 ', '0977', '2');
+INSERT INTO `city_code` VALUES ('3093', '640000', null, '宁夏回族自治区', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('3094', '640100', '640000', '银川市', '宁夏回族自治区', '', '0951', '1');
+INSERT INTO `city_code` VALUES ('3095', '640200', '640000', '石嘴山市', '宁夏回族自治区', '', '0952', '1');
+INSERT INTO `city_code` VALUES ('3096', '640300', '640000', '吴忠市', '宁夏回族自治区', '', '0953', '1');
+INSERT INTO `city_code` VALUES ('3097', '640400', '640000', '固原市', '宁夏回族自治区', '', '0954', '1');
+INSERT INTO `city_code` VALUES ('3098', '640500', '640000', '中卫市', '宁夏回族自治区', '', '0977', '1');
+INSERT INTO `city_code` VALUES ('3099', '640104', '640100', '兴庆区', '宁夏回族自治区', '银川市', '0951', '2');
+INSERT INTO `city_code` VALUES ('3100', '640105', '640100', '西夏区', '宁夏回族自治区', '银川市', '0951', '2');
+INSERT INTO `city_code` VALUES ('3101', '640106', '640100', '金凤区', '宁夏回族自治区', '银川市', '0951', '2');
+INSERT INTO `city_code` VALUES ('3102', '640121', '640100', '永宁县', '宁夏回族自治区', '银川市', '0951', '2');
+INSERT INTO `city_code` VALUES ('3103', '640122', '640100', '贺兰县', '宁夏回族自治区', '银川市', '0951', '2');
+INSERT INTO `city_code` VALUES ('3104', '640181', '640100', '灵武市', '宁夏回族自治区', '银川市', '0951', '2');
+INSERT INTO `city_code` VALUES ('3105', '640202', '640200', '大武口区', '宁夏回族自治区', '石嘴山市', '0952', '2');
+INSERT INTO `city_code` VALUES ('3106', '640205', '640200', '惠农区', '宁夏回族自治区', '石嘴山市', '0952', '2');
+INSERT INTO `city_code` VALUES ('3107', '640221', '640200', '平罗县', '宁夏回族自治区', '石嘴山市', '0952', '2');
+INSERT INTO `city_code` VALUES ('3108', '640302', '640300', '利通区', '宁夏回族自治区', '吴忠市', '0953', '2');
+INSERT INTO `city_code` VALUES ('3109', '640303', '640300', '红寺堡区', '宁夏回族自治区', '吴忠市', '0953', '2');
+INSERT INTO `city_code` VALUES ('3110', '640323', '640300', '盐池县', '宁夏回族自治区', '吴忠市', '0953', '2');
+INSERT INTO `city_code` VALUES ('3111', '640324', '640300', '同心县', '宁夏回族自治区', '吴忠市', '0953', '2');
+INSERT INTO `city_code` VALUES ('3112', '640381', '640300', '青铜峡市', '宁夏回族自治区', '吴忠市', '0953', '2');
+INSERT INTO `city_code` VALUES ('3113', '640402', '640400', '原州区', '宁夏回族自治区', '固原市', '0954', '2');
+INSERT INTO `city_code` VALUES ('3114', '640422', '640400', '西吉县', '宁夏回族自治区', '固原市', '0954', '2');
+INSERT INTO `city_code` VALUES ('3115', '640423', '640400', '隆德县', '宁夏回族自治区', '固原市', '0954', '2');
+INSERT INTO `city_code` VALUES ('3116', '640424', '640400', '泾源县', '宁夏回族自治区', '固原市', '0954', '2');
+INSERT INTO `city_code` VALUES ('3117', '640425', '640400', '彭阳县', '宁夏回族自治区', '固原市', '0954', '2');
+INSERT INTO `city_code` VALUES ('3118', '640502', '640500', '沙坡头区', '宁夏回族自治区', '中卫市', '0977', '2');
+INSERT INTO `city_code` VALUES ('3119', '640521', '640500', '中宁县', '宁夏回族自治区', '中卫市', '0977', '2');
+INSERT INTO `city_code` VALUES ('3120', '640522', '640500', '海原县', '宁夏回族自治区', '中卫市', '0977', '2');
+INSERT INTO `city_code` VALUES ('3121', '650000', null, '新疆维吾尔自治区', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('3122', '650100', '650000', '乌鲁木齐市', '新疆维吾尔自治区', '', '0991', '1');
+INSERT INTO `city_code` VALUES ('3123', '650200', '650000', '克拉玛依市', '新疆维吾尔自治区', '', '0990', '1');
+INSERT INTO `city_code` VALUES ('3124', '652100', '650000', '吐鲁番地区', '新疆维吾尔自治区', '', '0995', '1');
+INSERT INTO `city_code` VALUES ('3125', '652200', '650000', '哈密地区', '新疆维吾尔自治区', '', '0902', '1');
+INSERT INTO `city_code` VALUES ('3126', '652300', '650000', '昌吉回族自治州 ', '新疆维吾尔自治区', '', '0994', '1');
+INSERT INTO `city_code` VALUES ('3127', '652700', '650000', '博尔塔拉蒙古自治州 ', '新疆维吾尔自治区', '', '0909', '1');
+INSERT INTO `city_code` VALUES ('3128', '652800', '650000', '巴音郭楞蒙古自治州 ', '新疆维吾尔自治区', '', '0996', '1');
+INSERT INTO `city_code` VALUES ('3129', '652900', '650000', '阿克苏地区', '新疆维吾尔自治区', '', '0997', '1');
+INSERT INTO `city_code` VALUES ('3130', '653000', '650000', '克孜勒苏柯尔克孜自治州 ', '新疆维吾尔自治区', '', '0908', '1');
+INSERT INTO `city_code` VALUES ('3131', '653100', '650000', '喀什地区', '新疆维吾尔自治区', '', '0998', '1');
+INSERT INTO `city_code` VALUES ('3132', '653200', '650000', '和田地区', '新疆维吾尔自治区', '', '0903', '1');
+INSERT INTO `city_code` VALUES ('3133', '654000', '650000', '伊犁哈萨克自治州 ', '新疆维吾尔自治区', '', '0999', '1');
+INSERT INTO `city_code` VALUES ('3134', '654200', '650000', '塔城地区', '新疆维吾尔自治区', '', '0901', '1');
+INSERT INTO `city_code` VALUES ('3135', '654300', '650000', '阿勒泰地区', '新疆维吾尔自治区', '', '0906', '1');
+INSERT INTO `city_code` VALUES ('3136', '659000', '650000', '自治区直辖', '新疆维吾尔自治区', '', '', '1');
+INSERT INTO `city_code` VALUES ('3137', '650102', '650100', '天山区', '新疆维吾尔自治区', '乌鲁木齐市', '0991', '2');
+INSERT INTO `city_code` VALUES ('3138', '650103', '650100', '沙依巴克区', '新疆维吾尔自治区', '乌鲁木齐市', '0991', '2');
+INSERT INTO `city_code` VALUES ('3139', '650104', '650100', '新市区', '新疆维吾尔自治区', '乌鲁木齐市', '0991', '2');
+INSERT INTO `city_code` VALUES ('3140', '650105', '650100', '水磨沟区', '新疆维吾尔自治区', '乌鲁木齐市', '0991', '2');
+INSERT INTO `city_code` VALUES ('3141', '650106', '650100', '头屯河区', '新疆维吾尔自治区', '乌鲁木齐市', '0991', '2');
+INSERT INTO `city_code` VALUES ('3142', '650107', '650100', '达坂城区', '新疆维吾尔自治区', '乌鲁木齐市', '0991', '2');
+INSERT INTO `city_code` VALUES ('3143', '650109', '650100', '米东区', '新疆维吾尔自治区', '乌鲁木齐市', '0991', '2');
+INSERT INTO `city_code` VALUES ('3144', '650121', '650100', '乌鲁木齐县', '新疆维吾尔自治区', '乌鲁木齐市', '0991', '2');
+INSERT INTO `city_code` VALUES ('3145', '650202', '650200', '独山子区', '新疆维吾尔自治区', '克拉玛依市', '0992', '2');
+INSERT INTO `city_code` VALUES ('3146', '650203', '650200', '克拉玛依区', '新疆维吾尔自治区', '克拉玛依市', '0990', '2');
+INSERT INTO `city_code` VALUES ('3147', '650204', '650200', '白碱滩区', '新疆维吾尔自治区', '克拉玛依市', '0990', '2');
+INSERT INTO `city_code` VALUES ('3148', '650205', '650200', '乌尔禾区', '新疆维吾尔自治区', '克拉玛依市', '0990', '2');
+INSERT INTO `city_code` VALUES ('3149', '652101', '652100', '吐鲁番市', '新疆维吾尔自治区', '吐鲁番地区', '0995', '2');
+INSERT INTO `city_code` VALUES ('3150', '652122', '652100', '鄯善县', '新疆维吾尔自治区', '吐鲁番地区', '0995', '2');
+INSERT INTO `city_code` VALUES ('3151', '652123', '652100', '托克逊县', '新疆维吾尔自治区', '吐鲁番地区', '0995', '2');
+INSERT INTO `city_code` VALUES ('3152', '652201', '652200', '哈密市', '新疆维吾尔自治区', '哈密地区', '0902', '2');
+INSERT INTO `city_code` VALUES ('3153', '652222', '652200', '巴里坤哈萨克自治县', '新疆维吾尔自治区', '哈密地区', '0902', '2');
+INSERT INTO `city_code` VALUES ('3154', '652223', '652200', '伊吾县', '新疆维吾尔自治区', '哈密地区', '0902', '2');
+INSERT INTO `city_code` VALUES ('3155', '652301', '652300', '昌吉市', '新疆维吾尔自治区', '昌吉回族自治州 ', '0994', '2');
+INSERT INTO `city_code` VALUES ('3156', '652302', '652300', '阜康市', '新疆维吾尔自治区', '昌吉回族自治州 ', '0994', '2');
+INSERT INTO `city_code` VALUES ('3157', '652323', '652300', '呼图壁县', '新疆维吾尔自治区', '昌吉回族自治州 ', '0994', '2');
+INSERT INTO `city_code` VALUES ('3158', '652324', '652300', '玛纳斯县', '新疆维吾尔自治区', '昌吉回族自治州 ', '0994', '2');
+INSERT INTO `city_code` VALUES ('3159', '652325', '652300', '奇台县', '新疆维吾尔自治区', '昌吉回族自治州 ', '0994', '2');
+INSERT INTO `city_code` VALUES ('3160', '652327', '652300', '吉木萨尔县', '新疆维吾尔自治区', '昌吉回族自治州 ', '0994', '2');
+INSERT INTO `city_code` VALUES ('3161', '652328', '652300', '木垒哈萨克自治县', '新疆维吾尔自治区', '昌吉回族自治州 ', '0994', '2');
+INSERT INTO `city_code` VALUES ('3162', '652701', '652700', '博乐市', '新疆维吾尔自治区', '博尔塔拉蒙古自治州 ', '0909', '2');
+INSERT INTO `city_code` VALUES ('3163', '652722', '652700', '精河县', '新疆维吾尔自治区', '博尔塔拉蒙古自治州 ', '0909', '2');
+INSERT INTO `city_code` VALUES ('3164', '652723', '652700', '温泉县', '新疆维吾尔自治区', '博尔塔拉蒙古自治州 ', '0909', '2');
+INSERT INTO `city_code` VALUES ('3165', '652801', '652800', '库尔勒市', '新疆维吾尔自治区', '巴音郭楞蒙古自治州 ', '0996', '2');
+INSERT INTO `city_code` VALUES ('3166', '652822', '652800', '轮台县', '新疆维吾尔自治区', '巴音郭楞蒙古自治州 ', '0996', '2');
+INSERT INTO `city_code` VALUES ('3167', '652823', '652800', '尉犁县', '新疆维吾尔自治区', '巴音郭楞蒙古自治州 ', '0996', '2');
+INSERT INTO `city_code` VALUES ('3168', '652824', '652800', '若羌县', '新疆维吾尔自治区', '巴音郭楞蒙古自治州 ', '0996', '2');
+INSERT INTO `city_code` VALUES ('3169', '652825', '652800', '且末县', '新疆维吾尔自治区', '巴音郭楞蒙古自治州 ', '0996', '2');
+INSERT INTO `city_code` VALUES ('3170', '652826', '652800', '焉耆回族自治县', '新疆维吾尔自治区', '巴音郭楞蒙古自治州 ', '0996', '2');
+INSERT INTO `city_code` VALUES ('3171', '652827', '652800', '和静县', '新疆维吾尔自治区', '巴音郭楞蒙古自治州 ', '0996', '2');
+INSERT INTO `city_code` VALUES ('3172', '652828', '652800', '和硕县', '新疆维吾尔自治区', '巴音郭楞蒙古自治州 ', '0996', '2');
+INSERT INTO `city_code` VALUES ('3173', '652829', '652800', '博湖县', '新疆维吾尔自治区', '巴音郭楞蒙古自治州 ', '0996', '2');
+INSERT INTO `city_code` VALUES ('3174', '652901', '652900', '阿克苏市', '新疆维吾尔自治区', '阿克苏地区', '0997', '2');
+INSERT INTO `city_code` VALUES ('3175', '652922', '652900', '温宿县', '新疆维吾尔自治区', '阿克苏地区', '0997', '2');
+INSERT INTO `city_code` VALUES ('3176', '652923', '652900', '库车县', '新疆维吾尔自治区', '阿克苏地区', '0997', '2');
+INSERT INTO `city_code` VALUES ('3177', '652924', '652900', '沙雅县', '新疆维吾尔自治区', '阿克苏地区', '0997', '2');
+INSERT INTO `city_code` VALUES ('3178', '652925', '652900', '新和县', '新疆维吾尔自治区', '阿克苏地区', '0997', '2');
+INSERT INTO `city_code` VALUES ('3179', '652926', '652900', '拜城县', '新疆维吾尔自治区', '阿克苏地区', '0997', '2');
+INSERT INTO `city_code` VALUES ('3180', '652927', '652900', '乌什县', '新疆维吾尔自治区', '阿克苏地区', '0997', '2');
+INSERT INTO `city_code` VALUES ('3181', '652928', '652900', '阿瓦提县', '新疆维吾尔自治区', '阿克苏地区', '0997', '2');
+INSERT INTO `city_code` VALUES ('3182', '652929', '652900', '柯坪县', '新疆维吾尔自治区', '阿克苏地区', '0997', '2');
+INSERT INTO `city_code` VALUES ('3183', '653001', '653000', '阿图什市', '新疆维吾尔自治区', '克孜勒苏柯尔克孜自治州 ', '0908', '2');
+INSERT INTO `city_code` VALUES ('3184', '653022', '653000', '阿克陶县', '新疆维吾尔自治区', '克孜勒苏柯尔克孜自治州 ', '0908', '2');
+INSERT INTO `city_code` VALUES ('3185', '653023', '653000', '阿合奇县', '新疆维吾尔自治区', '克孜勒苏柯尔克孜自治州 ', '0997', '2');
+INSERT INTO `city_code` VALUES ('3186', '653024', '653000', '乌恰县', '新疆维吾尔自治区', '克孜勒苏柯尔克孜自治州 ', '0908', '2');
+INSERT INTO `city_code` VALUES ('3187', '653101', '653100', '喀什市', '新疆维吾尔自治区', '喀什地区', '0998', '2');
+INSERT INTO `city_code` VALUES ('3188', '653121', '653100', '疏附县', '新疆维吾尔自治区', '喀什地区', '0998', '2');
+INSERT INTO `city_code` VALUES ('3189', '653122', '653100', '疏勒县', '新疆维吾尔自治区', '喀什地区', '0998', '2');
+INSERT INTO `city_code` VALUES ('3190', '653123', '653100', '英吉沙县', '新疆维吾尔自治区', '喀什地区', '0998', '2');
+INSERT INTO `city_code` VALUES ('3191', '653124', '653100', '泽普县', '新疆维吾尔自治区', '喀什地区', '0998', '2');
+INSERT INTO `city_code` VALUES ('3192', '653125', '653100', '莎车县', '新疆维吾尔自治区', '喀什地区', '0998', '2');
+INSERT INTO `city_code` VALUES ('3193', '653126', '653100', '叶城县', '新疆维吾尔自治区', '喀什地区', '0998', '2');
+INSERT INTO `city_code` VALUES ('3194', '653127', '653100', '麦盖提县', '新疆维吾尔自治区', '喀什地区', '0998', '2');
+INSERT INTO `city_code` VALUES ('3195', '653128', '653100', '岳普湖县', '新疆维吾尔自治区', '喀什地区', '0998', '2');
+INSERT INTO `city_code` VALUES ('3196', '653127', '653100', '麦盖提县', '新疆维吾尔自治区', '喀什地区', '0998', '2');
+INSERT INTO `city_code` VALUES ('3197', '653129', '653100', '伽师县', '新疆维吾尔自治区', '喀什地区', '0998', '2');
+INSERT INTO `city_code` VALUES ('3198', '653130', '653100', '巴楚县', '新疆维吾尔自治区', '喀什地区', '0998', '2');
+INSERT INTO `city_code` VALUES ('3199', '653131', '653100', '塔什库尔干塔吉克自治县', '新疆维吾尔自治区', '喀什地区', '0998', '2');
+INSERT INTO `city_code` VALUES ('3200', '653201', '653200', '和田市', '新疆维吾尔自治区', '和田地区', '0903', '2');
+INSERT INTO `city_code` VALUES ('3201', '653221', '653200', '和田县', '新疆维吾尔自治区', '和田地区', '0903', '2');
+INSERT INTO `city_code` VALUES ('3202', '653222', '653200', '墨玉县', '新疆维吾尔自治区', '和田地区', '0903', '2');
+INSERT INTO `city_code` VALUES ('3203', '653223', '653200', '皮山县', '新疆维吾尔自治区', '和田地区', '0903', '2');
+INSERT INTO `city_code` VALUES ('3204', '653224', '653200', '洛浦县', '新疆维吾尔自治区', '和田地区', '0903', '2');
+INSERT INTO `city_code` VALUES ('3205', '653225', '653200', '策勒县', '新疆维吾尔自治区', '和田地区', '0903', '2');
+INSERT INTO `city_code` VALUES ('3206', '653226', '653200', '于田县', '新疆维吾尔自治区', '和田地区', '0903', '2');
+INSERT INTO `city_code` VALUES ('3207', '653227', '653200', '民丰县', '新疆维吾尔自治区', '和田地区', '0903', '2');
+INSERT INTO `city_code` VALUES ('3208', '654002', '654000', '伊宁市', '新疆维吾尔自治区', '伊犁哈萨克自治州 ', '0999', '2');
+INSERT INTO `city_code` VALUES ('3209', '654003', '654000', '奎屯市', '新疆维吾尔自治区', '伊犁哈萨克自治州 ', '0992', '2');
+INSERT INTO `city_code` VALUES ('3210', '654021', '654000', '伊宁县', '新疆维吾尔自治区', '伊犁哈萨克自治州 ', '0999', '2');
+INSERT INTO `city_code` VALUES ('3211', '654022', '654000', '察布查尔锡伯自治县', '新疆维吾尔自治区', '伊犁哈萨克自治州 ', '0999', '2');
+INSERT INTO `city_code` VALUES ('3212', '654023', '654000', '霍城县', '新疆维吾尔自治区', '伊犁哈萨克自治州 ', '0999', '2');
+INSERT INTO `city_code` VALUES ('3213', '654024', '654000', '巩留县', '新疆维吾尔自治区', '伊犁哈萨克自治州 ', '0999', '2');
+INSERT INTO `city_code` VALUES ('3214', '654025', '654000', '新源县', '新疆维吾尔自治区', '伊犁哈萨克自治州 ', '0999', '2');
+INSERT INTO `city_code` VALUES ('3215', '654026', '654000', '昭苏县', '新疆维吾尔自治区', '伊犁哈萨克自治州 ', '0999', '2');
+INSERT INTO `city_code` VALUES ('3216', '654027', '654000', '特克斯县', '新疆维吾尔自治区', '伊犁哈萨克自治州 ', '0999', '2');
+INSERT INTO `city_code` VALUES ('3217', '654028', '654000', '尼勒克县', '新疆维吾尔自治区', '伊犁哈萨克自治州 ', '0999', '2');
+INSERT INTO `city_code` VALUES ('3218', '654201', '654200', '塔城市', '新疆维吾尔自治区', '塔城地区', '0901', '2');
+INSERT INTO `city_code` VALUES ('3219', '654202', '654200', '乌苏市', '新疆维吾尔自治区', '塔城地区', '0992', '2');
+INSERT INTO `city_code` VALUES ('3220', '654221', '654200', '额敏县', '新疆维吾尔自治区', '塔城地区', '0901', '2');
+INSERT INTO `city_code` VALUES ('3221', '654223', '654200', '沙湾县', '新疆维吾尔自治区', '塔城地区', '0993', '2');
+INSERT INTO `city_code` VALUES ('3222', '654224', '654200', '托里县', '新疆维吾尔自治区', '塔城地区', '0901', '2');
+INSERT INTO `city_code` VALUES ('3223', '654225', '654200', '裕民县', '新疆维吾尔自治区', '塔城地区', '0901', '2');
+INSERT INTO `city_code` VALUES ('3224', '654226', '654200', '和布克赛尔蒙古自治县', '新疆维吾尔自治区', '塔城地区', '0990', '2');
+INSERT INTO `city_code` VALUES ('3225', '654301', '654300', '阿勒泰市', '新疆维吾尔自治区', '阿勒泰地区', '0906', '2');
+INSERT INTO `city_code` VALUES ('3226', '654321', '654300', '布尔津县', '新疆维吾尔自治区', '阿勒泰地区', '0906', '2');
+INSERT INTO `city_code` VALUES ('3227', '654322', '654300', '富蕴县', '新疆维吾尔自治区', '阿勒泰地区', '0906', '2');
+INSERT INTO `city_code` VALUES ('3228', '654323', '654300', '福海县', '新疆维吾尔自治区', '阿勒泰地区', '0906', '2');
+INSERT INTO `city_code` VALUES ('3229', '654324', '654300', '哈巴河县', '新疆维吾尔自治区', '阿勒泰地区', '0906', '2');
+INSERT INTO `city_code` VALUES ('3230', '654325', '654300', '青河县', '新疆维吾尔自治区', '阿勒泰地区', '0906', '2');
+INSERT INTO `city_code` VALUES ('3231', '654326', '654300', '吉木乃县', '新疆维吾尔自治区', '阿勒泰地区', '0906', '2');
+INSERT INTO `city_code` VALUES ('3232', '0', '659000', '石河子市', '新疆维吾尔自治区', '自治区直辖', '0993', '2');
+INSERT INTO `city_code` VALUES ('3233', '0', '659000', '阿拉尔市', '新疆维吾尔自治区', '自治区直辖', '0997', '2');
+INSERT INTO `city_code` VALUES ('3234', '0', '659000', '图木舒克市', '新疆维吾尔自治区', '自治区直辖', '0998', '2');
+INSERT INTO `city_code` VALUES ('3235', '0', '659000', '五家渠市', '新疆维吾尔自治区', '自治区直辖', '0994', '2');
+INSERT INTO `city_code` VALUES ('3236', '710000', null, '台湾省', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('3237', '710100', '710000', '台北市', '台湾省', '', '00886', '1');
+INSERT INTO `city_code` VALUES ('3238', '710200', '710000', '高雄市', '台湾省', '', '00886', '1');
+INSERT INTO `city_code` VALUES ('3239', '710300', '710000', '基隆市', '台湾省', '', '00886', '1');
+INSERT INTO `city_code` VALUES ('3240', '710400', '710000', '台中市', '台湾省', '', '00886', '1');
+INSERT INTO `city_code` VALUES ('3241', '710500', '710000', '台南市', '台湾省', '', '00886', '1');
+INSERT INTO `city_code` VALUES ('3242', '710600', '710000', '新竹市', '台湾省', '', '00886', '1');
+INSERT INTO `city_code` VALUES ('3243', '710700', '710000', '嘉义市', '台湾省', '', '00886', '1');
+INSERT INTO `city_code` VALUES ('3244', '719000', '710000', '省直辖', '台湾省', '', '00886', '1');
+INSERT INTO `city_code` VALUES ('3245', '710101', '710100', '中正区', '台湾省', '台北市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3246', '710102', '710100', '大同区', '台湾省', '台北市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3247', '710103', '710100', '中山区', '台湾省', '台北市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3248', '710104', '710100', '松山区', '台湾省', '台北市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3249', '710105', '710100', '大安区', '台湾省', '台北市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3250', '710106', '710100', '万华区', '台湾省', '台北市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3251', '710107', '710100', '信义区', '台湾省', '台北市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3252', '710108', '710100', '士林区', '台湾省', '台北市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3253', '710109', '710100', '北投区', '台湾省', '台北市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3254', '710110', '710100', '内湖区', '台湾省', '台北市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3255', '710111', '710100', '南港区', '台湾省', '台北市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3256', '710112', '710100', '文山区', '台湾省', '台北市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3257', '710201', '710200', '新兴区', '台湾省', '高雄市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3258', '710202', '710200', '前金区', '台湾省', '高雄市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3259', '710203', '710200', '芩雅区', '台湾省', '高雄市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3260', '710204', '710200', '盐埕区', '台湾省', '高雄市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3261', '710205', '710200', '鼓山区', '台湾省', '高雄市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3262', '710206', '710200', '旗津区', '台湾省', '高雄市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3263', '710207', '710200', '前镇区', '台湾省', '高雄市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3264', '710208', '710200', '三民区', '台湾省', '高雄市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3265', '710209', '710200', '左营区', '台湾省', '高雄市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3266', '710210', '710200', '楠梓区', '台湾省', '高雄市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3267', '710211', '710200', '小港区', '台湾省', '高雄市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3268', '710301', '710300', '仁爱区', '台湾省', '基隆市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3269', '710302', '710300', '信义区', '台湾省', '基隆市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3270', '710303', '710300', '中正区', '台湾省', '基隆市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3271', '710304', '710300', '中山区', '台湾省', '基隆市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3272', '710305', '710300', '安乐区', '台湾省', '基隆市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3273', '710306', '710300', '暖暖区', '台湾省', '基隆市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3274', '710307', '710300', '七堵区', '台湾省', '基隆市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3275', '710401', '710400', '中区', '台湾省', '台中市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3276', '710402', '710400', '东区', '台湾省', '台中市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3277', '710403', '710400', '南区', '台湾省', '台中市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3278', '710404', '710400', '西区', '台湾省', '台中市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3279', '710405', '710400', '北区', '台湾省', '台中市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3280', '710406', '710400', '北屯区', '台湾省', '台中市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3281', '710407', '710400', '西屯区', '台湾省', '台中市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3282', '710408', '710400', '南屯区', '台湾省', '台中市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3283', '710501', '710500', '中西区', '台湾省', '台南市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3284', '710502', '710500', '东区', '台湾省', '台南市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3285', '710503', '710500', '南区', '台湾省', '台南市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3286', '710504', '710500', '北区', '台湾省', '台南市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3287', '710505', '710500', '安平区', '台湾省', '台南市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3288', '710506', '710500', '安南区', '台湾省', '台南市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3289', '710601', '710600', '东区', '台湾省', '新竹市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3290', '710602', '710600', '北区', '台湾省', '新竹市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3291', '710603', '710600', '香山区', '台湾省', '新竹市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3292', '710701', '710700', '东区', '台湾省', '嘉义市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3293', '710702', '710700', '西区', '台湾省', '嘉义市', '00886', '2');
+INSERT INTO `city_code` VALUES ('3294', '719001', '419000', '台北县', '台湾省', '省直辖', '00886', '2');
+INSERT INTO `city_code` VALUES ('3295', '719002', '419000', '宜兰县', '台湾省', '省直辖', '00886', '2');
+INSERT INTO `city_code` VALUES ('3296', '719003', '419000', '新竹县', '台湾省', '省直辖', '00886', '2');
+INSERT INTO `city_code` VALUES ('3297', '719004', '419000', '桃园县', '台湾省', '省直辖', '00886', '2');
+INSERT INTO `city_code` VALUES ('3298', '719005', '419000', '苗栗县', '台湾省', '省直辖', '00886', '2');
+INSERT INTO `city_code` VALUES ('3299', '719006', '419000', '台中县', '台湾省', '省直辖', '00886', '2');
+INSERT INTO `city_code` VALUES ('3300', '719007', '419000', '彰化县', '台湾省', '省直辖', '00886', '2');
+INSERT INTO `city_code` VALUES ('3301', '719008', '419000', '南投县', '台湾省', '省直辖', '00886', '2');
+INSERT INTO `city_code` VALUES ('3302', '719009', '419000', '嘉义县', '台湾省', '省直辖', '00886', '2');
+INSERT INTO `city_code` VALUES ('3303', '719010', '419000', '云林县', '台湾省', '省直辖', '00886', '2');
+INSERT INTO `city_code` VALUES ('3304', '719011', '419000', '台南县', '台湾省', '省直辖', '00886', '2');
+INSERT INTO `city_code` VALUES ('3305', '719012', '419000', '高雄县', '台湾省', '省直辖', '00886', '2');
+INSERT INTO `city_code` VALUES ('3306', '719013', '419000', '屏东县', '台湾省', '省直辖', '00886', '2');
+INSERT INTO `city_code` VALUES ('3307', '719014', '419000', '台东县', '台湾省', '省直辖', '00886', '2');
+INSERT INTO `city_code` VALUES ('3308', '719015', '419000', '花莲县', '台湾省', '省直辖', '00886', '2');
+INSERT INTO `city_code` VALUES ('3309', '719016', '419000', '澎湖县', '台湾省', '省直辖', '00886', '2');
+INSERT INTO `city_code` VALUES ('3310', '810000', null, '香港特别行政区', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('3311', '810100', '810000', '香港岛', '香港特别行政区', '', '00852', '1');
+INSERT INTO `city_code` VALUES ('3312', '810200', '810000', '九龙', '香港特别行政区', '', '00852', '1');
+INSERT INTO `city_code` VALUES ('3313', '810300', '810000', '新界', '香港特别行政区', '', '00852', '1');
+INSERT INTO `city_code` VALUES ('3314', '810101', '810100', '中西区', '香港特别行政区', '香港岛', '00852', '2');
+INSERT INTO `city_code` VALUES ('3315', '810102', '810100', '湾仔区 ', '香港特别行政区', '香港岛', '00852', '2');
+INSERT INTO `city_code` VALUES ('3316', '810103', '810100', '东区 ', '香港特别行政区', '香港岛', '00852', '2');
+INSERT INTO `city_code` VALUES ('3317', '810104', '810100', '南区', '香港特别行政区', '香港岛', '00852', '2');
+INSERT INTO `city_code` VALUES ('3318', '810201', '810200', '油尖旺区 ', '香港特别行政区', '九龙', '00852', '2');
+INSERT INTO `city_code` VALUES ('3319', '810202', '810200', '深水埗区', '香港特别行政区', '九龙', '00852', '2');
+INSERT INTO `city_code` VALUES ('3320', '810203', '810200', '九龙城区', '香港特别行政区', '九龙', '00852', '2');
+INSERT INTO `city_code` VALUES ('3321', '810204', '810200', '黄大仙区', '香港特别行政区', '九龙', '00852', '2');
+INSERT INTO `city_code` VALUES ('3322', '810205', '810200', '观塘区', '香港特别行政区', '九龙', '00852', '2');
+INSERT INTO `city_code` VALUES ('3323', '810301', '810300', '北区 ', '香港特别行政区', '新界', '00852', '2');
+INSERT INTO `city_code` VALUES ('3324', '810302', '810300', '大埔区', '香港特别行政区', '新界', '00852', '2');
+INSERT INTO `city_code` VALUES ('3325', '810303', '810300', '沙田区 ', '香港特别行政区', '新界', '00852', '2');
+INSERT INTO `city_code` VALUES ('3326', '810304', '810300', '西贡区', '香港特别行政区', '新界', '00852', '2');
+INSERT INTO `city_code` VALUES ('3327', '810305', '810300', '荃湾区', '香港特别行政区', '新界', '00852', '2');
+INSERT INTO `city_code` VALUES ('3328', '810306', '810300', '屯门区 ', '香港特别行政区', '新界', '00852', '2');
+INSERT INTO `city_code` VALUES ('3329', '810307', '810300', '元朗区 ', '香港特别行政区', '新界', '00852', '2');
+INSERT INTO `city_code` VALUES ('3330', '810308', '810300', '葵青区', '香港特别行政区', '新界', '00852', '2');
+INSERT INTO `city_code` VALUES ('3331', '810309', '810300', '离岛区', '香港特别行政区', '新界', '00852', '2');
+INSERT INTO `city_code` VALUES ('3332', '820000', null, '澳门特别行政区', '', '', '', '0');
+INSERT INTO `city_code` VALUES ('3333', '820100', '820000', '澳门半岛', '澳门特别行政区', '', '00853', '1');
+INSERT INTO `city_code` VALUES ('3334', '820200', '820000', '澳门离岛', '澳门特别行政区', '', '00853', '1');
+INSERT INTO `city_code` VALUES ('3335', '820300', '820000', '无堂区划分区域', '澳门特别行政区', '', '00853', '1');
+INSERT INTO `city_code` VALUES ('3336', '820101', '820100', '花地玛堂区 ', '澳门特别行政区', '澳门半岛', '00853', '2');
+INSERT INTO `city_code` VALUES ('3337', '820102', '820100', '圣安多尼堂区', '澳门特别行政区', '澳门半岛', '00853', '2');
+INSERT INTO `city_code` VALUES ('3338', '820103', '820100', '大堂区', '澳门特别行政区', '澳门半岛', '00853', '2');
+INSERT INTO `city_code` VALUES ('3339', '820104', '820100', '望德堂区', '澳门特别行政区', '澳门半岛', '00853', '2');
+INSERT INTO `city_code` VALUES ('3340', '820105', '820100', '风顺堂区', '澳门特别行政区', '澳门半岛', '00853', '2');
+INSERT INTO `city_code` VALUES ('3341', '820201', '820200', '嘉模堂区', '澳门特别行政区', '澳门离岛', '00853', '2');
+INSERT INTO `city_code` VALUES ('3342', '820202', '820200', '圣方济各堂区', '澳门特别行政区', '澳门离岛', '00853', '2');
+INSERT INTO `city_code` VALUES ('3343', '820301', '820300', '路氹城', '澳门特别行政区', '无堂区划分区域', '00853', '2');
+
+-- ----------------------------
+-- Table structure for `collect_folder`
+-- ----------------------------
+DROP TABLE IF EXISTS `collect_folder`;
+CREATE TABLE `collect_folder` (
+  `id_` bigint(20) NOT NULL,
+  `folder_type_` varchar(50) NOT NULL COMMENT '主题类型',
+  `topic_id_` bigint(20) NOT NULL COMMENT '主题ID',
+  `create_by_` bigint(20) NOT NULL,
+  `create_time_` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='收藏夹表-同一主题类型、同一主题只能收藏一次';
+
+-- ----------------------------
+-- Records of collect_folder
+-- ----------------------------
+INSERT INTO `collect_folder` VALUES ('2151678709616108', 'erciyuan', '9151671651648801', '1151062905116501', '2018-01-24 17:56:07');
+INSERT INTO `collect_folder` VALUES ('2151678709616109', 'erciyuan', '9151675850620403', '1151062905116501', '2018-01-24 17:56:09');
+INSERT INTO `collect_folder` VALUES ('2151678709616120', 'erciyuan', '9151678709616114', '1151062524542901', '2018-01-24 22:03:38');
+INSERT INTO `collect_folder` VALUES ('2151678709616121', 'erciyuan', '9151678709616110', '1151062524542901', '2018-01-24 22:03:44');
+INSERT INTO `collect_folder` VALUES ('2151678709616122', 'erciyuan', '9151678709616102', '1151062524542901', '2018-01-24 22:03:45');
+INSERT INTO `collect_folder` VALUES ('2151678709616123', 'erciyuan', '9151675850620407', '1151062524542901', '2018-01-24 22:03:47');
+
+-- ----------------------------
+-- Table structure for `comment`
+-- ----------------------------
+DROP TABLE IF EXISTS `comment`;
+CREATE TABLE `comment` (
+  `id_` bigint(20) NOT NULL,
+  `content_` varchar(200) NOT NULL COMMENT '评论内容',
+  `target_id_` bigint(20) NOT NULL COMMENT '对应entry表id',
+  `reply_ids_` varchar(1000) DEFAULT NULL COMMENT '回复id集合',
+  `grade_` int(8) NOT NULL DEFAULT '0' COMMENT '针对entry分数记录 每人每主题只能评分1次 数据来源grade',
+  `endorse_` int(8) DEFAULT '0' COMMENT '针对此评论的点赞数',
+  `status_` smallint(1) NOT NULL DEFAULT '1',
+  `tocken_` varchar(50) DEFAULT NULL COMMENT '唯一校验码',
+  `curr_version_` smallint(1) DEFAULT '1' COMMENT '乐观锁',
+  `create_by_` bigint(20) NOT NULL,
+  `create_time_` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='评论表';
+
+-- ----------------------------
+-- Records of comment
+-- ----------------------------
+INSERT INTO `comment` VALUES ('875924631009', '无敌花美艳', '1075924631008', null, '100', '1', '1', '9a95665b9d001112cf267cfed466ff4a', '1', '1151062524542901', '2018-02-13 14:01:48');
+INSERT INTO `comment` VALUES ('875924631012', '是不是好看？', '1075924631008', null, '100', null, '1', 'cd2097ceec0f77e45309764e9118544a', '1', '1151062524542901', '2018-02-13 14:02:14');
+INSERT INTO `comment` VALUES ('875924631014', '哦的女神', '1075924631008', null, '100', null, '1', 'fd0cb3bf36da0065f8bf3c1ca533e179', '1', '1151062524542901', '2018-02-13 23:13:45');
+INSERT INTO `comment` VALUES ('8151675850620401', '你好啊', '10151671651648806', '7151675850620402', '0', null, '1', '90ed4a3bc1a5a0fa175c2197d333b85b', '1', '1151062524542901', '2018-01-24 09:48:26');
+INSERT INTO `comment` VALUES ('8151678709616124', '真的很美', '10151678709616118', null, '100', null, '1', 'bd784b60a29536870d7cbdc763dfe97e', '1', '1151062524542901', '2018-01-24 22:04:47');
+INSERT INTO `comment` VALUES ('8151713147263001', '真是不行啊', '10151678709616118', null, '0', null, '1', '3e55836b5f53e6c1510535b1330f496f', '1', '1151385996686901', '2018-01-28 17:24:32');
+INSERT INTO `comment` VALUES ('8151713147263002', '哈哈', '10151678709616117', null, '0', null, '1', '1b113fb5ddadcbf6618373a7fe9f20cf', '1', '1151385996686901', '2018-01-28 17:24:53');
+INSERT INTO `comment` VALUES ('8151714898314523', '我说我采集的美啊', '10151714898314512', null, '100', '1', '1', '6e68f78ac9bfff962ef2246022daa87a', '1', '1151062905116501', '2018-01-29 10:27:52');
+INSERT INTO `comment` VALUES ('8151764769309501', '毛线和毛i按啊', '10151675850620412', null, '80', '1', '1', 'ee30961ff24777deb547207a4de62072', '1', '1151062524542901', '2018-02-03 16:48:13');
+INSERT INTO `comment` VALUES ('8151774845549901', '我说的对吧', '10151675850620410', null, '80', null, '1', 'd9e3a5533757d781c808ce0615300d37', '1', '1151062524542901', '2018-02-04 20:47:35');
+INSERT INTO `comment` VALUES ('8151775931235003', '大家说的对', '10151775819152001', null, '100', null, '1', '36705624718ded1785482a1693f0c39d', '1', '1151062524542901', '2018-02-05 09:41:47');
+INSERT INTO `comment` VALUES ('8151780290440401', '我可以说很牛逼吗', '10151775769039801', null, '100', null, '1', '98aa33d960314f9b7d26ab792803911b', '1', '1151062524542901', '2018-02-05 11:55:04');
+INSERT INTO `comment` VALUES ('8151806096315710', '哈哈哈哈', '10151806096315708', null, '0', null, '1', '46d72a6e625930fec6531e2a9154c88d', '1', '1151062524542901', '2018-02-08 12:11:13');
+
+-- ----------------------------
+-- Table structure for `entry`
+-- ----------------------------
+DROP TABLE IF EXISTS `entry`;
+CREATE TABLE `entry` (
+  `id_` bigint(20) NOT NULL COMMENT 'id 是唯一验证码',
+  `topic_id_` bigint(20) NOT NULL,
+  `form_url_` varchar(200) DEFAULT NULL,
+  `server_url_` varchar(100) DEFAULT NULL,
+  `is_sync_` smallint(1) DEFAULT NULL,
+  `title_` varchar(100) DEFAULT NULL COMMENT '文章标题',
+  `img_url_` varchar(200) DEFAULT NULL,
+  `img_width_` int(8) DEFAULT NULL,
+  `img_height_` int(8) DEFAULT NULL,
+  `desc_` varchar(1000) DEFAULT NULL,
+  `sort_id_` int(8) NOT NULL,
+  `grade_` int(8) NOT NULL DEFAULT '0' COMMENT '分数(取消评分)',
+  `comment_num_` int(11) unsigned zerofill NOT NULL DEFAULT '00000000000' COMMENT '评论总数',
+  `remark_` varchar(100) DEFAULT NULL COMMENT '备注',
+  `curr_version_` smallint(1) NOT NULL DEFAULT '1',
+  `is_carousel_` smallint(1) DEFAULT NULL COMMENT '是否轮播 0 否 1 是',
+  `status_` smallint(6) NOT NULL DEFAULT '2' COMMENT '1 发布 0 无效 2  预发布 3 违规',
+  `create_by_` bigint(20) NOT NULL,
+  `create_time_` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='图片';
+
+-- ----------------------------
+-- Records of entry
+-- ----------------------------
+INSERT INTO `entry` VALUES ('1075956749601', '975956277501', null, null, null, '', 'xixi/1075956749601.jpg;xixi/1075956749601_s.jpg', '260', '368', '', '1', '0', '00000000000', null, '1', null, '1', '1151062524542901', '2018-02-20 21:56:54');
+INSERT INTO `entry` VALUES ('1075959860901', '975956277501', null, null, null, '', 'xixi/1075959860901.jpg;xixi/1075959860901_s.jpg', '260', '346', '', '1', '0', '00000000000', null, '2', null, '1', '1151062524542901', '2018-02-21 15:13:50');
+INSERT INTO `entry` VALUES ('1075960616401', '975959729601', null, null, null, '', 'xixi/1075960616401.jpg;xixi/1075960616401_s.jpg', '260', '260', '', '1', '0', '00000000000', null, '1', null, '1', '1151062524542901', '2018-02-21 19:25:44');
+INSERT INTO `entry` VALUES ('1075960616402', '975959729601', null, null, null, '', 'xixi/1075960616402.jpg;xixi/1075960616402_s.jpg', '260', '346', '', '1', '0', '00000000000', null, '2', null, '1', '1151062524542901', '2018-02-21 19:26:34');
+INSERT INTO `entry` VALUES ('1075961250004', '975956277501', null, null, null, '', 'xixi/1075961250004.jpg;xixi/1075961250004_s.jpg', '260', '390', '', '1', '0', '00000000000', null, '1', null, '1', '1151062524542901', '2018-02-21 23:07:53');
+INSERT INTO `entry` VALUES ('1075961250005', '975956277501', null, null, null, '', 'xixi/1075961250005.jpg;xixi/1075961250005_s.jpg', '260', '390', '', '1', '0', '00000000000', null, '1', null, '1', '1151062524542901', '2018-02-21 23:08:43');
+INSERT INTO `entry` VALUES ('1075964112903', '975959729601', null, null, null, '', 'xixi/1075964112903.jpg;xixi/1075964112903_s.jpg', '390', '260', '', '1', '0', '00000000000', null, '1', null, '1', '1151062524542901', '2018-02-22 15:24:48');
+INSERT INTO `entry` VALUES ('1075964112904', '975959729601', null, null, null, '', 'xixi/1075964112904.jpg;xixi/1075964112904_s.jpg', '260', '390', '', '1', '0', '00000000000', null, '1', null, '1', '1151062524542901', '2018-02-22 15:26:00');
+INSERT INTO `entry` VALUES ('1075964112905', '975959729601', null, null, null, '', 'xixi/1075964112905.jpg;xixi/1075964112905_s.jpg', '390', '260', '', '1', '0', '00000000000', null, '1', null, '1', '1151062524542901', '2018-02-22 15:39:48');
+INSERT INTO `entry` VALUES ('1075964112909', '975959729601', null, null, null, '', 'xixi/1075964112909.jpg;xixi/1075964112909_s.jpg', '389', '260', '', '1', '0', '00000000000', null, '2', null, '1', '1151062524542901', '2018-02-22 16:36:40');
+INSERT INTO `entry` VALUES ('1075964777801', '975959729601', null, null, null, '', 'xixi/1075964777801.jpg;xixi/1075964777801_s.jpg', '260', '345', '', '1', '0', '00000000000', null, '1', null, '1', '1151062524542901', '2018-02-22 18:32:43');
+
+-- ----------------------------
+-- Table structure for `fans`
+-- ----------------------------
+DROP TABLE IF EXISTS `fans`;
+CREATE TABLE `fans` (
+  `id_` bigint(20) NOT NULL,
+  `account_id_` bigint(20) NOT NULL COMMENT '被关注用户id',
+  `group_id_` bigint(20) NOT NULL COMMENT '分组id',
+  `fans_id_` bigint(20) NOT NULL COMMENT '粉丝id',
+  `remark_` varchar(100) DEFAULT NULL COMMENT '别名',
+  `create_by_` bigint(20) NOT NULL,
+  `create_time_` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='联系人表';
+
+-- ----------------------------
+-- Records of fans
+-- ----------------------------
+INSERT INTO `fans` VALUES ('5151678709616107', '1151062524542901', '12151678709616127', '1151062905116501', null, '1151062905116501', '2018-01-24 17:55:55');
+INSERT INTO `fans` VALUES ('5151678709616119', '1151062905116501', '12151782238174302', '1151062524542901', null, '1151062524542901', '2018-01-24 22:03:05');
+
+-- ----------------------------
+-- Table structure for `fans_group`
+-- ----------------------------
+DROP TABLE IF EXISTS `fans_group`;
+CREATE TABLE `fans_group` (
+  `id_` bigint(20) NOT NULL,
+  `name_` varchar(20) NOT NULL,
+  `desc_` varchar(200) DEFAULT NULL,
+  `type_` smallint(1) NOT NULL COMMENT '0 未分组 1 fans分组 2 关注分组',
+  `create_by_` bigint(20) NOT NULL,
+  `create_time_` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='联系人分组';
+
+-- ----------------------------
+-- Records of fans_group
+-- ----------------------------
+INSERT INTO `fans_group` VALUES ('0', '未分组', '默认分组', '0', '1', '2017-12-20 09:23:32');
+INSERT INTO `fans_group` VALUES ('12151678709616127', '我的fans', null, '1', '1151062524542901', '2018-01-24 22:15:12');
+INSERT INTO `fans_group` VALUES ('12151782238174302', '我的关注', null, '2', '1151062524542901', '2018-02-05 17:20:56');
+
+-- ----------------------------
+-- Table structure for `full_index`
+-- ----------------------------
+DROP TABLE IF EXISTS `full_index`;
+CREATE TABLE `full_index` (
+  `id_` bigint(20) NOT NULL,
+  `index_` varchar(500) NOT NULL COMMENT 'tiltle and tags',
+  `topic_id_` bigint(20) NOT NULL,
+  `entry_id_` bigint(20) DEFAULT NULL,
+  `curr_version_` smallint(1) NOT NULL,
+  `status_` smallint(1) NOT NULL DEFAULT '1' COMMENT '0 无效  1 有效',
+  `create_by_` bigint(20) NOT NULL,
+  `create_time_` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_`),
+  FULLTEXT KEY `index_` (`index_`) /*!50100 WITH PARSER `ngram` */ 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of full_index
+-- ----------------------------
+INSERT INTO `full_index` VALUES ('1375904075701', '草拟吗b changtui', '975904067504', null, '1', '1', '1151062524542901', '2018-02-08 17:18:35');
+INSERT INTO `full_index` VALUES ('1375924631006', '去你妈的 siwa', '975924631005', null, '1', '1', '1151062524542901', '2018-02-13 13:58:50');
+INSERT INTO `full_index` VALUES ('1375924631016', '新的主题 siwa', '975924631015', null, '1', '1', '1151062524542901', '2018-02-15 19:37:32');
+INSERT INTO `full_index` VALUES ('1375924631019', '清纯嫩模晓迪秀曼妙身姿香艳迷人(图2)', '975924631015', '1075924631018', '1', '1', '1151062524542901', '2018-02-15 19:37:49');
+INSERT INTO `full_index` VALUES ('1375924631021', '清纯嫩模晓迪秀曼妙身姿香艳迷人(图3)', '975924631015', '1075924631020', '1', '1', '1151062524542901', '2018-02-15 19:37:50');
+INSERT INTO `full_index` VALUES ('1375924631023', '清纯嫩模晓迪秀曼妙身姿香艳迷人(图4)', '975924631015', '1075924631022', '1', '1', '1151062524542901', '2018-02-15 19:37:50');
+INSERT INTO `full_index` VALUES ('1375942465402', '庆祝我第一次部署成功 siwa', '975942465401', null, '1', '1', '1151062524542901', '2018-02-17 14:35:41');
+INSERT INTO `full_index` VALUES ('1375956277502', '测试01 changtui', '975956277501', null, '1', '1', '1151062524542901', '2018-02-20 19:19:30');
+INSERT INTO `full_index` VALUES ('1375959729602', '这是一个阶段 changtui', '975959729601', null, '1', '1', '1151062524542901', '2018-02-21 14:30:09');
+INSERT INTO `full_index` VALUES ('6575904067592001', '啥是你吗啊 juru', '4575904067592000', null, '1', '1', '1151062524542901', '2018-02-08 17:16:06');
+INSERT INTO `full_index` VALUES ('13151671651648802', '美女私房照 siwa', '9151671651648801', null, '1', '1', '1151062524542901', '2018-01-23 22:09:09');
+INSERT INTO `full_index` VALUES ('13151671651648805', '夏季', '9151671651648801', '10151671651648804', '1', '1', '1151062524542901', '2018-01-23 22:09:44');
+INSERT INTO `full_index` VALUES ('13151671651648807', '冬季', '9151671651648801', '10151671651648806', '1', '1', '1151062524542901', '2018-01-23 22:10:05');
+INSERT INTO `full_index` VALUES ('13151675850620404', '谁和谁的心 changtui', '9151675850620403', null, '1', '0', '1151062524542901', '2018-02-05 18:24:01');
+INSERT INTO `full_index` VALUES ('13151675850620408', '2018年多开心的一年啊 juru', '9151675850620407', null, '1', '1', '1151062905116501', '2018-01-24 15:23:07');
+INSERT INTO `full_index` VALUES ('13151678709616103', '天下第一美人吗 changtui', '9151678709616102', null, '1', '1', '1151062905116501', '2018-01-24 17:50:42');
+INSERT INTO `full_index` VALUES ('13151678709616111', '这事一个扯淡的年纪 juru', '9151678709616110', null, '1', '1', '1151062905116501', '2018-01-24 18:00:38');
+INSERT INTO `full_index` VALUES ('13151678709616115', '还是天天吃萝卜 changtui', '9151678709616114', null, '1', '1', '1151062905116501', '2018-01-24 18:01:25');
+INSERT INTO `full_index` VALUES ('13151713147263004', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真 juru', '9151713147263003', null, '1', '1', '1151062905116501', '2018-01-28 19:12:31');
+INSERT INTO `full_index` VALUES ('13151713147263007', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263006', '1', '1', '1151062905116501', '2018-01-28 19:17:50');
+INSERT INTO `full_index` VALUES ('13151713147263009', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263008', '1', '1', '1151062905116501', '2018-01-28 19:17:50');
+INSERT INTO `full_index` VALUES ('13151713147263011', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263010', '1', '1', '1151062905116501', '2018-01-28 19:17:51');
+INSERT INTO `full_index` VALUES ('13151713147263013', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263012', '1', '1', '1151062905116501', '2018-01-28 19:17:51');
+INSERT INTO `full_index` VALUES ('13151713147263015', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263014', '1', '1', '1151062905116501', '2018-01-28 19:17:52');
+INSERT INTO `full_index` VALUES ('13151713147263017', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263016', '1', '1', '1151062905116501', '2018-01-28 19:17:52');
+INSERT INTO `full_index` VALUES ('13151713147263019', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263018', '1', '1', '1151062905116501', '2018-01-28 19:17:52');
+INSERT INTO `full_index` VALUES ('13151713147263021', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263020', '1', '1', '1151062905116501', '2018-01-28 19:17:53');
+INSERT INTO `full_index` VALUES ('13151713147263023', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263022', '1', '1', '1151062905116501', '2018-01-28 19:17:53');
+INSERT INTO `full_index` VALUES ('13151713147263025', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263024', '1', '1', '1151062905116501', '2018-01-28 19:17:53');
+INSERT INTO `full_index` VALUES ('13151713147263027', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263026', '1', '1', '1151062905116501', '2018-01-28 19:17:54');
+INSERT INTO `full_index` VALUES ('13151713147263029', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263028', '1', '1', '1151062905116501', '2018-01-28 19:17:54');
+INSERT INTO `full_index` VALUES ('13151713147263031', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263030', '1', '1', '1151062905116501', '2018-01-28 19:17:54');
+INSERT INTO `full_index` VALUES ('13151713147263033', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263032', '1', '1', '1151062905116501', '2018-01-28 19:17:54');
+INSERT INTO `full_index` VALUES ('13151713147263035', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263034', '1', '1', '1151062905116501', '2018-01-28 19:17:55');
+INSERT INTO `full_index` VALUES ('13151713147263037', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263036', '1', '1', '1151062905116501', '2018-01-28 19:17:55');
+INSERT INTO `full_index` VALUES ('13151713147263039', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263038', '1', '1', '1151062905116501', '2018-01-28 19:17:55');
+INSERT INTO `full_index` VALUES ('13151713147263041', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263040', '1', '1', '1151062905116501', '2018-01-28 19:17:55');
+INSERT INTO `full_index` VALUES ('13151713147263043', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263042', '1', '1', '1151062905116501', '2018-01-28 19:17:56');
+INSERT INTO `full_index` VALUES ('13151713147263045', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263044', '1', '1', '1151062905116501', '2018-01-28 19:17:56');
+INSERT INTO `full_index` VALUES ('13151713147263047', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263046', '1', '1', '1151062905116501', '2018-01-28 19:17:56');
+INSERT INTO `full_index` VALUES ('13151713147263049', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263048', '1', '1', '1151062905116501', '2018-01-28 19:17:56');
+INSERT INTO `full_index` VALUES ('13151713147263051', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263050', '1', '1', '1151062905116501', '2018-01-28 19:17:57');
+INSERT INTO `full_index` VALUES ('13151713147263053', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263052', '1', '1', '1151062905116501', '2018-01-28 19:17:57');
+INSERT INTO `full_index` VALUES ('13151713147263055', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263054', '1', '1', '1151062905116501', '2018-01-28 19:17:57');
+INSERT INTO `full_index` VALUES ('13151713147263057', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263056', '1', '1', '1151062905116501', '2018-01-28 19:17:58');
+INSERT INTO `full_index` VALUES ('13151713147263059', '成熟御姐黑色比基尼傲人双峰修长玉腿性感写真', '9151713147263003', '10151713147263058', '1', '1', '1151062905116501', '2018-01-28 19:17:58');
+INSERT INTO `full_index` VALUES ('13151713147263062', '014广州车展冷艳车模秀美腿 changtui', '9151713147263061', null, '1', '1', '1151062905116501', '2018-01-28 21:22:39');
+INSERT INTO `full_index` VALUES ('13151713147263065', '妩媚女人吴沐熙与酒红MINI相伴(图6)', '9151713147263061', '10151713147263064', '1', '1', '1151062905116501', '2018-01-28 21:22:50');
+INSERT INTO `full_index` VALUES ('13151713147263067', '妩媚女人吴沐熙与酒红MINI相伴(图7)', '9151713147263061', '10151713147263066', '1', '1', '1151062905116501', '2018-01-28 21:22:50');
+INSERT INTO `full_index` VALUES ('13151713147263069', '妩媚女人吴沐熙与酒红MINI相伴(图12)', '9151713147263061', '10151713147263068', '1', '1', '1151062905116501', '2018-01-28 21:22:51');
+INSERT INTO `full_index` VALUES ('13151713147263071', '妩媚女人吴沐熙与酒红MINI相伴(图14)', '9151713147263061', '10151713147263070', '1', '1', '1151062905116501', '2018-01-28 21:22:51');
+INSERT INTO `full_index` VALUES ('13151713147263073', '2014广州车展冷艳车模秀美腿(图1)', '9151713147263061', '10151713147263072', '1', '1', '1151062905116501', '2018-01-28 21:22:51');
+INSERT INTO `full_index` VALUES ('13151713147263075', '2014广州车展冷艳车模秀美腿(图2)', '9151713147263061', '10151713147263074', '1', '1', '1151062905116501', '2018-01-28 21:22:51');
+INSERT INTO `full_index` VALUES ('13151713147263077', '2014广州车展冷艳车模秀美腿(图3)', '9151713147263061', '10151713147263076', '1', '1', '1151062905116501', '2018-01-28 21:22:51');
+INSERT INTO `full_index` VALUES ('13151713147263079', '2014广州车展冷艳车模秀美腿(图4)', '9151713147263061', '10151713147263078', '1', '1', '1151062905116501', '2018-01-28 21:22:52');
+INSERT INTO `full_index` VALUES ('13151713147263081', '2014广州车展冷艳车模秀美腿(图5)', '9151713147263061', '10151713147263080', '1', '1', '1151062905116501', '2018-01-28 21:22:52');
+INSERT INTO `full_index` VALUES ('13151713147263083', '2014广州车展冷艳车模秀美腿(图6)', '9151713147263061', '10151713147263082', '1', '1', '1151062905116501', '2018-01-28 21:22:52');
+INSERT INTO `full_index` VALUES ('13151713147263085', '2014广州车展冷艳车模秀美腿(图6)', '9151713147263061', '10151713147263084', '1', '1', '1151062905116501', '2018-01-28 21:24:59');
+INSERT INTO `full_index` VALUES ('13151713147263087', '2014广州车展冷艳车模秀美腿(图7)', '9151713147263061', '10151713147263086', '1', '1', '1151062905116501', '2018-01-28 21:25:52');
+INSERT INTO `full_index` VALUES ('13151713147263089', '2014广州车展冷艳车模秀美腿(图8)', '9151713147263061', '10151713147263088', '1', '1', '1151062905116501', '2018-01-28 21:28:24');
+INSERT INTO `full_index` VALUES ('13151713147263091', '2014广州车展冷艳车模秀美腿(图10)', '9151713147263061', '10151713147263090', '1', '1', '1151062905116501', '2018-01-28 21:29:31');
+INSERT INTO `full_index` VALUES ('13151713147263093', '蜂鸟洗车女郎比基尼艺术写真(图1)', '9151713147263061', '10151713147263092', '1', '1', '1151062905116501', '2018-01-28 21:29:31');
+INSERT INTO `full_index` VALUES ('13151713147263095', '蜂鸟洗车女郎比基尼艺术写真(图3)', '9151713147263061', '10151713147263094', '1', '1', '1151062905116501', '2018-01-28 21:29:31');
+INSERT INTO `full_index` VALUES ('13151713147263097', '蜂鸟洗车女郎比基尼艺术写真(图4)', '9151713147263061', '10151713147263096', '1', '1', '1151062905116501', '2018-01-28 21:29:31');
+INSERT INTO `full_index` VALUES ('13151713147263099', '蜂鸟洗车女郎比基尼艺术写真(图5)', '9151713147263061', '10151713147263098', '1', '1', '1151062905116501', '2018-01-28 21:29:31');
+INSERT INTO `full_index` VALUES ('13151714617207901', '蜂鸟洗车女郎比基尼艺术写真(图6)', '9151713147263061', '101517131472630100', '1', '1', '1151062905116501', '2018-01-28 21:29:32');
+INSERT INTO `full_index` VALUES ('13151714617207903', '蜂鸟洗车女郎比基尼艺术写真(图7)', '9151713147263061', '10151714617207902', '1', '1', '1151062905116501', '2018-01-28 21:29:32');
+INSERT INTO `full_index` VALUES ('13151714617207905', '蜂鸟洗车女郎比基尼艺术写真(图8)', '9151713147263061', '10151714617207904', '1', '1', '1151062905116501', '2018-01-28 21:29:32');
+INSERT INTO `full_index` VALUES ('13151714617207907', '蜂鸟洗车女郎比基尼艺术写真(图9)', '9151713147263061', '10151714617207906', '1', '1', '1151062905116501', '2018-01-28 21:29:32');
+INSERT INTO `full_index` VALUES ('13151714617207909', '蜂鸟洗车女郎比基尼艺术写真(图10)', '9151713147263061', '10151714617207908', '1', '1', '1151062905116501', '2018-01-28 21:29:32');
+INSERT INTO `full_index` VALUES ('13151714617207911', '俏丽少妇王诗琪居家私房娇艳动人 juru', '9151714617207910', null, '1', '1', '1151062905116501', '2018-01-28 21:30:52');
+INSERT INTO `full_index` VALUES ('13151714617207914', '俏丽少妇王诗琪居家私房娇艳动人(图3)', '9151714617207910', '10151714617207913', '1', '1', '1151062905116501', '2018-01-28 21:33:03');
+INSERT INTO `full_index` VALUES ('13151714617207916', '俏丽少妇王诗琪居家私房娇艳动人(图4)', '9151714617207910', '10151714617207915', '1', '1', '1151062905116501', '2018-01-28 21:33:03');
+INSERT INTO `full_index` VALUES ('13151714617207918', '俏丽少妇王诗琪居家私房娇艳动人(图5)', '9151714617207910', '10151714617207917', '1', '1', '1151062905116501', '2018-01-28 21:33:03');
+INSERT INTO `full_index` VALUES ('13151714617207920', '俏丽少妇王诗琪居家私房娇艳动人(图6)', '9151714617207910', '10151714617207919', '1', '1', '1151062905116501', '2018-01-28 21:33:03');
+INSERT INTO `full_index` VALUES ('13151714617207922', '俏丽少妇王诗琪居家私房娇艳动人(图7)', '9151714617207910', '10151714617207921', '1', '1', '1151062905116501', '2018-01-28 21:33:04');
+INSERT INTO `full_index` VALUES ('13151714617207924', '俏丽少妇王诗琪居家私房娇艳动人(图8)', '9151714617207910', '10151714617207923', '1', '1', '1151062905116501', '2018-01-28 21:33:04');
+INSERT INTO `full_index` VALUES ('13151714617207926', '俏丽少妇王诗琪居家私房娇艳动人(图9)', '9151714617207910', '10151714617207925', '1', '1', '1151062905116501', '2018-01-28 21:33:04');
+INSERT INTO `full_index` VALUES ('13151714617207928', '俏丽少妇王诗琪居家私房娇艳动人(图10)', '9151714617207910', '10151714617207927', '1', '1', '1151062905116501', '2018-01-28 21:33:04');
+INSERT INTO `full_index` VALUES ('13151714617207930', '俏丽少妇王诗琪居家私房娇艳动人(图11)', '9151714617207910', '10151714617207929', '1', '1', '1151062905116501', '2018-01-28 21:33:05');
+INSERT INTO `full_index` VALUES ('13151714617207932', '俏丽少妇王诗琪居家私房娇艳动人(图12)', '9151714617207910', '10151714617207931', '1', '1', '1151062905116501', '2018-01-28 21:33:05');
+INSERT INTO `full_index` VALUES ('13151714617207934', '俏丽少妇王诗琪居家私房娇艳动人(图20)', '9151714617207910', '10151714617207933', '1', '1', '1151062905116501', '2018-01-28 21:33:05');
+INSERT INTO `full_index` VALUES ('13151714617207936', '俏丽少妇王诗琪居家私房娇艳动人(图21)', '9151714617207910', '10151714617207935', '1', '1', '1151062905116501', '2018-01-28 21:33:05');
+INSERT INTO `full_index` VALUES ('13151714617207938', '俏丽少妇王诗琪居家私房娇艳动人(图22)', '9151714617207910', '10151714617207937', '1', '1', '1151062905116501', '2018-01-28 21:33:05');
+INSERT INTO `full_index` VALUES ('13151714617207940', '俏丽少妇王诗琪居家私房娇艳动人(图23)', '9151714617207910', '10151714617207939', '1', '1', '1151062905116501', '2018-01-28 21:33:05');
+INSERT INTO `full_index` VALUES ('13151714617207942', '2015海南第一场车展大眼美女车模(图3)', '9151678709616102', '10151714617207941', '1', '1', '1151062905116501', '2018-01-28 21:35:59');
+INSERT INTO `full_index` VALUES ('13151714617207944', '2015海南第一场车展大眼美女车模(图4)', '9151678709616102', '10151714617207943', '1', '1', '1151062905116501', '2018-01-28 21:36:00');
+INSERT INTO `full_index` VALUES ('13151714617207946', '2015海南第一场车展大眼美女车模(图5)', '9151678709616102', '10151714617207945', '1', '1', '1151062905116501', '2018-01-28 21:36:00');
+INSERT INTO `full_index` VALUES ('13151714617207948', '2015海南第一场车展大眼美女车模(图8)', '9151678709616102', '10151714617207947', '1', '1', '1151062905116501', '2018-01-28 21:51:04');
+INSERT INTO `full_index` VALUES ('13151714617207950', '2015海南第一场车展大眼美女车模(图9)', '9151678709616102', '10151714617207949', '1', '1', '1151062905116501', '2018-01-28 21:51:04');
+INSERT INTO `full_index` VALUES ('13151714617207952', '2015海南第一场车展大眼美女车模(图9)', '9151678709616102', '10151714617207951', '1', '1', '1151062905116501', '2018-01-28 21:52:38');
+INSERT INTO `full_index` VALUES ('13151714617207954', '2015海南第一场车展大眼美女车模(图9)', '9151678709616102', '10151714617207953', '1', '1', '1151062905116501', '2018-01-28 21:55:26');
+INSERT INTO `full_index` VALUES ('13151714617207956', '2015海南第一场车展大眼美女车模(图9)', '9151678709616102', '10151714617207955', '1', '1', '1151062905116501', '2018-01-28 21:56:22');
+INSERT INTO `full_index` VALUES ('13151714617207958', '2015海南第一场车展大眼美女车模(图10)', '9151678709616102', '10151714617207957', '1', '1', '1151062905116501', '2018-01-28 21:57:22');
+INSERT INTO `full_index` VALUES ('13151714617207960', '性感女神尤美比基尼湿身大秀巨乳玉腿 changtui', '9151714617207959', null, '1', '1', '1151062905116501', '2018-01-28 22:02:02');
+INSERT INTO `full_index` VALUES ('13151714617207963', '性感女神尤美比基尼湿身大秀巨乳玉腿(图2)', '9151714617207959', '10151714617207962', '1', '1', '1151062905116501', '2018-01-28 22:03:10');
+INSERT INTO `full_index` VALUES ('13151714617207965', '性感女神尤美比基尼湿身大秀巨乳玉腿(图3)', '9151714617207959', '10151714617207964', '1', '1', '1151062905116501', '2018-01-28 22:03:11');
+INSERT INTO `full_index` VALUES ('13151714617207967', '性感女神尤美比基尼湿身大秀巨乳玉腿(图4)', '9151714617207959', '10151714617207966', '1', '1', '1151062905116501', '2018-01-28 22:03:11');
+INSERT INTO `full_index` VALUES ('13151714617207969', '性感女神尤美比基尼湿身大秀巨乳玉腿(图5)', '9151714617207959', '10151714617207968', '1', '1', '1151062905116501', '2018-01-28 22:03:11');
+INSERT INTO `full_index` VALUES ('13151714617207971', '性感女神尤美比基尼湿身大秀巨乳玉腿(图6)', '9151714617207959', '10151714617207970', '1', '1', '1151062905116501', '2018-01-28 22:03:11');
+INSERT INTO `full_index` VALUES ('13151714617207973', '性感女神尤美比基尼湿身大秀巨乳玉腿(图7)', '9151714617207959', '10151714617207972', '1', '1', '1151062905116501', '2018-01-28 22:03:11');
+INSERT INTO `full_index` VALUES ('13151714617207975', '性感女神尤美比基尼湿身大秀巨乳玉腿(图8)', '9151714617207959', '10151714617207974', '1', '1', '1151062905116501', '2018-01-28 22:03:12');
+INSERT INTO `full_index` VALUES ('13151714617207977', '性感女神尤美比基尼湿身大秀巨乳玉腿(图9)', '9151714617207959', '10151714617207976', '1', '1', '1151062905116501', '2018-01-28 22:03:12');
+INSERT INTO `full_index` VALUES ('13151714617207979', '性感女神尤美比基尼湿身大秀巨乳玉腿(图10)', '9151714617207959', '10151714617207978', '1', '1', '1151062905116501', '2018-01-28 22:03:12');
+INSERT INTO `full_index` VALUES ('13151714617207981', '性感女神尤美比基尼湿身大秀巨乳玉腿(图11)', '9151714617207959', '10151714617207980', '1', '1', '1151062905116501', '2018-01-28 22:03:12');
+INSERT INTO `full_index` VALUES ('13151714617207983', '性感女神尤美比基尼湿身大秀巨乳玉腿(图12)', '9151714617207959', '10151714617207982', '1', '1', '1151062905116501', '2018-01-28 22:03:13');
+INSERT INTO `full_index` VALUES ('13151714617207985', '性感女神尤美比基尼湿身大秀巨乳玉腿(图13)', '9151714617207959', '10151714617207984', '1', '1', '1151062905116501', '2018-01-28 22:03:13');
+INSERT INTO `full_index` VALUES ('13151714617207987', '性感女神尤美比基尼湿身大秀巨乳玉腿(图14)', '9151714617207959', '10151714617207986', '1', '1', '1151062905116501', '2018-01-28 22:03:13');
+INSERT INTO `full_index` VALUES ('13151714617207989', '性感女神尤美比基尼湿身大秀巨乳玉腿(图14)', '9151714617207959', '10151714617207988', '1', '1', '1151062905116501', '2018-01-28 22:05:32');
+INSERT INTO `full_index` VALUES ('13151714617207991', '性感女神尤美比基尼湿身大秀巨乳玉腿(图15)', '9151714617207959', '10151714617207990', '1', '1', '1151062905116501', '2018-01-28 22:05:33');
+INSERT INTO `full_index` VALUES ('13151714617207993', '性感女神尤美比基尼湿身大秀巨乳玉腿(图16)', '9151714617207959', '10151714617207992', '1', '1', '1151062905116501', '2018-01-28 22:05:33');
+INSERT INTO `full_index` VALUES ('13151714617207995', '性感女神尤美比基尼湿身大秀巨乳玉腿(图17)', '9151714617207959', '10151714617207994', '1', '1', '1151062905116501', '2018-01-28 22:07:02');
+INSERT INTO `full_index` VALUES ('13151714617207997', '性感女神尤美比基尼湿身大秀巨乳玉腿(图17)', '9151714617207959', '10151714617207996', '1', '1', '1151062905116501', '2018-01-28 22:07:45');
+INSERT INTO `full_index` VALUES ('13151714617207999', '性感女神尤美比基尼湿身大秀巨乳玉腿(图18)', '9151714617207959', '10151714617207998', '1', '1', '1151062905116501', '2018-01-28 22:14:32');
+INSERT INTO `full_index` VALUES ('13151714898314501', '性感女神尤美比基尼湿身大秀巨乳玉腿(图19)', '9151714617207959', '101517146172079100', '1', '1', '1151062905116501', '2018-01-28 22:16:23');
+INSERT INTO `full_index` VALUES ('13151714898314503', '性感女神尤美比基尼湿身大秀巨乳玉腿(图20)', '9151714617207959', '10151714898314502', '1', '1', '1151062905116501', '2018-01-28 22:17:58');
+INSERT INTO `full_index` VALUES ('13151714898314505', '性感女神尤美比基尼湿身大秀巨乳玉腿(图21)', '9151714617207959', '10151714898314504', '1', '1', '1151062905116501', '2018-01-28 22:19:42');
+INSERT INTO `full_index` VALUES ('13151714898314507', '若彤黑丝长腿 juru', '9151714898314506', null, '1', '1', '1151062905116501', '2018-01-29 10:24:18');
+INSERT INTO `full_index` VALUES ('13151714898314527', '这牛仔裤也太破了吧！ juru', '9151714898314526', null, '1', '1', '1151062905116501', '2018-01-29 10:37:49');
+INSERT INTO `full_index` VALUES ('13151714898314539', '好美的素颜美女 nenmo', '9151714898314538', null, '1', '1', '1151062905116501', '2018-01-29 10:45:39');
+INSERT INTO `full_index` VALUES ('13151714898314550', '皮肤白嫩！ ​背影迷人！上品！ nenmo', '9151714898314549', null, '1', '1', '1151062905116501', '2018-01-29 10:50:46');
+INSERT INTO `full_index` VALUES ('13151719734679802', '性感比基尼 nenmo', '9151719734679801', null, '1', '1', '1151062905116501', '2018-01-29 11:42:27');
+INSERT INTO `full_index` VALUES ('13151774845549903', '这是一个欣欣主题 changtui', '9151774845549902', null, '1', '1', '1151062524542901', '2018-02-04 20:56:41');
+INSERT INTO `full_index` VALUES ('13151806096315702', '新的动漫测试 juru', '9151806096315701', null, '1', '1', '1151062524542901', '2018-02-08 11:36:03');
+
+-- ----------------------------
+-- Table structure for `grade`
+-- ----------------------------
+DROP TABLE IF EXISTS `grade`;
+CREATE TABLE `grade` (
+  `id_` bigint(20) NOT NULL,
+  `grade_` int(2) NOT NULL DEFAULT '0',
+  `type_` smallint(1) NOT NULL COMMENT '1 topic',
+  `taget_id_` bigint(20) NOT NULL,
+  `create_by_` bigint(20) NOT NULL,
+  `create_time_` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='分数记录表';
+
+-- ----------------------------
+-- Records of grade
+-- ----------------------------
+INSERT INTO `grade` VALUES ('675924631010', '100', '1', '975924631005', '1151062524542901', '2018-02-13 14:01:48');
+INSERT INTO `grade` VALUES ('675924631011', '1', '2', '875924631009', '1151062524542901', '2018-02-13 14:02:03');
+INSERT INTO `grade` VALUES ('6151678709616125', '100', '1', '9151678709616114', '1151062524542901', '2018-01-24 22:04:47');
+INSERT INTO `grade` VALUES ('6151714898314524', '100', '1', '9151714898314506', '1151062905116501', '2018-01-29 10:27:52');
+INSERT INTO `grade` VALUES ('6151714898314525', '1', '2', '8151714898314523', '1151062905116501', '2018-01-29 10:27:55');
+INSERT INTO `grade` VALUES ('6151764769309502', '80', '1', '9151675850620407', '1151062524542901', '2018-02-03 16:48:13');
+INSERT INTO `grade` VALUES ('6151764769309503', '1', '2', '8151764769309501', '1151062524542901', '2018-02-03 16:51:03');
+INSERT INTO `grade` VALUES ('6151775931235004', '100', '1', '9151774845549902', '1151062524542901', '2018-02-05 09:41:47');
+
+-- ----------------------------
+-- Table structure for `img_file`
+-- ----------------------------
+DROP TABLE IF EXISTS `img_file`;
+CREATE TABLE `img_file` (
+  `id_` bigint(20) NOT NULL,
+  `server_url_` varchar(100) DEFAULT NULL,
+  `is_sync_` smallint(1) DEFAULT NULL,
+  `url_` varchar(100) NOT NULL,
+  `type_` varchar(10) NOT NULL,
+  `curr_version_` smallint(1) NOT NULL DEFAULT '0',
+  `create_by_` bigint(20) NOT NULL,
+  `create_time_` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of img_file
+-- ----------------------------
+INSERT INTO `img_file` VALUES ('15151791297499101', null, null, 'group1/M00/00/00/wKg4Qlp3sz6AANRQAAUrcTNwxU0323.jpg', 'index', '1', '1151385996686901', '2018-02-06 18:29:35');
+INSERT INTO `img_file` VALUES ('15151791297499102', null, null, 'group1/M00/00/00/wKg4Qlp3tY2AUHcMAAUrcTNwxU0191.jpg', 'index', '1', '1151385996686901', '2018-02-06 22:21:48');
+INSERT INTO `img_file` VALUES ('15151792859930901', null, null, 'group1/M00/00/00/wKg4Qlp3vCqAW61BAAu37ocQBkM297.jpg', 'index', '1', '1151385996686901', '2018-02-06 22:50:00');
+INSERT INTO `img_file` VALUES ('15151792859930902', null, null, 'group1/M00/00/00/wKg4Qlp3vDyAKsmdAAu37ocQBkM844.jpg', 'index', '1', '1151385996686901', '2018-02-06 22:50:18');
+
+-- ----------------------------
+-- Table structure for `province_code`
+-- ----------------------------
+DROP TABLE IF EXISTS `province_code`;
+CREATE TABLE `province_code` (
+  `id_` int(11) NOT NULL AUTO_INCREMENT,
+  `area_code_` int(11) DEFAULT NULL COMMENT '行政代号',
+  `p_area_code_` int(11) DEFAULT NULL COMMENT '父行政代号',
+  `area_name_` varchar(255) DEFAULT NULL COMMENT '区划名称',
+  `province_code_` varchar(255) DEFAULT NULL COMMENT '所属省',
+  `city_code_` varchar(255) DEFAULT NULL COMMENT '所属城市',
+  `zip_code_` varchar(20) DEFAULT NULL COMMENT '区号',
+  `devision_level_` int(8) DEFAULT NULL COMMENT '区划等级',
+  PRIMARY KEY (`id_`)
+) ENGINE=InnoDB AUTO_INCREMENT=3333 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of province_code
+-- ----------------------------
+INSERT INTO `province_code` VALUES ('1', '110000', '110000', '北京', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('19', '120000', '120000', '天津', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('37', '130000', null, '河北省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('221', '140000', null, '山西省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('352', '150000', null, '内蒙古自治区', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('466', '210000', null, '辽宁省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('581', '220000', null, '吉林省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('651', '230000', null, '黑龙江省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('797', '310000', '310000', '上海', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('816', '320000', null, '江苏省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('932', '330000', null, '浙江省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('1034', '340000', null, '安徽省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('1156', '350000', null, '福建省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('1251', '360000', null, '江西省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('1363', '370000', null, '山东省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('1521', '410000', null, '河南省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('1699', '420000', null, '湖北省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('1817', '430000', null, '湖南省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('1954', '440000', null, '广东省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('2099', '450000', null, '广西壮族自治区', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('2224', '460000', null, '海南省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('2253', '500000', null, '重庆', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('2293', '510000', null, '四川省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('2496', '520000', null, '贵州省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('2594', '530000', null, '云南省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('2740', '540000', null, '西藏自治区', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('2821', '610000', null, '陕西省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('2939', '620000', null, '甘肃省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('3041', '630000', null, '青海省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('3093', '640000', null, '宁夏回族自治区', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('3121', '650000', null, '新疆维吾尔自治区', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('3236', '710000', null, '台湾省', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('3310', '810000', null, '香港特别行政区', '', '', '', '0');
+INSERT INTO `province_code` VALUES ('3332', '820000', null, '澳门特别行政区', '', '', '', '0');
+
+-- ----------------------------
+-- Table structure for `reply`
+-- ----------------------------
+DROP TABLE IF EXISTS `reply`;
+CREATE TABLE `reply` (
+  `id_` bigint(20) NOT NULL,
+  `content_` varchar(200) NOT NULL COMMENT '内容',
+  `comment_id_` bigint(20) NOT NULL COMMENT '评论id',
+  `reply_to_` varchar(50) NOT NULL COMMENT '回复用户描述',
+  `curr_version_` smallint(1) NOT NULL DEFAULT '1' COMMENT '乐观锁',
+  `tocken_` varchar(50) NOT NULL,
+  `create_by_` bigint(20) NOT NULL,
+  `create_time_` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='评论回复表';
+
+-- ----------------------------
+-- Records of reply
+-- ----------------------------
+INSERT INTO `reply` VALUES ('7151675850620402', '自己回自己把', '8151675850620401', '小冬瓜', '1', 'e4ef4a8cbc3f435af089b1729d6cd025', '1151062524542901', '2018-01-24 09:48:43');
+
+-- ----------------------------
+-- Table structure for `sys_account`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_account`;
+CREATE TABLE `sys_account` (
+  `id_` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_name_` varchar(20) DEFAULT NULL COMMENT '真实姓名',
+  `account_name_` varchar(20) DEFAULT NULL COMMENT '用户名',
+  `nickname_` varchar(20) DEFAULT NULL COMMENT '昵称',
+  `password_` varchar(200) DEFAULT NULL COMMENT '密码',
+  `sex_` smallint(1) DEFAULT NULL COMMENT '0 男 1 女',
+  `level_` smallint(1) unsigned zerofill NOT NULL DEFAULT '1' COMMENT '级别(星)',
+  `vip_` smallint(1) unsigned zerofill NOT NULL DEFAULT '0' COMMENT 'vip 级别',
+  `fans_` int(8) unsigned zerofill NOT NULL DEFAULT '00000000' COMMENT '粉丝数目',
+  `attention_` int(8) unsigned zerofill NOT NULL DEFAULT '00000000' COMMENT '关注用户数目',
+  `topic_count_` int(8) NOT NULL DEFAULT '0' COMMENT '主题数目',
+  `entry_count_` int(8) unsigned zerofill NOT NULL DEFAULT '00000000' COMMENT '单片数目',
+  `birth_` int(8) DEFAULT NULL COMMENT '出生',
+  `province_` int(8) DEFAULT NULL COMMENT '省',
+  `provice_name_` varchar(50) DEFAULT NULL,
+  `city_` int(8) DEFAULT NULL COMMENT '市',
+  `city_name_` varchar(50) DEFAULT NULL,
+  `area_` int(8) DEFAULT NULL,
+  `area_name_` varchar(50) DEFAULT NULL,
+  `password_protect_` smallint(1) DEFAULT NULL COMMENT '密保问题',
+  `protect_answer_` varchar(50) DEFAULT NULL,
+  `school_` varchar(20) DEFAULT NULL,
+  `major_` varchar(20) DEFAULT NULL COMMENT '专业',
+  `work_unit_` varchar(30) DEFAULT NULL COMMENT '工作单位',
+  `job_` varchar(30) DEFAULT NULL COMMENT ' 工作',
+  `study_target_` smallint(1) DEFAULT NULL COMMENT '学习目标',
+  `attention_technology_` varchar(50) DEFAULT NULL COMMENT '关注技术',
+  `email_` varchar(30) DEFAULT NULL,
+  `img_path_` varchar(100) DEFAULT NULL,
+  `about_` varchar(100) DEFAULT NULL COMMENT '简介',
+  `desc_` varchar(500) DEFAULT NULL COMMENT '详细描述',
+  `hash_` varchar(200) DEFAULT NULL COMMENT '密码散列值',
+  `mobile_` varchar(20) DEFAULT NULL,
+  `qq_` varchar(50) DEFAULT NULL,
+  `weChat_` varchar(50) DEFAULT NULL COMMENT '微信',
+  `momo_` varchar(50) DEFAULT NULL COMMENT '陌陌',
+  `type_` char(1) DEFAULT NULL COMMENT '类型(E,C,T,S)员工 客户 系统临时 网站',
+  `start_date_` datetime DEFAULT NULL COMMENT '开始日期',
+  `end_date_` datetime DEFAULT NULL COMMENT '结束日期',
+  `relevance_id_` bigint(24) DEFAULT NULL COMMENT '关联用户ID',
+  `organization_id_` bigint(24) DEFAULT NULL COMMENT '组织ID',
+  `post_id_` bigint(24) DEFAULT NULL COMMENT '角色ID',
+  `islocked_` char(2) DEFAULT NULL COMMENT '是否锁定(is,no)',
+  `company_id_` bigint(24) DEFAULT NULL COMMENT '公司ID',
+  `status_` smallint(1) NOT NULL DEFAULT '0' COMMENT '状态0有效1无效',
+  `tocken_` varchar(50) DEFAULT NULL COMMENT '唯一校验码',
+  `curr_version_` smallint(6) DEFAULT '1' COMMENT '并发乐观锁',
+  `validatecode_` varchar(200) DEFAULT NULL COMMENT '邮箱激活码',
+  `created_by_` bigint(24) DEFAULT NULL COMMENT '创建人',
+  `created_time_` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建日期',
+  `last_updated_by_` bigint(24) DEFAULT NULL COMMENT '最后修改人',
+  `last_updated_time_` datetime DEFAULT NULL COMMENT '最后修改日期',
+  PRIMARY KEY (`id_`),
+  FULLTEXT KEY `fullindex` (`user_name_`,`account_name_`,`nickname_`,`about_`,`desc_`) /*!50100 WITH PARSER `ngram` */ 
+) ENGINE=InnoDB AUTO_INCREMENT=1151385996686902 DEFAULT CHARSET=utf8 COMMENT='系统用户表';
+
+-- ----------------------------
+-- Records of sys_account
+-- ----------------------------
+INSERT INTO `sys_account` VALUES ('1', null, 'caicai', '菜菜', '1000:3a36685ef1784e41f10bbbcf0c128660a4ac5dae4ca5144b:81d3ae5b0dfa77447cccc8f73595a2431822c32a4975d900', '0', '1', '2', '00000002', '00000001', '7', '00000013', null, '810000', '香港特别行政区', '810100', '香港岛', '810103', '东区', null, null, null, null, null, null, null, null, 'caicai@226.com', 'D:/upload/new/images/1.jpg', null, '我其实是菜菜宝宝', null, '18618299900', '100000', 'WE1233', null, 's', null, null, null, null, null, 'no', null, '1', null, '85', null, null, '2018-01-22 18:23:05', null, '2017-11-14 12:01:36');
+INSERT INTO `sys_account` VALUES ('2', 'dongdong', 'dongdong', '东东', '1000:cef31d6f335b6ccbb403033824ffeb4e4085656c21df0379:6a021136a920737832f2ac77b64dac8a7daa9a7a89e2d35d', '1', '5', '3', '00000000', '00000000', '0', '00000000', null, null, '北京', null, '北京市', null, null, null, null, null, null, null, null, null, null, 'zhang@126.com', 'D:/upload/images/head.jpg', null, '当春日的晨光不经意间从她背后照射而出时她慵懒的伸着懒腰露出有些享受的模样似乎早已知道这温暖的阳光有多么的舒适她换上蓝色的比基尼性感极了她又摆弄着球桌上五颜六色的桌球似乎每一颗都有一段不同的爱情故事她露出游刃有余的神情不同于展示自己完美身材时那般羞涩空穿的球衣显得尤其诱惑也许她更擅长这类游戏她依在窗边思考着爱情与暧昧是不是该一杆击碎这爱情的表', '', '13788907809', null, null, null, 't', '2016-08-15 14:40:13', null, null, '13147132894212503', '19144653271166901', 'no', null, '1', null, '1', null, '16144799930664901', '2017-12-17 19:47:42', '16144799930664901', '2016-08-16 22:19:21');
+INSERT INTO `sys_account` VALUES ('11', 'cc', 'caicai', '菜菜', '1000:cef31d6f335b6ccbb403033824ffeb4e4085656c21df0379:6a021136a920737832f2ac77b64dac8a7daa9a7a89e2d35d', '1', '5', '3', '00000000', '00000000', '0', '00000000', null, '130000', '河北省', '130200', '唐山市', '130207', '丰南区', null, null, null, null, null, null, null, null, 'zhang@126.com', 'D:/upload/new/images/1.jpg', null, '与你相约，是一种清浅的禅意，而我，便在红尘最深处的禅意里，等你', '', '13788907804', '344567', 'ww2334q', 'e423344', 't', '2016-08-15 14:40:13', null, null, '13147132894212503', '19144653271166901', 'is', null, '1', null, '1', null, '16144799930664901', '2017-12-22 15:29:17', '16144799930664901', '2016-08-16 22:19:21');
+INSERT INTO `sys_account` VALUES ('1150259241719601', null, 'laotouzi', '老头', '1000:5dcabdcb4cbc374e9efd499005b1a51ddb3b3da2bcc7c66c:659e7df34d217af67df9e592f28a8bf957bdeca51c97d3f2', '0', '0', '0', '00000000', '00000000', '0', '00000000', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 'laotouzi@126.com', 'D:/upload/images/timg.jpg', null, '明月月飞花  花绯月  什么渡什么', null, null, null, null, null, 't', null, null, null, null, null, 'no', null, '1', null, '1', '1000:778ed2cdc31a15d19bbbe6814d8662d8747546f2ff301164:e4913f8da3e29a5fd4feeb7576d1a8953c0bb3e952c2fbdd', null, '2018-01-20 09:38:08', null, '2017-10-24 17:41:06');
+INSERT INTO `sys_account` VALUES ('1151013759681601', null, 'wangfeng', null, '1000:19276a7d9f38e3e67453c4da854ad251e4993177013c50c9:0b067040733a894fb7a1f1e76cea395379f096511991df25', null, '0', '0', '00000000', '00000000', '0', '00000000', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 'wangfeng@126.com', null, null, null, null, null, null, null, null, 't', null, null, null, null, null, 'no', null, '1', null, '1', '1000:7e802fdd5bd4b898daf94823fc7aecc68d6f7f81b9d69d07:678b9fdf1cbff8462fca24788e4651d50609a5ecd9baade3', null, '2017-11-25 16:44:30', null, '2017-11-08 18:39:56');
+INSERT INTO `sys_account` VALUES ('1151045594477401', null, 'zhangsan', '张三疯', '1000:8f5015b982715b929ac1c8149c4c2cc57deb367cf2a5666c:84caa06d9d9f55e2692b402bcbf24a8c264f833d4244dfea', '0', '0', '0', '00000000', '00000000', '0', '00000000', null, '150000', '内蒙古自治区', '150600', '鄂尔多斯市', '150625', '杭锦旗', null, null, null, null, null, null, null, null, '', 'D:/upload/new/images/1151045594477401.jpg', null, '疯了就疯了吧', null, '18388900989', '', '', null, 'e', null, null, null, null, null, 'no', null, '1', null, '5', null, null, '2018-01-20 09:37:11', null, '2017-11-12 11:05:44');
+INSERT INTO `sys_account` VALUES ('1151049210132401', null, 'lisi', null, '1000:fe60027aeb6a1d29cdfea5abfca40756ba1b8f1086688a56:4cdc70310d74abe27bc88d29d2ead3968fbbd6f66220c1e3', '1', '0', '0', '00000000', '00000000', '0', '00000000', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, '18007912567', null, null, null, 's', null, null, null, null, null, 'no', null, '1', null, '1', null, null, '2018-01-20 09:38:07', null, '2017-11-12 21:08:21');
+INSERT INTO `sys_account` VALUES ('1151056822303801', null, 'sisi', '小米猪', '1000:a0985922680e2be74684b5c41ad801aeb423d2b0eb3202ea:52cdf0342a8050e14d06ca6d19fd92c43c359ee048467a8a', '1', '0', '0', '00000000', '00000000', '0', '00000000', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, '18009099098', null, null, null, 's', null, null, null, null, null, 'no', null, '1', null, '1', null, null, '2018-01-20 09:37:46', null, '2017-11-13 18:17:03');
+INSERT INTO `sys_account` VALUES ('1151062524542901', null, 'xixi', '小冬瓜', '1000:b2fa179add3eae7ba7909ada826b985c126902cdd00246c4:32edb5ec6e4c1981ef469c9f9f87b6987f4f0f565dc725e7', '1', '0', '0', '00000002', '00000001', '11', '00000047', null, '140000', '山西省', '140400', '长治市', '140425', '平顺县', null, null, null, null, null, null, null, null, '', 'xixi/1151062524542901.jpg', null, '我是一个超级小冬瓜、可以做汤、炒菜吃', null, '13009089678', '', '', null, 's', null, null, null, null, null, 'no', null, '1', null, '98', null, null, '2018-02-22 18:32:43', null, '2017-11-14 10:07:25');
+INSERT INTO `sys_account` VALUES ('1151062905116501', null, 'qqqd', '小毛衣', '1000:6f5bf6d85883faa6a351b40dcbd8b108b85bfda8e89ea48f:3449e0952b2e5126383ec6d229d35a509c173c38986f2ca3', '1', '0', '0', '00000000', '00000000', '13', '00000165', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 'group1/M00/00/00/wKg4QlpwuZOAH8F0AAAMCDNtTds819.jpg', null, null, null, '13990099889', null, null, null, 's', null, null, null, null, null, 'no', null, '1', null, '184', null, null, '2018-02-01 17:38:50', null, '2017-11-14 11:10:51');
+INSERT INTO `sys_account` VALUES ('1151063113496001', null, 'ffgg', '大冬瓜', '1000:e7b2299161820fc4b40e92e1cb4a1110362ebaeb06fc6c5b:c896a83b115d5a41b05a36f0bb8356d4fe2c4900ea909c69', '1', '0', '0', '00000000', '00000000', '0', '00000000', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 'group1/M00/00/00/wKg4Qlpwr9GAOr0eAAAQ-lWtdJM857.jpg', null, null, null, '13990988778', null, null, null, 's', null, null, null, null, null, 'no', null, '1', null, '3', null, null, '2018-02-01 16:35:28', null, '2017-11-14 11:45:34');
+INSERT INTO `sys_account` VALUES ('1151063145150901', null, 'zhangli', 'qqanduwwww', '1000:5e67ffdddde78b88442e7c30f221dd6177eb837068440809:67e16bbfe3568a66f44b5ef25c2eeac5051649e3fe6c67c6', '1', '0', '0', '00000000', '00000000', '0', '00000000', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, '13990009988', null, null, null, 's', null, null, null, null, null, 'no', null, '1', null, '1', null, null, '2017-11-25 16:44:34', null, '2017-11-14 11:50:51');
+INSERT INTO `sys_account` VALUES ('1151385996686901', null, 'tianxia', '管理员', '1000:7f620316bf86dc31669870a38ef7bff479354b37eea3cdf2:a93f495618b3f61969aa8172739956350f2ab93ff5646a8c', '1', '0', '0', '00000000', '00000002', '43', '00000019', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 'D:/upload/new/images/1151385996686901.jpg', null, null, null, '13888888888', null, null, null, 'e', null, null, null, null, null, 'no', null, '1', null, '63', null, null, '2018-01-20 09:38:36', null, '2017-12-21 20:39:26');
+
+-- ----------------------------
+-- Table structure for `sys_email`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_email`;
+CREATE TABLE `sys_email` (
+  `id_` bigint(20) NOT NULL,
+  `from_account_` bigint(20) NOT NULL,
+  `to_account_` bigint(20) NOT NULL,
+  `message_` varchar(500) NOT NULL,
+  `status_` smallint(1) NOT NULL DEFAULT '0',
+  `tocken_` varchar(50) NOT NULL COMMENT '唯一校验码',
+  `create_time_` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_email
+-- ----------------------------
+INSERT INTO `sys_email` VALUES ('11151678709616126', '1151062524542901', '1151062905116501', '你好小毛衣', '1', '6fdf1dcf8cc4855c25b990136a8be142', '2018-01-24 22:49:30');
+INSERT INTO `sys_email` VALUES ('11151680376142601', '1151062524542901', '1151062905116501', '你干嘛你', '1', 'e8a474f0f88d231f52ff40ed101b4148', '2018-01-24 22:49:30');
+INSERT INTO `sys_email` VALUES ('11151680376142602', '1151062905116501', '1151062524542901', '我呆着', '1', '9396aba007eb7ead927a506b3b27dd87', '2018-01-24 22:40:44');
+INSERT INTO `sys_email` VALUES ('11151680376142603', '1151062524542901', '1151062905116501', '哈哈', '1', 'c263a6edbcc3d95c895a6697ce4fc46a', '2018-01-24 22:46:36');
+INSERT INTO `sys_email` VALUES ('11151680376142604', '1151062524542901', '1151062905116501', '好懒', '1', '6662b9719379803bbc1f1d67930d07dc', '2018-01-24 22:45:33');
+INSERT INTO `sys_email` VALUES ('11151686870724401', '1151385996686901', '1151062905116501', '小毛衣 你怎么了', '0', '8441ba2f326407294baaebf8cd059869', '2018-01-25 16:25:07');
+INSERT INTO `sys_email` VALUES ('11151764769309504', '1151062524542901', '1151062905116501', '你好 魔衣', '0', '3370f5974d951b31a60015be0dd7cf5a', '2018-02-03 16:51:36');
+INSERT INTO `sys_email` VALUES ('11151765097292201', '1151062524542901', '1151062905116501', '方法', '0', '60751fd33841c992607779ea23ffcba1', '2018-02-03 17:42:52');
+INSERT INTO `sys_email` VALUES ('11151765128085001', '1151062524542901', '1151062905116501', '哈哈', '0', 'ee9906cb3cf7c735185d6abf065d8514', '2018-02-03 17:48:00');
+INSERT INTO `sys_email` VALUES ('11151765208699901', '1151062524542901', '1151062905116501', '没了', '0', 'aaac6b7e42c215e0d438b4cbeeb33629', '2018-02-03 18:01:27');
+INSERT INTO `sys_email` VALUES ('11151782238174301', '1151062524542901', '1151062905116501', '真是不错昵', '0', '1a0021ca80b348e6fb1e2ff983514c39', '2018-02-05 17:19:41');
+INSERT INTO `sys_email` VALUES ('11151782238174303', '1151062524542901', '1151062905116501', '今天不回家', '0', 'd414179b477a29604b7a9eb3600733d9', '2018-02-05 17:21:28');
+INSERT INTO `sys_email` VALUES ('11151782238174304', '1151062524542901', '1151062905116501', '今天不回家', '0', 'b9a27573a969d8e0a0cf286fbc70f7e5', '2018-02-05 17:21:31');
+INSERT INTO `sys_email` VALUES ('11151782238174305', '1151062524542901', '1151062905116501', '今天不回家', '0', '617651ef146629548213d81f18b7c684', '2018-02-05 17:21:33');
+INSERT INTO `sys_email` VALUES ('11151782238174306', '1151062524542901', '1151062905116501', '今天不回家', '0', 'f67d5d3de8f6e1e1914bee9e15b3e33d', '2018-02-05 17:21:35');
+INSERT INTO `sys_email` VALUES ('11151782238174307', '1151062524542901', '1151062905116501', '今天不回家', '0', '240cbfdb6491a55043cba915f9414e92', '2018-02-05 17:21:37');
+INSERT INTO `sys_email` VALUES ('11151782238174308', '1151062524542901', '1151062905116501', '今天不回家', '0', '9a93a1cec523340d97cbf5edae38b195', '2018-02-05 17:21:39');
+INSERT INTO `sys_email` VALUES ('11151782238174309', '1151062524542901', '1151062905116501', '今天不回家', '0', 'f2420510d0082a24ccd619a2fac59899', '2018-02-05 17:21:41');
+INSERT INTO `sys_email` VALUES ('11151782238174310', '1151062524542901', '1151062905116501', '今天不回家', '0', '0a7c41c9bb8dc41b581f868b87608351', '2018-02-05 17:21:43');
+
+-- ----------------------------
+-- Table structure for `topic`
+-- ----------------------------
+DROP TABLE IF EXISTS `topic`;
+CREATE TABLE `topic` (
+  `id_` bigint(20) NOT NULL AUTO_INCREMENT,
+  `title_` varchar(100) NOT NULL COMMENT '文章标题',
+  `from_url_` varchar(100) DEFAULT NULL,
+  `server_url_` varchar(100) DEFAULT NULL COMMENT '图片服务器地址',
+  `is_sync_` smallint(1) DEFAULT NULL COMMENT '是否同步图片，同步后更换server_url_地址为负载服务器',
+  `img_url_` varchar(200) DEFAULT NULL,
+  `img_width_` int(8) DEFAULT NULL,
+  `img_height_` int(8) DEFAULT NULL,
+  `desc_` varchar(1000) DEFAULT NULL,
+  `classify_` varchar(10) DEFAULT 'photo' COMMENT '照片 photo 文章 article',
+  `type_` varchar(50) DEFAULT NULL COMMENT '主题类别',
+  `tags_` varchar(100) DEFAULT NULL,
+  `is_carousel_` smallint(1) unsigned zerofill NOT NULL COMMENT '是否轮播 0 否 1 是',
+  `is_top_` smallint(1) NOT NULL DEFAULT '0' COMMENT '是否置顶0 否 1 是',
+  `grade_` int(8) unsigned zerofill NOT NULL DEFAULT '00000000' COMMENT '分数',
+  `sort_id_` bigint(20) unsigned zerofill DEFAULT NULL COMMENT '只有置顶 才排序',
+  `share_` bigint(20) unsigned zerofill NOT NULL DEFAULT '00000000000000000000' COMMENT '分享次数',
+  `collect_` bigint(20) unsigned zerofill NOT NULL DEFAULT '00000000000000000000' COMMENT '收藏次数',
+  `entry_num_` int(8) unsigned zerofill NOT NULL DEFAULT '00000000' COMMENT 'entry 数目',
+  `status_` smallint(1) NOT NULL DEFAULT '2' COMMENT '1 发布 0 删除 2  预发布 3 违规',
+  `remark_` varchar(100) DEFAULT NULL COMMENT '备注',
+  `tocken_` varchar(50) DEFAULT NULL COMMENT '唯一校验码',
+  `curr_version_` smallint(6) NOT NULL DEFAULT '1' COMMENT '乐观锁',
+  `create_by_` bigint(20) NOT NULL,
+  `create_time_` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_`)
+) ENGINE=InnoDB AUTO_INCREMENT=975959729602 DEFAULT CHARSET=utf8 COMMENT='主词条';
+
+-- ----------------------------
+-- Records of topic
+-- ----------------------------
+INSERT INTO `topic` VALUES ('975956277501', '测试01', null, null, null, 'xixi/975956277501.jpg;xixi/975956277501_s.jpg', '388', '260', '', 'article', 'erciyuan', 'changtui', '0', '0', '00000000', null, '00000000000000000000', '00000000000000000000', '00000004', '2', null, null, '7', '1151062524542901', '2018-02-20 19:19:30');
+INSERT INTO `topic` VALUES ('975959729601', '这是一个阶段', null, null, null, 'xixi/975959729601.jpg;xixi/975959729601_s.jpg', '260', '385', '', 'article', 'erciyuan', 'changtui', '0', '0', '00000000', null, '00000000000000000000', '00000000000000000000', '00000007', '1', null, null, '15', '1151062524542901', '2018-02-21 14:30:09');
+
+-- ----------------------------
+-- Table structure for `topic_to_tag`
+-- ----------------------------
+DROP TABLE IF EXISTS `topic_to_tag`;
+CREATE TABLE `topic_to_tag` (
+  `id_` bigint(20) NOT NULL,
+  `tag_name_` varchar(50) NOT NULL COMMENT '标签名',
+  `topic_id_` bigint(20) NOT NULL COMMENT '主题ID',
+  `create_by_` bigint(20) NOT NULL,
+  `create_time_` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主题 标签 映射表(主题映射过的标签不可重复)';
+
+-- ----------------------------
+-- Records of topic_to_tag
+-- ----------------------------
+INSERT INTO `topic_to_tag` VALUES ('375904075702', 'changtui', '975904067504', '1151062524542901', '2018-02-08 17:18:35');
+INSERT INTO `topic_to_tag` VALUES ('375924631013', 'siwa', '975924631005', '1151062524542901', '2018-02-13 23:10:11');
+INSERT INTO `topic_to_tag` VALUES ('375924631017', 'siwa', '975924631015', '1151062524542901', '2018-02-15 19:37:32');
+INSERT INTO `topic_to_tag` VALUES ('375942650802', 'siwa', '975942465401', '1151062524542901', '2018-02-17 18:27:15');
+INSERT INTO `topic_to_tag` VALUES ('375956277503', 'changtui', '975956277501', '1151062524542901', '2018-02-20 19:19:30');
+INSERT INTO `topic_to_tag` VALUES ('375959729603', 'changtui', '975959729601', '1151062524542901', '2018-02-21 14:30:10');
+INSERT INTO `topic_to_tag` VALUES ('1575904067592001', 'juru', '4575904067592000', '1151062524542901', '2018-02-08 17:16:06');
+INSERT INTO `topic_to_tag` VALUES ('3151671651648803', 'siwa', '9151671651648801', '1151062524542901', '2018-01-23 22:09:09');
+INSERT INTO `topic_to_tag` VALUES ('3151675850620405', 'changtui', '9151675850620403', '1151062524542901', '2018-01-24 10:27:31');
+INSERT INTO `topic_to_tag` VALUES ('3151678709616101', 'juru', '9151675850620407', '1151062905116501', '2018-01-24 17:44:56');
+INSERT INTO `topic_to_tag` VALUES ('3151678709616104', 'changtui', '9151678709616102', '1151062905116501', '2018-01-24 17:50:42');
+INSERT INTO `topic_to_tag` VALUES ('3151678709616112', 'juru', '9151678709616110', '1151062905116501', '2018-01-24 18:00:38');
+INSERT INTO `topic_to_tag` VALUES ('3151678709616116', 'changtui', '9151678709616114', '1151062905116501', '2018-01-24 18:01:25');
+INSERT INTO `topic_to_tag` VALUES ('3151713147263060', 'juru', '9151713147263003', '1151062905116501', '2018-01-28 19:19:48');
+INSERT INTO `topic_to_tag` VALUES ('3151713147263063', 'changtui', '9151713147263061', '1151062905116501', '2018-01-28 21:22:39');
+INSERT INTO `topic_to_tag` VALUES ('3151714617207912', 'juru', '9151714617207910', '1151062905116501', '2018-01-28 21:30:52');
+INSERT INTO `topic_to_tag` VALUES ('3151714617207961', 'changtui', '9151714617207959', '1151062905116501', '2018-01-28 22:02:02');
+INSERT INTO `topic_to_tag` VALUES ('3151714898314522', 'juru', '9151714898314506', '1151062905116501', '2018-01-29 10:27:21');
+INSERT INTO `topic_to_tag` VALUES ('3151714898314537', 'juru', '9151714898314526', '1151062905116501', '2018-01-29 10:40:46');
+INSERT INTO `topic_to_tag` VALUES ('3151714898314540', 'nenmo', '9151714898314538', '1151062905116501', '2018-01-29 10:45:39');
+INSERT INTO `topic_to_tag` VALUES ('3151714898314551', 'nenmo', '9151714898314549', '1151062905116501', '2018-01-29 10:50:46');
+INSERT INTO `topic_to_tag` VALUES ('3151719734679803', 'nenmo', '9151719734679801', '1151062905116501', '2018-01-29 11:42:27');
+INSERT INTO `topic_to_tag` VALUES ('3151774845549904', 'changtui', '9151774845549902', '1151062524542901', '2018-02-04 20:56:41');
+INSERT INTO `topic_to_tag` VALUES ('3151806096315709', 'juru', '9151806096315701', '1151062524542901', '2018-02-08 11:37:34');
